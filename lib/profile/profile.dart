@@ -39,9 +39,7 @@ class _ProfileState extends State<Profile> {
         // backgroundColor: const Color.fromARGB(255, 196, 196, 196),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [ lightMarron,
-                  marron])),
+              gradient: LinearGradient(colors: [lightMarron, marron])),
         ),
       ),
       body: isLoading
@@ -86,43 +84,95 @@ class _ProfileState extends State<Profile> {
                                       ),
                                       Align(
                                         alignment: Alignment.center,
-                                        child: Column(
+                                        child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              Text(
-                                                'First Name: $firstName',
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  const Text(
+                                                    'First Name: ',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    firstName,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                ],
                                               ),
                                               const SizedBox(
                                                 height: 20,
                                               ),
-                                              Text(
-                                                'Last Name: $lastName',
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  const Text(
+                                                    'Last Name: ',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    lastName,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                ],
                                               ),
                                               const SizedBox(
                                                 height: 20,
                                               ),
-                                              Text(
-                                                'Mobile: $mobile',
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  const Text(
+                                                    'Mobile: ',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    mobile,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                ],
                                               ),
                                               const SizedBox(
                                                 height: 20,
                                               ),
-                                              Text(
-                                                'Admin Id: ${widget.adminId}',
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  const Text(
+                                                    'Admin Id: ',
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    widget.adminId,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                ],
                                               ),
                                             ]),
                                       ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:ticket_management_system/Homescreen.dart';
 import 'package:ticket_management_system/Master/master.dart';
 import 'package:ticket_management_system/Report/ticketTableReport.dart';
-import 'package:ticket_management_system/profile/profile.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 // ignore: camel_case_types, must_be_immutable
@@ -21,18 +20,17 @@ final String adminId = 'KM1737';
 // ignore: camel_case_types
 class _customSideState extends State<customSide> {
   List<String> tabTitle = [
-    'Profile',
+    // 'Profile',
     'Master',
     'Reports',
   ];
   List<dynamic> tabIcon = [
-    Icons.supervised_user_circle_sharp,
+    // Icons.supervised_user_circle_sharp,
     Icons.house_rounded,
     Icons.house_outlined,
   ];
   List<bool> design = [
     true,
-    false,
     false,
   ];
 
@@ -43,7 +41,7 @@ class _customSideState extends State<customSide> {
   @override
   Widget build(BuildContext context) {
     pages = [
-      const Profile(adminId: 'KM1737'),
+      // const Profile(adminId: 'KM1737'),
       MasterHomeScreen(adminId: 'KM1737'),
       const TicketTableReport()
     ];
@@ -57,10 +55,7 @@ class _customSideState extends State<customSide> {
                 gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                  lightMarron,
-                  marron
-                ])),
+                    colors: [lightMarron, marron])),
             child: Column(
               children: [
                 Container(
@@ -93,7 +88,7 @@ class _customSideState extends State<customSide> {
                       child: Column(
                         children: [
                           Text(
-                            'TMS',
+                            'T.M.S',
                             style: TextStyle(
                                 color: white,
                                 fontSize: 16,
@@ -101,7 +96,10 @@ class _customSideState extends State<customSide> {
                           ),
                           Text(
                             'Admin Panel',
-                            style: TextStyle(color: white, fontSize: 14),
+                            style: TextStyle(
+                                color: white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -150,7 +148,7 @@ class _customSideState extends State<customSide> {
 
   void setDesignBool() {
     List<bool> tempBool = [];
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 2; i++) {
       tempBool.add(false);
     }
     design = tempBool;

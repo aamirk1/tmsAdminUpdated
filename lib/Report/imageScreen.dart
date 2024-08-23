@@ -4,6 +4,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:image_network/image_network.dart';
 // import 'package:photo_view/photo_view.dart';
+// import 'package:ticket_management_system/utils/colors.dart';
 
 // class ImageScreen extends StatefulWidget {
 //   final List<String> imageFiles;
@@ -11,6 +12,7 @@
 //   final String pageTitle;
 
 //   const ImageScreen({
+//     super.key,
 //     required this.imageFiles,
 //     required this.initialIndex,
 //     required String imageFile,
@@ -33,7 +35,7 @@
 //     return Scaffold(
 //       appBar: AppBar(
 //         iconTheme: const IconThemeData(color: Colors.white),
-//         backgroundColor: Colors.deepPurple,
+//         backgroundColor: marron,
 //         centerTitle: true,
 //         title: const Text(
 //           'Image',
@@ -41,8 +43,7 @@
 //         ),
 //         flexibleSpace: Container(
 //           decoration: const BoxDecoration(
-//               gradient:
-//                   LinearGradient(colors: [Colors.purple, Colors.deepPurple])),
+//               gradient: LinearGradient(colors: [lightMarron, marron])),
 //         ),
 //       ),
 //       body: Center(
@@ -61,10 +62,6 @@
 //               child: widget.pageTitle == 'Report Page'
 //                   ? ImageNetwork(
 //                       height: 400, width: 600, image: widget.imageFiles[index])
-//                   //imageProvider: FileImage(File(widget.imageFiles[index])),
-//                   // backgroundDecoration:
-//                   //     const BoxDecoration(color: Colors.black),
-
 //                   : PhotoView(
 //                       imageProvider: FileImage(File(widget.imageFiles[index])),
 //                       backgroundDecoration:

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_management_system/Master/createUser/createUser.dart';
 import 'package:ticket_management_system/Master/itemMaster/itemMaster.dart';
@@ -16,6 +17,16 @@ class _MasterHomeScreenState extends State<MasterHomeScreen> {
   bool isUserScreen = false;
   bool isWorkScreen = false;
   bool isItemMasterScreen = false;
+  String firstName = '';
+  String lastName = '';
+  String mobile = '';
+  String adminId = '';
+  @override
+  void initState() {
+    getProfile(widget.adminId);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +46,18 @@ class _MasterHomeScreenState extends State<MasterHomeScreen> {
           decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [lightMarron, marron])),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              profilePopup();
+            },
+            icon: const Icon(
+              Icons.supervised_user_circle_sharp,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -125,5 +148,83 @@ class _MasterHomeScreenState extends State<MasterHomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> getProfile(String adminId) async {
+    DocumentSnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('admins')
+        .doc(adminId)
+        .get();
+    if (querySnapshot.exists && querySnapshot.data() != null) {
+      Map<String, dynamic> data = querySnapshot.data() as Map<String, dynamic>;
+      firstName = data['firstName'] ?? '';
+      lastName = data['lastName'] ?? '';
+      mobile = data['mobile'] ?? '';
+      adminId = data['adminId'] ?? '';
+    }
+
+    setState(() {});
+  }
+
+  void profilePopup() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            alignment: Alignment.topRight,
+            shape: const BeveledRectangleBorder(),
+            content: Container(
+              margin: const EdgeInsets.only(top: 20),
+              height: MediaQuery.of(context).size.height / 3.5,
+              child: Align(
+                alignment: Alignment.center,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'First Name: $firstName',
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Last Name: $lastName',
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Mobile: $mobile',
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Admin Id: ${widget.adminId}',
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                    ]),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Back',
+                    style: TextStyle(color: marron),
+                  ))
+            ],
+          );
+        });
   }
 }
