@@ -81,69 +81,67 @@ class _ListOfAssetState extends State<ListOfAsset> {
                     width: MediaQuery.of(context).size.width * 0.25,
                     child: Card(
                       elevation: 10,
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: value.assetList.length,
-                                itemBuilder: (item, index) {
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text(
-                                          value.assetList[index],
-                                          style: const TextStyle(
-                                              color: Colors.black),
-                                        ),
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.edit,
-                                                color: black,
-                                              ),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditAssetForm(
-                                                      assetId: value
-                                                          .assetList[index],
-                                                    ),
-                                                  ),
-                                                ).whenComplete(() {
-                                                  setState(() {
-                                                    fetchData();
-                                                    isLoading = false;
-                                                  });
-                                                });
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ),
-                                              onPressed: () {
-                                                deleteAsset(
-                                                    value.assetList[index]);
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: value.assetList.length,
+                              itemBuilder: (item, index) {
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text(
+                                        value.assetList[index],
+                                        style: const TextStyle(
+                                            color: Colors.black),
                                       ),
-                                      const Divider(
-                                        color: Colors.black,
-                                      )
-                                    ],
-                                  );
-                                }),
-                          ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: black,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditAssetForm(
+                                                    assetId: value
+                                                        .assetList[index],
+                                                  ),
+                                                ),
+                                              ).whenComplete(() {
+                                                setState(() {
+                                                  fetchData();
+                                                  isLoading = false;
+                                                });
+                                              });
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              deleteAsset(
+                                                  value.assetList[index]);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(
+                                      color: Colors.black,
+                                    )
+                                  ],
+                                );
+                              }),
                         ),
                       ),
                     ),

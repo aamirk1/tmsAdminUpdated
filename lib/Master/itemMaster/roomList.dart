@@ -32,6 +32,7 @@ class _RoomListState extends State<RoomList> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AllRoomProvider>(context, listen: false);
     return Scaffold(
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -86,66 +87,64 @@ class _RoomListState extends State<RoomList> {
                     width: MediaQuery.of(context).size.width * 0.25,
                     child: Card(
                       elevation: 10,
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: value.roomList.length,
-                                itemBuilder: (item, index) {
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text(
-                                          value.roomList[index],
-                                          style: const TextStyle(
-                                              color: Colors.black),
-                                        ),
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.edit,
-                                                color: black,
-                                              ),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditRoomForm(
-                                                      roomId:
-                                                          value.roomList[index],
-                                                    ),
-                                                  ),
-                                                ).whenComplete(() {
-                                                  setState(() {});
-                                                });
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ),
-                                              onPressed: () {
-                                                deleteroomNumber(
-                                                    value.roomList[index]);
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: value.roomList.length,
+                              itemBuilder: (item, index) {
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text(
+                                        value.roomList[index],
+                                        style: const TextStyle(
+                                            color: Colors.black),
                                       ),
-                                      const Divider(
-                                        color: Colors.black,
-                                      )
-                                    ],
-                                  );
-                                }),
-                          ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: black,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditRoomForm(
+                                                    roomId:
+                                                        value.roomList[index],
+                                                  ),
+                                                ),
+                                              ).whenComplete(() {
+                                                provider.setLoadWidget(false);
+                                              });
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              deleteroomNumber(
+                                                  value.roomList[index]);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(
+                                      color: Colors.black,
+                                    )
+                                  ],
+                                );
+                              }),
                         ),
                       ),
                     ),

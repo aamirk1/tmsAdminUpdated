@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_management_system/Master/createUser/userDetails.dart';
 import 'package:ticket_management_system/providers/userProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 class EditUserForm extends StatefulWidget {
-  const EditUserForm({super.key, required this.userId});
-  final String userId;
+  const EditUserForm({super.key, required this.fullName});
+  final String fullName;
 
   @override
   State<EditUserForm> createState() => _EditUserFormState();
@@ -35,7 +34,7 @@ class _EditUserFormState extends State<EditUserForm> {
   final formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    fetchData(widget.userId).whenComplete(() => setState(() {
+    fetchData(widget.fullName).whenComplete(() => setState(() {
           selectedWorkList = roleList.map((e) => e.toString()).toList();
           isLoading = false;
         }));
@@ -53,8 +52,7 @@ class _EditUserFormState extends State<EditUserForm> {
           flexibleSpace: Container(
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
-            colors: [ lightMarron,
-                  Color.fromRGBO(97, 4, 4, 0.875)],
+            colors: [lightMarron, Color.fromRGBO(97, 4, 4, 0.875)],
           )))),
       body: Center(
         child: Container(
@@ -199,7 +197,7 @@ class _EditUserFormState extends State<EditUserForm> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
+                          backgroundColor: marron,
                           fixedSize: Size(
                             MediaQuery.of(context).size.width * 0.30,
                             45,
@@ -239,14 +237,18 @@ class _EditUserFormState extends State<EditUserForm> {
 
   Future<void> updateData(String fname, String lname, String mobile,
       String password, List<String> role) async {
+    String firstInitial = fname[0][0].trim().toUpperCase();
+    String lastInitial = lname[0][0].trim().toUpperCase();
+    String mobileLastFour = mobile.substring(mobile.length - 4);
     String fullName = '$fname $lname';
 
+    String userId = '$firstInitial$lastInitial$mobileLastFour';
     final provider = Provider.of<AllUserProvider>(context, listen: false);
     await FirebaseFirestore.instance
         .collection('members')
-        .doc(widget.userId)
-        .update({
-      // 'userId': userId,
+        .doc(widget.fullName)
+        .set({
+      'userId': userId,
       'fullName': fullName,
       'fName': fname,
       'lName': lname,
@@ -254,15 +256,7 @@ class _EditUserFormState extends State<EditUserForm> {
       'password': password,
       'role': role,
     });
-    provider.addSingleList({
-      // 'userId': userId,
-      'fullName': fullName,
-      'fName': fname,
-      'lName': lname,
-      'mobile': mobile,
-      'password': password,
-      'role': role,
-    });
+    provider.addSingleList({'fullName': fullName});
   }
 
   Future<void> popupmessage(String msg) async {
@@ -279,17 +273,10 @@ class _EditUserFormState extends State<EditUserForm> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      fetchData(widget.userId).whenComplete(() {
+                      fetchData(widget.fullName).whenComplete(() {
                         Navigator.pop(context);
                         Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => UserDetails(
-                              userId: widget.userId,
-                            ),
-                          ),
-                        );
+
                         fnameController.clear();
                         lnameController.clear();
                         mobileController.clear();
@@ -320,6 +307,7 @@ class _EditUserFormState extends State<EditUserForm> {
   }
 
   Future<void> fetchData(String userId) async {
+    final provider = Provider.of<AllUserProvider>(context, listen: false);
     DocumentSnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('members')
         .doc(userId)
@@ -332,7 +320,8 @@ class _EditUserFormState extends State<EditUserForm> {
       passwordController.text = data['password'] ?? '';
       role = data['role'] ?? 'No Roles';
     }
-    setState(() {});
+
+    provider.setBuilderList(userList);
     roleList = role;
     // print('roleList : $roleList');
   }
@@ -399,7 +388,7 @@ class _EditUserFormState extends State<EditUserForm> {
                                   left: 8.0, right: 4, top: 5, bottom: 5),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.deepPurple,
+                                    backgroundColor: marron,
                                     fixedSize: Size(
                                       MediaQuery.of(context).size.width * 0.08,
                                       40,
@@ -408,21 +397,10 @@ class _EditUserFormState extends State<EditUserForm> {
                                       borderRadius: BorderRadius.circular(10),
                                     )),
                                 onPressed: () {
-                                  if (formKey.currentState!.validate()) {
-                                    updateData(
-                                            fnameController.text,
-                                            lnameController.text,
-                                            mobileController.text,
-                                            passwordController.text,
-                                            selectedWorkList)
-                                        .whenComplete(() async {
-                                      await popupmessage(
-                                          'User updated successfully!!');
-                                    });
-                                  }
+                                  Navigator.pop(context);
                                 },
                                 child: const Text(
-                                  'Update',
+                                  'Done',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: white,

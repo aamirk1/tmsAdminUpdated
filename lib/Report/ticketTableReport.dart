@@ -11,6 +11,7 @@ import 'package:ticket_management_system/providers/assetsProvider.dart';
 import 'package:ticket_management_system/providers/buildingProvider.dart';
 import 'package:ticket_management_system/providers/floorProvider.dart';
 import 'package:ticket_management_system/providers/roomProvider.dart';
+import 'package:ticket_management_system/providers/userProvider.dart';
 import 'package:ticket_management_system/providers/workProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
@@ -428,6 +429,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
   }
 
   Future<void> fetchUser() async {
+    final provider = Provider.of<AllUserProvider>(context, listen: false);
     List<String> tempData = [];
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('members').get();
@@ -451,7 +453,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
       }
     }
 
-    setState(() {});
+    provider.setBuilderList(userList);
   }
 
   Future<void> fetchServiceProvider() async {
@@ -509,9 +511,9 @@ class _TicketTableReportState extends State<TicketTableReport> {
     if (querySnapshot.docs.isNotEmpty) {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
       buildingNumberList = tempData;
-      provider.setBuilderList(buildingNumberList);
     }
-    setState(() {});
+      provider.setBuilderList(buildingNumberList);
+   
   }
 
   Future<void> getFloor() async {
@@ -525,10 +527,9 @@ class _TicketTableReportState extends State<TicketTableReport> {
       uniqueFloorList.addAll(tempData);
       Set<String> set = uniqueFloorList.toSet();
       floorNumberList = set.toList();
-      provider.setBuilderList(floorNumberList);
     }
-    // print(floorNumberList);
-    setState(() {});
+      provider.setBuilderList(floorNumberList);
+   
   }
 
   Future<void> getRoom() async {
@@ -542,10 +543,10 @@ class _TicketTableReportState extends State<TicketTableReport> {
       uniqueRoomList.addAll(tempData);
       Set<String> set = uniqueRoomList.toSet();
       roomNumberList = set.toList();
-      provider.setBuilderList(roomNumberList);
     }
+      provider.setBuilderList(roomNumberList);
     // print(roomNumberList);
-    setState(() {});
+  
   }
 
   Future<void> getAsset() async {
@@ -559,9 +560,9 @@ class _TicketTableReportState extends State<TicketTableReport> {
       uniqueAssetsList.addAll(tempData);
       Set<String> set = uniqueAssetsList.toSet();
       assetList = set.toList();
-      provider.setBuilderList(assetList);
     }
-    setState(() {});
+      provider.setBuilderList(assetList);
+
   }
 
   Future<void> getWorkList() async {
@@ -574,7 +575,6 @@ class _TicketTableReportState extends State<TicketTableReport> {
     }
 
     provider.setBuilderList(allWorkData);
-    setState(() {});
   }
 
   Widget customDropDown(String title, List<String> customDropDownList,

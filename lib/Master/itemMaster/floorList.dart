@@ -83,69 +83,67 @@ class _FloorListState extends State<FloorList> {
                     width: MediaQuery.of(context).size.width * 0.25,
                     child: Card(
                       elevation: 10,
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: value.floorList.length,
-                                itemBuilder: (item, index) {
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text(
-                                          value.floorList[index],
-                                          style: const TextStyle(
-                                              color: Colors.black),
-                                        ),
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.edit,
-                                                color: black,
-                                              ),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditFloorForm(
-                                                      floorId: value
-                                                          .floorList[index],
-                                                    ),
-                                                  ),
-                                                ).whenComplete(() {
-                                                  setState(() {
-                                                    // fetchData();
-                                                    // isLoading = false;
-                                                  });
-                                                });
-                                              },
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ),
-                                              onPressed: () {
-                                                deletefloorNumber(
-                                                    value.floorList[index]);
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: value.floorList.length,
+                              itemBuilder: (item, index) {
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text(
+                                        value.floorList[index],
+                                        style: const TextStyle(
+                                            color: Colors.black),
                                       ),
-                                      const Divider(
-                                        color: Colors.black,
-                                      )
-                                    ],
-                                  );
-                                }),
-                          ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: black,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditFloorForm(
+                                                    floorId: value
+                                                        .floorList[index],
+                                                  ),
+                                                ),
+                                              ).whenComplete(() {
+                                                setState(() {
+                                                  // fetchData();
+                                                  // isLoading = false;
+                                                });
+                                              });
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              deletefloorNumber(
+                                                  value.floorList[index]);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(
+                                      color: Colors.black,
+                                    )
+                                  ],
+                                );
+                              }),
                         ),
                       ),
                     ),
@@ -187,8 +185,6 @@ class _FloorListState extends State<FloorList> {
         .delete();
     provider.removeData(floorNumberList.indexOf(floorNumber));
   }
-
- 
 
   void popupmessage(String msg) {
     final provider = Provider.of<AllFloorProvider>(context, listen: false);

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Master/createUser/editUserForm.dart';
 import 'package:ticket_management_system/Master/createUser/userDetails.dart';
@@ -28,7 +27,7 @@ class _CreateUserState extends State<CreateUser> {
   final formKey = GlobalKey<FormState>();
   int _selectedIndex = 0;
   List<String> workList = [];
-  List<String> userData = [];
+  List<String> userList = [];
   String? selectedServiceProvider;
   bool isMultiCheckbox = false;
   String? selectedWork;
@@ -44,7 +43,7 @@ class _CreateUserState extends State<CreateUser> {
       });
     });
     // Get.put(UserController()).isLoading.value = false;
-    // print(userData);
+    // print(userList);
     super.initState();
   }
 
@@ -69,26 +68,12 @@ class _CreateUserState extends State<CreateUser> {
                             key: formKey,
                             child: Column(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    customDropDown(
-                                      'Select Work',
-                                      true,
-                                      workList,
-                                      "Search Work",
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 2),
                                   child: Container(
                                     color: Colors.white,
-                                    height: 60,
+                                    height: 50,
                                     width: MediaQuery.of(context).size.width *
                                         0.30,
                                     child: TextFormField(
@@ -127,7 +112,7 @@ class _CreateUserState extends State<CreateUser> {
                                       horizontal: 10, vertical: 2),
                                   child: Container(
                                     color: Colors.white,
-                                    height: 60,
+                                    height: 50,
                                     width: MediaQuery.of(context).size.width *
                                         0.30,
                                     child: TextFormField(
@@ -166,7 +151,7 @@ class _CreateUserState extends State<CreateUser> {
                                       horizontal: 10, vertical: 4),
                                   child: Container(
                                     color: Colors.white,
-                                    height: 60,
+                                    height: 55,
                                     width: MediaQuery.of(context).size.width *
                                         0.30,
                                     child: TextFormField(
@@ -207,7 +192,7 @@ class _CreateUserState extends State<CreateUser> {
                                       horizontal: 10, vertical: 4),
                                   child: Container(
                                     color: Colors.white,
-                                    height: 60,
+                                    height: 50,
                                     width: MediaQuery.of(context).size.width *
                                         0.30,
                                     child: TextFormField(
@@ -238,15 +223,26 @@ class _CreateUserState extends State<CreateUser> {
                                     ),
                                   ),
                                 ),
+                                const SizedBox(height: 2),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    customDropDown(
+                                      'Select Work',
+                                      true,
+                                      workList,
+                                      "Search Work",
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 75,
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: marron,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      )),
+                                    fixedSize: const Size(100, 40),
+                                    backgroundColor: marron,
+                                  ),
                                   onPressed: () {
                                     if (formKey.currentState!.validate()) {
                                       storeData(
@@ -295,7 +291,7 @@ class _CreateUserState extends State<CreateUser> {
                                               0.7,
                                       child: ListView.builder(
                                           shrinkWrap: true,
-                                          itemCount: userData.length,
+                                          itemCount: value.userList.length,
                                           itemBuilder: (item, index) {
                                             return Column(
                                               children: [
@@ -306,15 +302,9 @@ class _CreateUserState extends State<CreateUser> {
                                                       isShowUserDetails =
                                                           !isShowUserDetails;
                                                     });
-                                                    // Get.to(
-                                                    //   UserDetails(
-                                                    //     adminId: widget.adminId,
-                                                    //     userId: userData[index],
-                                                    //   ),
-                                                    // );
                                                   },
                                                   title: Text(
-                                                    userData[index],
+                                                    value.userList[index],
                                                     style: const TextStyle(
                                                       color: Colors.black,
                                                     ),
@@ -334,9 +324,9 @@ class _CreateUserState extends State<CreateUser> {
                                                             MaterialPageRoute(
                                                               builder: (context) =>
                                                                   EditUserForm(
-                                                                userId:
-                                                                    userData[
-                                                                        index],
+                                                                fullName: value
+                                                                        .userList[
+                                                                    index],
                                                               ),
                                                             ),
                                                           );
@@ -349,7 +339,8 @@ class _CreateUserState extends State<CreateUser> {
                                                         ),
                                                         onPressed: () {
                                                           deleteUser(
-                                                            userData[index],
+                                                            value.userList[
+                                                                index],
                                                           );
                                                         },
                                                       ),
@@ -376,7 +367,8 @@ class _CreateUserState extends State<CreateUser> {
                             width: MediaQuery.of(context).size.width,
                             child: isShowUserDetails
                                 ? UserDetails(
-                                    userId: userData[_selectedIndex].toString(),
+                                    fullName:
+                                        userList[_selectedIndex].toString(),
                                   )
                                 : Container())),
                   ],
@@ -390,33 +382,39 @@ class _CreateUserState extends State<CreateUser> {
     provider.removeData(provider.userList.indexOf(userId));
   }
 
-  Future<void> editUser(String userId) async {
-    await FirebaseFirestore.instance.collection('members').doc(userId).delete();
-  }
-
-// Store User Data
-
   Future<void> popupmessage(String msg) async {
-    Get.defaultDialog(
-      middleText: msg,
-      actions: [
-        TextButton(
-          onPressed: () async {
-            Get.back();
-            Get.back();
-            fnameController.clear();
-            lnameController.clear();
-            mobileController.clear();
-            passwordController.clear();
-            selectedServiceProvider = null;
-          },
-          child: const Text(
-            'OK',
-            style: TextStyle(color: Colors.green),
-          ),
-        ),
-      ],
-    );
+    final provider = Provider.of<AllUserProvider>(context, listen: false);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: AlertDialog(
+              content: Text(
+                msg,
+                style: const TextStyle(fontSize: 14, color: Colors.green),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    fetchData().whenComplete(() {
+                      Navigator.pop(context);
+                      fnameController.clear();
+                      lnameController.clear();
+                      mobileController.clear();
+                      passwordController.clear();
+                      selectedServiceProvider = null;
+                      provider.setLoadWidget(false);
+                    });
+                  },
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   Future<void> getWorks() async {
@@ -431,16 +429,6 @@ class _CreateUserState extends State<CreateUser> {
     provider.setBuilderList(workList);
     print('workList $workList');
   }
-
-  // Future<void> fetchData() async {
-  //   QuerySnapshot querySnapshot =
-  //       await FirebaseFirestore.instance.collection('members').get();
-  //   if (querySnapshot.docs.isNotEmpty) {
-  //     List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
-  //     Get.put(UserController()).userList.value = tempData;
-  //     print(Get.put(UserController()).userList);
-  //   }
-  // }
 
   Widget customDropDown(String title, bool isMultiCheckbox,
       List<String> customDropDownList, String hintText) {
@@ -468,7 +456,7 @@ class _CreateUserState extends State<CreateUser> {
                     searchController: workController,
                     searchInnerWidgetHeight: 20,
                     searchInnerWidget: SizedBox(
-                      height: 60, //: 42,
+                      height: 50, //: 42,
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Row(
@@ -501,7 +489,7 @@ class _CreateUserState extends State<CreateUser> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 2.0, right: 2, top: 6, bottom: 5),
+                                  left: 2.0, right: 1, top: 6, bottom: 5),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: marron,
@@ -513,21 +501,10 @@ class _CreateUserState extends State<CreateUser> {
                                       borderRadius: BorderRadius.circular(6),
                                     )),
                                 onPressed: () {
-                                  if (formKey.currentState!.validate()) {
-                                    storeData(
-                                            fnameController.value.text,
-                                            lnameController.value.text,
-                                            mobileController.value.text,
-                                            passwordController.value.text,
-                                            selectedWorkList)
-                                        .whenComplete(() async {
-                                      await popupmessage(
-                                          'User created successfully!!');
-                                    });
-                                  }
+                                  Navigator.pop(context);
                                 },
                                 child: const Text(
-                                  'Save',
+                                  'Done',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: white,
@@ -711,6 +688,7 @@ class _CreateUserState extends State<CreateUser> {
 
   Future<void> storeData(String fname, String lname, String mobile,
       String password, List<String> role) async {
+    final provider = Provider.of<AllUserProvider>(context, listen: false);
     String firstInitial = fname[0][0].trim().toUpperCase();
     String lastInitial = lname[0][0].trim().toUpperCase();
     String mobileLastFour = mobile.substring(mobile.length - 4);
@@ -718,7 +696,7 @@ class _CreateUserState extends State<CreateUser> {
 
     String userId = '$firstInitial$lastInitial$mobileLastFour';
 
-    await FirebaseFirestore.instance.collection('members').doc(userId).set({
+    await FirebaseFirestore.instance.collection('members').doc(fullName).set({
       'userId': userId,
       'fullName': fullName,
       'fName': fname,
@@ -728,15 +706,7 @@ class _CreateUserState extends State<CreateUser> {
       'role': role,
     });
 
-    // _userData.value = {
-    //   'userId': userId,
-    //   'fullName': fullName,
-    //   'fName': fname,
-    //   'lName': lname,
-    //   'mobile': mobile,
-    //   'password': password,
-    //   'role': role,
-    // };
+    provider.addSingleList({'fullName': fullName});
 
     // setState(() {});
   }
@@ -748,9 +718,9 @@ class _CreateUserState extends State<CreateUser> {
         await FirebaseFirestore.instance.collection('members').get();
     if (querySnapshot.docs.isNotEmpty) {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
-      userData = tempData;
+      userList = tempData;
     }
-    setState(() {});
-    print('userList $userData');
+    provider.setBuilderList(userList);
+    print('userList $userList');
   }
 }

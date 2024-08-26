@@ -37,8 +37,7 @@ class _EditWorkFormState extends State<EditWorkForm> {
           flexibleSpace: Container(
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
-            colors: [ lightMarron,
-                  marron],
+            colors: [lightMarron, marron],
           )))),
       body: Center(
         child: Container(
@@ -100,6 +99,7 @@ class _EditWorkFormState extends State<EditWorkForm> {
                             if (formKey.currentState!.validate()) {
                               updateData(widget.workId, workController.text)
                                   .whenComplete(() async {
+                                await deleteOldData(widget.workId);
                                 await popupmessage(
                                     'Work Updated successfully!!');
                               });
@@ -171,7 +171,6 @@ class _EditWorkFormState extends State<EditWorkForm> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      deleteOldData(widget.workId);
                       workController.clear();
                       Navigator.pop(context);
                       Navigator.pop(context);

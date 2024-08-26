@@ -13,6 +13,7 @@ import 'package:ticket_management_system/providers/role_page_totalNum_provider.d
 import 'package:ticket_management_system/providers/roomProvider.dart';
 import 'package:ticket_management_system/providers/userProvider.dart';
 import 'package:ticket_management_system/providers/workProvider.dart';
+import 'package:ticket_management_system/utils/colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,18 +58,13 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           scrollbarTheme: const ScrollbarThemeData(
             thumbColor: WidgetStatePropertyAll(
-              Colors.deepPurple,
+              marron,
             ),
           ),
           primarySwatch: Colors.blue,
         ),
         home: customSide(),
         // TicketTableReport(),
-        // CreateUser(adminId: 'ST8032')
-        // Dashboard(adminId: 'ST8032'),
-        // LoginPage(),
-        // SplashScreen()
-        // const LoginPage(),
       ),
     );
   }
