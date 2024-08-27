@@ -34,8 +34,10 @@ class _CreateUserState extends State<CreateUser> {
   List<String> selectedWorkList = [];
   bool isShowUserDetails = false;
   bool isLoading = true;
+  Stream? _stream;
   @override
   void initState() {
+    _stream = FirebaseFirestore.instance.collection('members').snapshots();
     getWorks();
     fetchData().whenComplete(() {
       setState(() {
@@ -280,82 +282,98 @@ class _CreateUserState extends State<CreateUser> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SingleChildScrollView(
-                              child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Consumer<AllUserProvider>(
-                                      builder: (context, value, child) {
-                                    return SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.7,
-                                      child: ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: value.userList.length,
-                                          itemBuilder: (item, index) {
-                                            return Column(
-                                              children: [
-                                                ListTile(
-                                                  onTap: () {
-                                                    _selectedIndex = index;
-                                                    setState(() {
-                                                      isShowUserDetails =
-                                                          !isShowUserDetails;
-                                                    });
-                                                  },
-                                                  title: Text(
-                                                    value.userList[index],
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  trailing: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      IconButton(
-                                                        icon: const Icon(
-                                                          Icons.edit,
-                                                          color: black,
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.7,
+                                  child: StreamBuilder(
+                                      stream: _stream,
+                                      builder:
+                                          (context, AsyncSnapshot snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        } else if (!snapshot.hasData ||
+                                            snapshot.data!.docs.isEmpty) {
+                                          return const Text('No data found');
+                                        } else {
+                                          return ListView.builder(
+                                              itemCount:
+                                                  snapshot.data!.docs.length,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  children: [
+                                                    ListTile(
+                                                      onTap: () {
+                                                        _selectedIndex = index;
+                                                        setState(() {
+                                                          isShowUserDetails =
+                                                              !isShowUserDetails;
+                                                        });
+                                                      },
+                                                      title: Text(
+                                                        snapshot.data
+                                                                .docs[index]
+                                                            ['fullName'],
+                                                        style: const TextStyle(
+                                                          color: Colors.black,
                                                         ),
-                                                        onPressed: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  EditUserForm(
-                                                                fullName: value
-                                                                        .userList[
-                                                                    index],
-                                                              ),
+                                                      ),
+                                                      trailing: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          IconButton(
+                                                            icon: const Icon(
+                                                              Icons.edit,
+                                                              color: black,
                                                             ),
-                                                          );
-                                                        },
+                                                            onPressed: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          EditUserForm(
+                                                                    fullName: snapshot
+                                                                            .data
+                                                                            .docs[index]
+                                                                        [
+                                                                        'fullName'],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                          IconButton(
+                                                            icon: const Icon(
+                                                              Icons.delete,
+                                                              color: Colors.red,
+                                                            ),
+                                                            onPressed: () {
+                                                              deleteUser(
+                                                                snapshot.data
+                                                                            .docs[
+                                                                        index][
+                                                                    'fullName'],
+                                                              );
+                                                            },
+                                                          ),
+                                                        ],
                                                       ),
-                                                      IconButton(
-                                                        icon: const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.red,
-                                                        ),
-                                                        onPressed: () {
-                                                          deleteUser(
-                                                            value.userList[
-                                                                index],
-                                                          );
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const Divider(
-                                                  color: Colors.black,
-                                                )
-                                              ],
-                                            );
-                                          }),
-                                    );
-                                  })),
-                            ),
+                                                    ),
+                                                    const Divider(
+                                                      color: Colors.black,
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        }
+                                      }),
+                                )),
                           ],
                         ),
                       ),

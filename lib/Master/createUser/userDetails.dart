@@ -119,6 +119,7 @@ class _UserDetailsState extends State<UserDetails> {
                                               padding:
                                                   const EdgeInsets.all(2.0),
                                               child: SizedBox(
+                                                width: 150,
                                                 height: 25,
                                                 child: ListTile(
                                                   title: RichText(
@@ -127,7 +128,8 @@ class _UserDetailsState extends State<UserDetails> {
                                                       text:
                                                           '${index + 1}. ${roleList[index]}',
                                                       style: const TextStyle(
-                                                          color: black),
+                                                        color: black,
+                                                      ),
                                                     ),
                                                   ])),
                                                 ),
@@ -181,7 +183,7 @@ class _UserDetailsState extends State<UserDetails> {
           Text(
             value.isEmpty ? 'N/A' : value,
             style: const TextStyle(
-                color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
+                color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
       ),

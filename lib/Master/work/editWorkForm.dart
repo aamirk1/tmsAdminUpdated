@@ -63,7 +63,7 @@ class _EditWorkFormState extends State<EditWorkForm> {
                             height: 60,
                             width: MediaQuery.of(context).size.width * 0.30,
                             child: TextFormField(
-                              textInputAction: TextInputAction.done,
+                              textInputAction: TextInputAction.next,
                               expands: true,
                               maxLines: null,
                               controller: workController,
@@ -87,7 +87,7 @@ class _EditWorkFormState extends State<EditWorkForm> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
+                              backgroundColor: lightMarron,
                               fixedSize: Size(
                                 MediaQuery.of(context).size.width * 0.30,
                                 45,
@@ -99,7 +99,7 @@ class _EditWorkFormState extends State<EditWorkForm> {
                             if (formKey.currentState!.validate()) {
                               updateData(widget.workId, workController.text)
                                   .whenComplete(() async {
-                                await deleteOldData(widget.workId);
+                                deleteOldData(widget.workId);
                                 await popupmessage(
                                     'Work Updated successfully!!');
                               });
@@ -108,8 +108,7 @@ class _EditWorkFormState extends State<EditWorkForm> {
                           child: const Center(
                             child: Text(
                               'Update Work',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                              style: TextStyle(color: marron, fontSize: 16),
                             ),
                           ),
                         ),

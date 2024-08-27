@@ -16,203 +16,149 @@ class _ListOfWorkState extends State<ListOfWork> {
   TextEditingController workController = TextEditingController();
   bool isLoading = true;
   List<String> workList = [];
+  Stream? _stream;
   @override
   void initState() {
-    fetchData().whenComplete(() => setState(() {
-          isLoading = false;
-        }));
+    _stream = FirebaseFirestore.instance.collection('works').snapshots();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Consumer<AllWorkProvider>(
-                builder: (context, value, child) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          alignment: Alignment.topCenter,
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          child: Card(
-                            elevation: 10,
-                            child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
+      body: Column(
+        children: [
+          Center(
+            child: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width * 0.40,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Container(
+                      color: Colors.white,
+                      height: 40,
+                      width: MediaQuery.of(context).size.width * 0.30,
+                      child: TextFormField(
+                        textInputAction: TextInputAction.done,
+                        expands: true,
+                        maxLines: null,
+                        controller: workController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          hintText: 'Add Work',
+                          hintStyle: const TextStyle(fontSize: 12),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        storeData(workController.text).whenComplete(() {
+                          popupmessage('Work added successfully!!');
+                        });
+                      },
+                      child: const Text('Save')),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.60,
+            width: MediaQuery.of(context).size.width * 0.40,
+            child: Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: StreamBuilder(
+                      stream: _stream,
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No data found');
+                        } else {
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (item, index) {
+                                return Column(
                                   children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Container(
-                                            color: Colors.white,
-                                            height: 40,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.25,
-                                            child: TextFormField(
-                                              textInputAction:
-                                                  TextInputAction.done,
-                                              expands: true,
-                                              maxLines: null,
-                                              controller: workController,
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 8,
-                                                ),
-                                                hintText: 'Add Work',
-                                                hintStyle: const TextStyle(
-                                                    fontSize: 12),
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-
-                                        // ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: marron,
-                                              fixedSize: Size(
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.25,
-                                                45,
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
+                                    ListTile(
+                                      title: Text(
+                                        snapshot.data.docs[index]['work'],
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: black,
                                             ),
                                             onPressed: () {
-                                              storeData(workController.text)
-                                                  .whenComplete(() {
-                                                popupmessage(
-                                                    'Work added successfully!!');
-                                              });
-                                            },
-                                            child: const Text(
-                                              'Save',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
-                                            ))
-                                      ],
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: Card(
-                            elevation: 10,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SingleChildScrollView(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.7,
-                                      child: ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: workList.length,
-                                          itemBuilder: (item, index) {
-                                            return Column(
-                                              children: [
-                                                ListTile(
-                                                  title: Text(
-                                                    workList[index],
-                                                    style: const TextStyle(
-                                                        color: Colors.black),
-                                                  ),
-                                                  trailing: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      IconButton(
-                                                        icon: const Icon(
-                                                          Icons.edit,
-                                                          color: black,
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  EditWorkForm(
-                                                                workId:
-                                                                    workList[
-                                                                        index],
-                                                              ),
-                                                            ),
-                                                          ).whenComplete(() {
-                                                            setState(() {
-                                                              fetchData();
-                                                              isLoading = false;
-                                                            });
-                                                          });
-                                                        },
-                                                      ),
-                                                      IconButton(
-                                                        icon: const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.red,
-                                                        ),
-                                                        onPressed: () {
-                                                          deleteWork(
-                                                            workList[index],
-                                                          );
-                                                        },
-                                                      ),
-                                                    ],
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditWorkForm(
+                                                    workId: snapshot.data
+                                                        .docs[index]['work'],
                                                   ),
                                                 ),
-                                                const Divider(
-                                                  color: Colors.black,
-                                                )
-                                              ],
-                                            );
-                                          }),
+                                              );
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () {
+                                              deleteWork(snapshot
+                                                  .data.docs[index]['work']);
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ));
+                                    const Divider(
+                                      color: Colors.black,
+                                    )
+                                  ],
+                                );
+                              });
+                        }
+                      }),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   Future<void> fetchData() async {

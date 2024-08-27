@@ -17,85 +17,95 @@ class _FloorListState extends State<FloorList> {
   List<String> floorNumberList = [];
 
   bool isLoading = true;
-
+  Stream? _stream;
   @override
   void initState() {
+    _stream = FirebaseFirestore.instance.collection('floorNumbers').snapshots();
     super.initState();
-    fetchData().whenComplete(() => setState(() {
-          isLoading = false;
-        }));
+    // fetchData().whenComplete(() => setState(() {
+    //       isLoading = false;
+    //     }));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Container(
-                        color: Colors.white,
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * 0.14,
-                        child: TextFormField(
-                          textInputAction: TextInputAction.done,
-                          expands: true,
-                          maxLines: null,
-                          controller: floorNumberController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Add Floor No',
-                            hintStyle: const TextStyle(fontSize: 12),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Container(
+                  color: Colors.white,
+                  height: 40,
+                  width: MediaQuery.of(context).size.width * 0.14,
+                  child: TextFormField(
+                    textInputAction: TextInputAction.done,
+                    expands: true,
+                    maxLines: null,
+                    controller: floorNumberController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      hintText: 'Add Floor No',
+                      hintStyle: const TextStyle(fontSize: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          storeData(floorNumberController.text)
-                              .whenComplete(() {
-                            popupmessage('Room No. added successfully!!');
-                          });
-                        },
-                        child: const Text('Save')),
-                  ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Consumer<AllFloorProvider>(builder: (context, value, child) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Card(
-                      elevation: 10,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: ListView.builder(
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    storeData(floorNumberController.text).whenComplete(() {
+                      popupmessage('Room No. added successfully!!');
+                    });
+                  },
+                  child: const Text('Save')),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.25,
+            child: Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: StreamBuilder(
+                      stream: _stream,
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No data found');
+                        } else {
+                          return ListView.builder(
                               shrinkWrap: true,
-                              itemCount: value.floorList.length,
+                              itemCount: snapshot.data!.docs.length,
                               itemBuilder: (item, index) {
                                 return Column(
                                   children: [
                                     ListTile(
                                       title: Text(
-                                        value.floorList[index],
+                                        snapshot.data.docs[index]
+                                            ['floorNumber'],
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -113,8 +123,9 @@ class _FloorListState extends State<FloorList> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       EditFloorForm(
-                                                    floorId: value
-                                                        .floorList[index],
+                                                    floorId: snapshot
+                                                            .data.docs[index]
+                                                        ['floorNumber'],
                                                   ),
                                                 ),
                                               ).whenComplete(() {
@@ -131,8 +142,8 @@ class _FloorListState extends State<FloorList> {
                                               color: Colors.red,
                                             ),
                                             onPressed: () {
-                                              deletefloorNumber(
-                                                  value.floorList[index]);
+                                              deletefloorNumber(snapshot.data
+                                                  .docs[index]['floorNumber']);
                                             },
                                           ),
                                         ],
@@ -143,14 +154,15 @@ class _FloorListState extends State<FloorList> {
                                     )
                                   ],
                                 );
-                              }),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ],
+                              });
+                        }
+                      }),
+                ),
+              ),
             ),
+          )
+        ],
+      ),
     );
   }
 
@@ -165,17 +177,7 @@ class _FloorListState extends State<FloorList> {
     provider.addSingleList({'floorNumber': floorNumber});
   }
 
-  Future<void> fetchData() async {
-    final provider = Provider.of<AllFloorProvider>(context, listen: false);
-    provider.setBuilderList([]);
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('floorNumbers').get();
-    if (querySnapshot.docs.isNotEmpty) {
-      List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
-      floorNumberList = tempData;
-      provider.setBuilderList(floorNumberList);
-    }
-  }
+  
 
   Future<void> deletefloorNumber(String floorNumber) async {
     final provider = Provider.of<AllFloorProvider>(context, listen: false);
@@ -200,11 +202,10 @@ class _FloorListState extends State<FloorList> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      fetchData().whenComplete(() {
-                        Navigator.pop(context);
+                       Navigator.pop(context);
                         floorNumberController.clear();
                         provider.setLoadWidget(false);
-                      });
+                     
                     },
                     child: const Text(
                       'OK',

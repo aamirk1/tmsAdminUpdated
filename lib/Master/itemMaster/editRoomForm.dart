@@ -63,7 +63,7 @@ class _EditRoomFormState extends State<EditRoomForm> {
                             height: 60,
                             width: MediaQuery.of(context).size.width * 0.30,
                             child: TextFormField(
-                              textInputAction: TextInputAction.done,
+                              textInputAction: TextInputAction.next,
                               expands: true,
                               maxLines: null,
                               controller: roomController,
@@ -138,10 +138,10 @@ class _EditRoomFormState extends State<EditRoomForm> {
           .collection('roomNumbers')
           .doc(newDocumentId)
           .set({
-        'room': newDocumentId,
+        'roomNumber': newDocumentId,
       });
       provider.addSingleList({
-        'room': newDocumentId,
+        'roomNumber': newDocumentId,
       });
       // print("Document updated successfully");
     } else {

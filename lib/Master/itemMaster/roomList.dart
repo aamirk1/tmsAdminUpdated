@@ -17,89 +17,92 @@ class _RoomListState extends State<RoomList> {
   List<String> roomNumberList = [];
 
   bool isLoading = true;
-
+  Stream? _stream;
   @override
   void initState() {
+    _stream = FirebaseFirestore.instance.collection('roomNumbers').snapshots();
     super.initState();
-    fetchData().whenComplete(
-      () => setState(
-        () {
-          isLoading = false;
-        },
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AllRoomProvider>(context, listen: false);
     return Scaffold(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Container(
-                        color: Colors.white,
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * 0.14,
-                        child: TextFormField(
-                          textInputAction: TextInputAction.done,
-                          expands: true,
-                          maxLines: null,
-                          controller: roomNumberController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Add Room No',
-                            hintStyle: const TextStyle(fontSize: 12),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Container(
+                  color: Colors.white,
+                  height: 40,
+                  width: MediaQuery.of(context).size.width * 0.14,
+                  child: TextFormField(
+                    textInputAction: TextInputAction.done,
+                    expands: true,
+                    maxLines: null,
+                    controller: roomNumberController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      hintText: 'Add Room No',
+                      hintStyle: const TextStyle(fontSize: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          storeData(roomNumberController.text).whenComplete(() {
-                            popupmessage('Room No. added successfully!!');
-                          });
-                        },
-                        child: const Text('Save')),
-                  ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Consumer<AllRoomProvider>(builder: (context, value, child) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Card(
-                      elevation: 10,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: ListView.builder(
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    storeData(roomNumberController.text).whenComplete(() {
+                      popupmessage('Room No. added successfully!!');
+                    });
+                  },
+                  child: const Text('Save')),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.25,
+            child: Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: StreamBuilder(
+                      stream: _stream,
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No data found');
+                        } else {
+                          return ListView.builder(
                               shrinkWrap: true,
-                              itemCount: value.roomList.length,
+                              itemCount: snapshot.data!.docs.length,
                               itemBuilder: (item, index) {
                                 return Column(
                                   children: [
                                     ListTile(
                                       title: Text(
-                                        value.roomList[index],
+                                        snapshot.data.docs[index]['roomNumber'],
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -117,8 +120,9 @@ class _RoomListState extends State<RoomList> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       EditRoomForm(
-                                                    roomId:
-                                                        value.roomList[index],
+                                                    roomId: snapshot
+                                                            .data.docs[index]
+                                                        ['roomNumber'],
                                                   ),
                                                 ),
                                               ).whenComplete(() {
@@ -132,8 +136,8 @@ class _RoomListState extends State<RoomList> {
                                               color: Colors.red,
                                             ),
                                             onPressed: () {
-                                              deleteroomNumber(
-                                                  value.roomList[index]);
+                                              deleteroomNumber(snapshot.data
+                                                  .docs[index]['roomNumber']);
                                             },
                                           ),
                                         ],
@@ -144,14 +148,15 @@ class _RoomListState extends State<RoomList> {
                                     )
                                   ],
                                 );
-                              }),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ],
+                              });
+                        }
+                      }),
+                ),
+              ),
             ),
+          )
+        ],
+      ),
     );
   }
 
@@ -164,18 +169,6 @@ class _RoomListState extends State<RoomList> {
       'roomNumber': roomNumber,
     });
     provider.addSingleList({'roomNumber': roomNumber});
-  }
-
-  Future<void> fetchData() async {
-    final provider = Provider.of<AllRoomProvider>(context, listen: false);
-    provider.setBuilderList([]);
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('roomNumbers').get();
-    if (querySnapshot.docs.isNotEmpty) {
-      List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
-      roomNumberList = tempData;
-      provider.setBuilderList(roomNumberList);
-    }
   }
 
   Future<void> deleteroomNumber(String roomNumber) async {
@@ -201,11 +194,9 @@ class _RoomListState extends State<RoomList> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      fetchData().whenComplete(() {
-                        Navigator.pop(context);
-                        roomNumberController.clear();
-                        provider.setLoadWidget(false);
-                      });
+                      Navigator.pop(context);
+                      roomNumberController.clear();
+                      provider.setLoadWidget(false);
                     },
                     child: const Text(
                       'OK',

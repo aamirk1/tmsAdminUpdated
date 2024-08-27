@@ -16,11 +16,13 @@ class _ListOfAssetState extends State<ListOfAsset> {
   TextEditingController assetController = TextEditingController();
   bool isLoading = true;
   List<String> assetList = [];
+  Stream? _stream;
   @override
   void initState() {
-    fetchData().whenComplete(() => setState(() {
-          isLoading = false;
-        }));
+    _stream = FirebaseFirestore.instance.collection('assets').snapshots();
+    // fetchData().whenComplete(() => setState(() {
+    //       isLoading = false;
+    //     }));
     super.initState();
   }
 
@@ -28,72 +30,81 @@ class _ListOfAssetState extends State<ListOfAsset> {
   Widget build(BuildContext context) {
     // fetchData();
     return Scaffold(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Container(
-                        color: Colors.white,
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * 0.14,
-                        child: TextFormField(
-                          textInputAction: TextInputAction.done,
-                          expands: true,
-                          maxLines: null,
-                          controller: assetController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Add Asset',
-                            hintStyle: const TextStyle(fontSize: 12),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Container(
+                  color: Colors.white,
+                  height: 40,
+                  width: MediaQuery.of(context).size.width * 0.14,
+                  child: TextFormField(
+                    textInputAction: TextInputAction.done,
+                    expands: true,
+                    maxLines: null,
+                    controller: assetController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      hintText: 'Add Asset',
+                      hintStyle: const TextStyle(fontSize: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          storeData(assetController.text).whenComplete(() {
-                            popupmessage('Asset added successfully!!');
-                          });
-                        },
-                        child: const Text('Save')),
-                  ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Consumer<AllAssetProvider>(builder: (context, value, child) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Card(
-                      elevation: 10,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: ListView.builder(
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    storeData(assetController.text).whenComplete(() {
+                      popupmessage('Asset added successfully!!');
+                    });
+                  },
+                  child: const Text('Save')),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.25,
+            child: Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: StreamBuilder(
+                      stream: _stream,
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No data found');
+                        } else {
+                          return ListView.builder(
                               shrinkWrap: true,
-                              itemCount: value.assetList.length,
+                              itemCount: snapshot.data!.docs.length,
                               itemBuilder: (item, index) {
                                 return Column(
                                   children: [
                                     ListTile(
                                       title: Text(
-                                        value.assetList[index],
+                                        snapshot.data.docs[index]['asset'],
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -111,16 +122,11 @@ class _ListOfAssetState extends State<ListOfAsset> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       EditAssetForm(
-                                                    assetId: value
-                                                        .assetList[index],
+                                                    assetId: snapshot.data
+                                                        .docs[index]['asset'],
                                                   ),
                                                 ),
-                                              ).whenComplete(() {
-                                                setState(() {
-                                                  fetchData();
-                                                  isLoading = false;
-                                                });
-                                              });
+                                              ).whenComplete(() {});
                                             },
                                           ),
                                           IconButton(
@@ -129,8 +135,8 @@ class _ListOfAssetState extends State<ListOfAsset> {
                                               color: Colors.red,
                                             ),
                                             onPressed: () {
-                                              deleteAsset(
-                                                  value.assetList[index]);
+                                              deleteAsset(snapshot
+                                                  .data.docs[index]['asset']);
                                             },
                                           ),
                                         ],
@@ -141,28 +147,19 @@ class _ListOfAssetState extends State<ListOfAsset> {
                                     )
                                   ],
                                 );
-                              }),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ],
+                              });
+                        }
+                      }),
+                ),
+              ),
             ),
+          )
+        ],
+      ),
     );
   }
 
-  Future<void> fetchData() async {
-    final provider = Provider.of<AllAssetProvider>(context, listen: false);
-    provider.setBuilderList([]);
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('assets').get();
-    if (querySnapshot.docs.isNotEmpty) {
-      List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
-      assetList = tempData;
-      provider.setBuilderList(assetList);
-    }
-  }
+
 
   Future<void> deleteAsset(String asset) async {
     final provider = Provider.of<AllAssetProvider>(context, listen: false);
@@ -297,11 +294,11 @@ class _ListOfAssetState extends State<ListOfAsset> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      fetchData().whenComplete(() {
+                      
                         Navigator.pop(context);
                         assetController.clear();
                         provider.setLoadWidget(false);
-                      });
+              
                     },
                     child: const Text(
                       'OK',

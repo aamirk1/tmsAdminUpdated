@@ -66,7 +66,7 @@ class _EditAssetFormState extends State<EditAssetForm> {
                             height: 60,
                             width: MediaQuery.of(context).size.width * 0.30,
                             child: TextFormField(
-                              textInputAction: TextInputAction.done,
+                              textInputAction: TextInputAction.next,
                               expands: true,
                               maxLines: null,
                               controller: assetController,
@@ -110,8 +110,10 @@ class _EditAssetFormState extends State<EditAssetForm> {
                           child: const Center(
                             child: Text(
                               'Update Asset',
-                              style:
-                                  TextStyle(color: marron, fontSize: 16,fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: marron,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),

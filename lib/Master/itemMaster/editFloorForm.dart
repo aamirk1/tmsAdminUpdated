@@ -37,7 +37,7 @@ class _EditFloorFormState extends State<EditFloorForm> {
           flexibleSpace: Container(
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
-            colors: [Colors.purple, Colors.deepPurple],
+            colors: [lightMarron, marron],
           )))),
       body: Center(
         child: Container(
@@ -47,7 +47,7 @@ class _EditFloorFormState extends State<EditFloorForm> {
           child: Card(
             elevation: 10,
             child: Container(
-              margin: EdgeInsets.only(top: 50),
+              margin: const EdgeInsets.only(top: 50),
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -63,7 +63,7 @@ class _EditFloorFormState extends State<EditFloorForm> {
                             height: 60,
                             width: MediaQuery.of(context).size.width * 0.30,
                             child: TextFormField(
-                              textInputAction: TextInputAction.done,
+                              textInputAction: TextInputAction.next,
                               expands: true,
                               maxLines: null,
                               controller: floorController,
@@ -108,8 +108,7 @@ class _EditFloorFormState extends State<EditFloorForm> {
                           child: const Center(
                             child: Text(
                               'Update Floor',
-                              style:
-                                  TextStyle(color: marron, fontSize: 16),
+                              style: TextStyle(color: marron, fontSize: 16),
                             ),
                           ),
                         ),
@@ -137,10 +136,10 @@ class _EditFloorFormState extends State<EditFloorForm> {
           .collection('floorNumbers')
           .doc(newDocumentId)
           .set({
-        'floor': newDocumentId,
+        'floorNumber': newDocumentId,
       });
       provider.addSingleList({
-        'floor': newDocumentId,
+        'floorNumber': newDocumentId,
       });
       // print("Document updated successfully");
     } else {

@@ -340,12 +340,6 @@ class _ReportDetailsState extends State<ReportDetails> {
                                             MaterialPageRoute(
                                           builder: (context) {
                                             return UpdateServiceProvider(
-                                                year: widget.ticketData[index]
-                                                        ['year']
-                                                    .toString(),
-                                                month: widget.ticketData[index]
-                                                        ['month']
-                                                    .toString(),
                                                 day: widget.ticketData[index]
                                                         ['date']
                                                     .toString(),
@@ -443,14 +437,10 @@ class _ReportDetailsState extends State<ReportDetails> {
       String year, String month, String date, String ticketId) async {
     await FirebaseFirestore.instance
         .collection("raisedTickets")
-        .doc(year)
-        .collection('months')
-        .doc(month)
-        .collection('date')
         .doc(date)
         .collection('tickets')
         .doc(ticketId)
-        .update({'status': 'Open'}).whenComplete(() {
+        .update({'status': 'Open', 'isSeen': true}).whenComplete(() {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.green,

@@ -18,85 +18,97 @@ class _BuildingListState extends State<BuildingList> {
   List<String> buildingNumberList = [];
 
   bool isLoading = true;
-
+  Stream? _stream;
   @override
   void initState() {
+    _stream =
+        FirebaseFirestore.instance.collection('buildingNumbers').snapshots();
+    // fetchData().whenComplete(() => setState(() {
+    //       isLoading = false;
+    //     }));
     super.initState();
-    fetchData().whenComplete(() => setState(() {
-          isLoading = false;
-        }));
   }
 
   @override
   Widget build(BuildContext context) {
+    // fetchData();
     return Scaffold(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Container(
-                        color: Colors.white,
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * 0.14,
-                        child: TextFormField(
-                          textInputAction: TextInputAction.done,
-                          expands: true,
-                          maxLines: null,
-                          controller: buildingNumberController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 8,
-                            ),
-                            hintText: 'Add Building No',
-                            hintStyle: const TextStyle(fontSize: 12),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Container(
+                  color: Colors.white,
+                  height: 40,
+                  width: MediaQuery.of(context).size.width * 0.14,
+                  child: TextFormField(
+                    textInputAction: TextInputAction.done,
+                    expands: true,
+                    maxLines: null,
+                    controller: buildingNumberController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      hintText: 'Add Building Number',
+                      hintStyle: const TextStyle(fontSize: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          storeData(buildingNumberController.text)
-                              .whenComplete(() {
-                            popupmessage('Building No. added successfully!!');
-                          });
-                        },
-                        child: const Text('Save')),
-                  ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Consumer<AllBuildingProvider>(builder: (context, value, child) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    child: Card(
-                      elevation: 10,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: ListView.builder(
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    storeData(buildingNumberController.text).whenComplete(() {
+                      popupmessage('Asset added successfully!!');
+                    });
+                  },
+                  child: const Text('Save')),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.width * 0.25,
+            child: Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: StreamBuilder(
+                      stream: _stream,
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No data found');
+                        } else {
+                          return ListView.builder(
                               shrinkWrap: true,
-                              itemCount: value.buildingList.length,
+                              itemCount: snapshot.data!.docs.length,
                               itemBuilder: (item, index) {
                                 return Column(
                                   children: [
                                     ListTile(
                                       title: Text(
-                                        value.buildingList[index],
+                                        snapshot.data.docs[index]
+                                            ['buildingNumber'],
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -114,16 +126,12 @@ class _BuildingListState extends State<BuildingList> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       EditBuildingForm(
-                                                    buildingId: value
-                                                        .buildingList[index],
+                                                    buildingId: snapshot
+                                                            .data.docs[index]
+                                                        ['buildingNumber'],
                                                   ),
                                                 ),
-                                              ).whenComplete(() {
-                                                setState(() {
-                                                  // fetchData();
-                                                  // isLoading = false;
-                                                });
-                                              });
+                                              ).whenComplete(() {});
                                             },
                                           ),
                                           IconButton(
@@ -133,7 +141,8 @@ class _BuildingListState extends State<BuildingList> {
                                             ),
                                             onPressed: () {
                                               deletebuildingNumber(
-                                                  value.buildingList[index]);
+                                                  snapshot.data.docs[index]
+                                                      ['buildingNumber']);
                                             },
                                           ),
                                         ],
@@ -144,28 +153,19 @@ class _BuildingListState extends State<BuildingList> {
                                     )
                                   ],
                                 );
-                              }),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ],
+                              });
+                        }
+                      }),
+                ),
+              ),
             ),
+          )
+        ],
+      ),
     );
   }
 
-  Future<void> fetchData() async {
-    final provider = Provider.of<AllBuildingProvider>(context, listen: false);
-    provider.setBuilderList([]);
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('buildingNumbers').get();
-    if (querySnapshot.docs.isNotEmpty) {
-      List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
-      buildingNumberList = tempData;
-      provider.setBuilderList(buildingNumberList);
-    }
-  }
+ 
 
   Future<void> deletebuildingNumber(String buildingNumber) async {
     final provider = Provider.of<AllBuildingProvider>(context, listen: false);
@@ -209,11 +209,11 @@ class _BuildingListState extends State<BuildingList> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      fetchData().whenComplete(() {
+                     
                         Navigator.pop(context);
                         buildingNumberController.clear();
                         provider.setLoadWidget(false);
-                      });
+                   
                     },
                     child: const Text(
                       'OK',

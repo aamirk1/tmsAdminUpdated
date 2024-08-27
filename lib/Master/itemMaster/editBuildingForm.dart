@@ -67,7 +67,7 @@ class _EditBuildingFormState extends State<EditBuildingForm> {
                             height: 60,
                             width: MediaQuery.of(context).size.width * 0.30,
                             child: TextFormField(
-                              textInputAction: TextInputAction.done,
+                              textInputAction: TextInputAction.next,
                               expands: true,
                               maxLines: null,
                               controller: buildingController,
@@ -177,7 +177,7 @@ class _EditBuildingFormState extends State<EditBuildingForm> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      // deleteOldData(widget.workId);
+                      deleteOldData(widget.buildingId);
                       buildingController.clear();
                       Navigator.pop(context);
                       Navigator.pop(context);
