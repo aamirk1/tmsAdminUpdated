@@ -161,18 +161,7 @@ class _ListOfWorkState extends State<ListOfWork> {
     );
   }
 
-  Future<void> fetchData() async {
-    final provider = Provider.of<AllWorkProvider>(context, listen: false);
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('works').get();
-    if (querySnapshot.docs.isNotEmpty) {
-      List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
-      workList = tempData;
-    }
-
-    provider.setBuilderList(workList);
-  }
-
+  
   Future<void> deleteWork(String work) async {
     final provider = Provider.of<AllWorkProvider>(context, listen: false);
     await FirebaseFirestore.instance.collection('works').doc(work).delete();
@@ -201,7 +190,6 @@ class _ListOfWorkState extends State<ListOfWork> {
   }
 
   void popupmessage(String msg) {
-    final provider = Provider.of<AllWorkProvider>(context, listen: false);
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -214,11 +202,8 @@ class _ListOfWorkState extends State<ListOfWork> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      fetchData().whenComplete(() {
                         Navigator.pop(context);
                         workController.clear();
-                        provider.setLoadWidget(false);
-                      });
                     },
                     child: const Text(
                       'OK',

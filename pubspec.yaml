@@ -46,7 +46,7 @@ dependencies:
   file_picker: 
   image_picker: ^1.0.7
   intl: ^0.19.0
-  carousel_slider: 
+  carousel_slider: ^5.0.0
   photo_view: ^0.15.0
   image_network: ^2.5.6
   fluttertoast: ^8.2.6

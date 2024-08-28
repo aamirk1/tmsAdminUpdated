@@ -1,7 +1,7 @@
 // import 'dart:io';
 
 // import 'package:carousel_slider/carousel_slider.dart';
-// import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart' hide CarouselController;
 // import 'package:image_network/image_network.dart';
 // import 'package:photo_view/photo_view.dart';
 // import 'package:ticket_management_system/utils/colors.dart';

@@ -84,96 +84,12 @@ class _ProfileState extends State<Profile> {
                                       ),
                                       Align(
                                         alignment: Alignment.center,
-                                        child: Row(
+                                        child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  const Text(
-                                                    'First Name: ',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                  Text(
-                                                    firstName,
-                                                    style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 20,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  const Text(
-                                                    'Last Name: ',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                  Text(
-                                                    lastName,
-                                                    style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 20,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  const Text(
-                                                    'Mobile: ',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                  Text(
-                                                    mobile,
-                                                    style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 20,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  const Text(
-                                                    'Admin Id: ',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                  Text(
-                                                    widget.adminId,
-                                                    style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                ],
-                                              ),
+                                             
                                             ]),
                                       ),
                                       const SizedBox(
@@ -228,4 +144,6 @@ class _ProfileState extends State<Profile> {
 
     setState(() {});
   }
+
+  
 }

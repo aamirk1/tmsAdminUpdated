@@ -174,43 +174,18 @@ class _MasterHomeScreenState extends State<MasterHomeScreen> {
             alignment: Alignment.topRight,
             shape: const BeveledRectangleBorder(),
             content: Container(
-              margin: const EdgeInsets.only(top: 20),
-              height: MediaQuery.of(context).size.height / 3.5,
+              // margin: const EdgeInsets.only(top: 20),
+              height: MediaQuery.of(context).size.height * 0.4,
               child: Align(
                 alignment: Alignment.center,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                        'First Name: $firstName',
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.black),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Last Name: $lastName',
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.black),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Mobile: $mobile',
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.black),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Admin Id: ${widget.adminId}',
-                        style:
-                            const TextStyle(fontSize: 16, color: Colors.black),
-                      ),
+                      buildProfile('First Name :', firstName),
+                      buildProfile('Last Name :', lastName),
+                      buildProfile('Mobile No :', mobile),
+                      buildProfile('Admin Id:', widget.adminId),
                     ]),
               ),
             ),
@@ -226,5 +201,42 @@ class _MasterHomeScreenState extends State<MasterHomeScreen> {
             ],
           );
         });
+  }
+
+  Widget buildProfile(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          IntrinsicWidth(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.1,
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 141, 36, 41),
+                  borderRadius: BorderRadius.circular(8.0)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                child: Center(
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 40),
+          Text(
+            value.isEmpty ? 'N/A' : value,
+            style: const TextStyle(
+                color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
   }
 }

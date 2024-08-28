@@ -170,8 +170,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                                         Icons.business,
                                         'Tat: ',
                                         widget.ticketData[index]['tat']
-                                                .toString() ??
-                                            "N/A",
+                                                .toString(),
                                         index)
                                   ],
                                 ),
@@ -294,11 +293,16 @@ class _ReportDetailsState extends State<ReportDetails> {
                                                       //         builder:
                                                       //             (context) =>
                                                       //                 ImageScreen(
-                                                      //                   pageTitle: 'Report Page',
-                                                      //                   imageFiles: imageFilePaths,
-                                                      //                   initialIndex: index2,
-                                                      //                   imageFile: imageFilePaths[index2],
-                                                      //                   ticketId: ticketList[index],
+                                                      //                   pageTitle:
+                                                      //                       'Report Page',
+                                                      //                   imageFiles:
+                                                      //                       imageFilePaths,
+                                                      //                   initialIndex:
+                                                      //                       index2,
+                                                      //                   imageFile:
+                                                      //                       imageFilePaths[index2],
+                                                      //                   ticketId:
+                                                      //                       ticketList[index],
                                                       //                 )));
                                                     },
                                                     image:
@@ -335,6 +339,10 @@ class _ReportDetailsState extends State<ReportDetails> {
                                           fontWeight: FontWeight.bold)),
                                   const SizedBox(width: 100),
                                   ElevatedButton(
+                                      style: const ButtonStyle(
+                                        backgroundColor:
+                                            WidgetStatePropertyAll(marron),
+                                      ),
                                       onPressed: () {
                                         Navigator.push(context,
                                             MaterialPageRoute(
@@ -348,7 +356,10 @@ class _ReportDetailsState extends State<ReportDetails> {
                                           },
                                         ));
                                       },
-                                      child: const Text('Re Assign'))
+                                      child: const Text(
+                                        'Re Assign',
+                                        style: TextStyle(color: Colors.white),
+                                      ))
                                 ]),
                                 const SizedBox(height: 2),
                                 Row(children: [
@@ -358,6 +369,10 @@ class _ReportDetailsState extends State<ReportDetails> {
                                           fontWeight: FontWeight.bold)),
                                   const SizedBox(width: 100),
                                   ElevatedButton(
+                                      style: const ButtonStyle(
+                                        backgroundColor:
+                                            WidgetStatePropertyAll(marron),
+                                      ),
                                       onPressed: () {
                                         if (widget.ticketData[index]
                                                 ['status'] ==
@@ -380,7 +395,10 @@ class _ReportDetailsState extends State<ReportDetails> {
                                           );
                                         }
                                       },
-                                      child: const Text('Revive'))
+                                      child: const Text(
+                                        'Revive',
+                                        style: TextStyle(color: Colors.white),
+                                      ))
                                 ]),
                               ],
                             ),
