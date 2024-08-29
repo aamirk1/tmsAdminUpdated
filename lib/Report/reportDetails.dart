@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_network/image_network.dart';
+import 'package:ticket_management_system/Report/imageScreen.dart';
 import 'package:ticket_management_system/Report/upDateServiceProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
@@ -170,7 +171,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                                         Icons.business,
                                         'Tat: ',
                                         widget.ticketData[index]['tat']
-                                                .toString(),
+                                            .toString(),
                                         index)
                                   ],
                                 ),
@@ -243,7 +244,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                                     ticketCard(
                                         Icons.build,
                                         'User: ',
-                                        widget.ticketData[index]['user'] ??
+                                        widget.ticketData[index]['name'] ??
                                             "N/A",
                                         index)
                                   ],
@@ -279,55 +280,47 @@ class _ReportDetailsState extends State<ReportDetails> {
                                     itemBuilder: (context, index2) => SizedBox(
                                       height: 50,
                                       width: 50,
-                                      child: isLoading
-                                          ? const CircularProgressIndicator()
-                                          : kIsWeb
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: ImageNetwork(
-                                                    onTap: () {
-                                                      // Navigator.push(
-                                                      //     context,
-                                                      //     MaterialPageRoute(
-                                                      //         builder:
-                                                      //             (context) =>
-                                                      //                 ImageScreen(
-                                                      //                   pageTitle:
-                                                      //                       'Report Page',
-                                                      //                   imageFiles:
-                                                      //                       imageFilePaths,
-                                                      //                   initialIndex:
-                                                      //                       index2,
-                                                      //                   imageFile:
-                                                      //                       imageFilePaths[index2],
-                                                      //                   ticketId:
-                                                      //                       ticketList[index],
-                                                      //                 )));
-                                                    },
-                                                    image:
-                                                        imageFilePaths[index2],
-                                                    // put a height and width because they are required
-                                                    height: 50,
-                                                    width: 50,
-                                                    curve: Curves.easeIn,
-                                                    fitWeb: BoxFitWeb.cover,
-                                                    onLoading:
-                                                        const CircularProgressIndicator(
-                                                      color:
-                                                          Colors.indigoAccent,
-                                                    ),
-                                                    onError: const Icon(
-                                                      Icons.error,
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                )
-                                              : const Icon(
+                                      child: kIsWeb
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: ImageNetwork(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                      return ImageScreen(
+                                                        pageTitle:
+                                                            'Report Page',
+                                                        imageFiles:
+                                                            imageFilePaths,
+                                                        initialIndex: index2,
+                                                      );
+                                                    }),
+                                                  );
+                                                },
+                                                image: imageFilePaths[index2],
+                                                height: 50,
+                                                width: 50,
+                                                curve: Curves.easeIn,
+                                                fitWeb: BoxFitWeb.cover,
+                                                onLoading: const Icon(
                                                   Icons.image,
                                                   color: black,
                                                   size: 50,
                                                 ),
+                                                onError: const Icon(
+                                                  Icons.error,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Icons.image,
+                                              color: black,
+                                              size: 50,
+                                            ),
                                     ),
                                   ),
                                 ),
@@ -340,21 +333,25 @@ class _ReportDetailsState extends State<ReportDetails> {
                                   const SizedBox(width: 100),
                                   ElevatedButton(
                                       style: const ButtonStyle(
+                                        fixedSize: WidgetStatePropertyAll(
+                                            Size(120, 4)),
                                         backgroundColor:
                                             WidgetStatePropertyAll(marron),
                                       ),
                                       onPressed: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                          builder: (context) {
-                                            return UpdateServiceProvider(
-                                                day: widget.ticketData[index]
-                                                        ['date']
-                                                    .toString(),
-                                                ticketId:
-                                                    widget.ticketList[index]);
-                                          },
-                                        ));
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return UpdateServiceProvider(
+                                                  day: widget.ticketData[index]
+                                                          ['date']
+                                                      .toString(),
+                                                  ticketId:
+                                                      widget.ticketList[index]);
+                                            },
+                                          ),
+                                        );
                                       },
                                       child: const Text(
                                         'Re Assign',
@@ -367,9 +364,11 @@ class _ReportDetailsState extends State<ReportDetails> {
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold)),
-                                  const SizedBox(width: 100),
+                                  const SizedBox(width: 120),
                                   ElevatedButton(
                                       style: const ButtonStyle(
+                                        fixedSize: WidgetStatePropertyAll(
+                                            Size(120, 4)),
                                         backgroundColor:
                                             WidgetStatePropertyAll(marron),
                                       ),

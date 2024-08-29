@@ -66,7 +66,7 @@ class _FloorListState extends State<FloorList> {
               ElevatedButton(
                   onPressed: () {
                     storeData(floorNumberController.text).whenComplete(() {
-                      popupmessage('Room No. added successfully!!');
+                      popupmessage('Floor No. added successfully!!');
                     });
                   },
                   child: const Text('Save')),
@@ -177,8 +177,6 @@ class _FloorListState extends State<FloorList> {
     provider.addSingleList({'floorNumber': floorNumber});
   }
 
-  
-
   Future<void> deletefloorNumber(String floorNumber) async {
     final provider = Provider.of<AllFloorProvider>(context, listen: false);
     await FirebaseFirestore.instance
@@ -202,10 +200,9 @@ class _FloorListState extends State<FloorList> {
               actions: [
                 TextButton(
                     onPressed: () {
-                       Navigator.pop(context);
-                        floorNumberController.clear();
-                        provider.setLoadWidget(false);
-                     
+                      Navigator.pop(context);
+                      floorNumberController.clear();
+                      provider.setLoadWidget(false);
                     },
                     child: const Text(
                       'OK',

@@ -207,7 +207,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
                                                           : '',
                                                       style: const TextStyle(
                                                           backgroundColor:
-                                                              purple,
+                                                              marron,
                                                           color: Colors.white)),
                                                 ])),
                                           ),
@@ -512,8 +512,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
       buildingNumberList = tempData;
     }
-      provider.setBuilderList(buildingNumberList);
-   
+    provider.setBuilderList(buildingNumberList);
   }
 
   Future<void> getFloor() async {
@@ -528,8 +527,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
       Set<String> set = uniqueFloorList.toSet();
       floorNumberList = set.toList();
     }
-      provider.setBuilderList(floorNumberList);
-   
+    provider.setBuilderList(floorNumberList);
   }
 
   Future<void> getRoom() async {
@@ -544,9 +542,8 @@ class _TicketTableReportState extends State<TicketTableReport> {
       Set<String> set = uniqueRoomList.toSet();
       roomNumberList = set.toList();
     }
-      provider.setBuilderList(roomNumberList);
+    provider.setBuilderList(roomNumberList);
     // print(roomNumberList);
-  
   }
 
   Future<void> getAsset() async {
@@ -561,8 +558,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
       Set<String> set = uniqueAssetsList.toSet();
       assetList = set.toList();
     }
-      provider.setBuilderList(assetList);
-
+    provider.setBuilderList(assetList);
   }
 
   Future<void> getWorkList() async {

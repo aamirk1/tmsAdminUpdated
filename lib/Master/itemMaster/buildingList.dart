@@ -69,7 +69,7 @@ class _BuildingListState extends State<BuildingList> {
               ElevatedButton(
                   onPressed: () {
                     storeData(buildingNumberController.text).whenComplete(() {
-                      popupmessage('Asset added successfully!!');
+                      popupmessage('Building added successfully!!');
                     });
                   },
                   child: const Text('Save')),
@@ -165,8 +165,6 @@ class _BuildingListState extends State<BuildingList> {
     );
   }
 
- 
-
   Future<void> deletebuildingNumber(String buildingNumber) async {
     final provider = Provider.of<AllBuildingProvider>(context, listen: false);
     await FirebaseFirestore.instance
@@ -209,11 +207,9 @@ class _BuildingListState extends State<BuildingList> {
               actions: [
                 TextButton(
                     onPressed: () {
-                     
-                        Navigator.pop(context);
-                        buildingNumberController.clear();
-                        provider.setLoadWidget(false);
-                   
+                      Navigator.pop(context);
+                      buildingNumberController.clear();
+                      provider.setLoadWidget(false);
                     },
                     child: const Text(
                       'OK',
