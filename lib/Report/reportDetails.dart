@@ -106,304 +106,656 @@ class _ReportDetailsState extends State<ReportDetails> {
                       List<String> imageFilePaths = List<String>.from(
                           widget.ticketData[index]['imageFilePaths'] ?? []);
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.work,
-                                        "Status: ",
-                                        widget.ticketData[index]['status'] ??
-                                            "N/A",
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.work,
-                                        "Ticket No.: ",
-                                        widget.ticketList[index] ?? "N/A",
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.work,
-                                        "Date (Opened): ",
-                                        widget.ticketData[index]['date'] ??
-                                            "N/A",
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.work,
-                                        "Date (Closed): ",
-                                        widget.ticketData[index]
-                                                ['closedDate'] ??
-                                            "N/A",
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.business,
-                                        'Tat: ',
-                                        widget.ticketData[index]['tat']
-                                            .toString(),
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.business,
-                                        'Work: ',
-                                        widget.ticketData[index]['work'] ??
-                                            "N/A",
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.layers,
-                                        "Building: ",
-                                        widget.ticketData[index]['building']
-                                            .toString(),
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.layers,
-                                        "Floor: ",
-                                        widget.ticketData[index]['floor']
-                                            .toString(),
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 2,
-                                ),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.room,
-                                        'Room: ',
-                                        widget.ticketData[index]['room'] ??
-                                            "N/A",
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(height: 2),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.account_balance,
-                                        "Asset: ",
-                                        widget.ticketData[index]['asset'] ??
-                                            "N/A",
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(height: 2),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.build,
-                                        'User: ',
-                                        widget.ticketData[index]['name'] ??
-                                            "N/A",
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(height: 2),
-                                Row(
-                                  children: [
-                                    ticketCard(
-                                        Icons.build,
-                                        'ServiceProvider: ',
-                                        widget.ticketData[index]
-                                                ['serviceProvider']
-                                            .toString()
-                                            .replaceAll(RegExp(r'\[|\]'), ' '),
-                                        index)
-                                  ],
-                                ),
-                                const SizedBox(height: 2),
-                                Row(children: [
-                                  ticketCard(
-                                      Icons.comment,
-                                      'Remark: ',
-                                      widget.ticketData[index]['remark']
-                                          .toString(),
-                                      index)
-                                ]),
-                                const SizedBox(height: 2),
-                                SizedBox(
-                                  height: 50,
-                                  child: ListView.builder(
-                                    itemCount: imageFilePaths.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index2) => SizedBox(
-                                      height: 50,
-                                      width: 50,
-                                      child: kIsWeb
-                                          ? Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: ImageNetwork(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                      return ImageScreen(
-                                                        pageTitle:
-                                                            'Report Page',
-                                                        imageFiles:
-                                                            imageFilePaths,
-                                                        initialIndex: index2,
-                                                      );
-                                                    }),
-                                                  );
-                                                },
-                                                image: imageFilePaths[index2],
-                                                height: 50,
-                                                width: 50,
-                                                curve: Curves.easeIn,
-                                                fitWeb: BoxFitWeb.cover,
-                                                onLoading: const Icon(
-                                                  Icons.image,
-                                                  color: black,
-                                                  size: 50,
-                                                ),
-                                                onError: const Icon(
-                                                  Icons.error,
-                                                  color: Colors.red,
-                                                ),
-                                              ),
-                                            )
-                                          : const Icon(
-                                              Icons.image,
-                                              color: black,
-                                              size: 50,
+                          padding: const EdgeInsets.all(8.0),
+                          child: widget.ticketData[index]['status'] == "Open"
+                              ? Card(
+                                  color: lightMarron,
+                                  elevation: 5,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.work,
+                                                "Status: ",
+                                                widget.ticketData[index]
+                                                        ['status'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.work,
+                                                "Ticket No.: ",
+                                                widget.ticketList[index] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.work,
+                                                "Date (Opened): ",
+                                                widget.ticketData[index]
+                                                        ['date'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.work,
+                                                "Date (Closed): ",
+                                                widget.ticketData[index]
+                                                        ['closedDate'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.business,
+                                                'Tat: ',
+                                                widget.ticketData[index]['tat']
+                                                    .toString(),
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.business,
+                                                'Work: ',
+                                                widget.ticketData[index]
+                                                        ['work'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.layers,
+                                                "Building: ",
+                                                widget.ticketData[index]
+                                                        ['building']
+                                                    .toString(),
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.layers,
+                                                "Floor: ",
+                                                widget.ticketData[index]
+                                                        ['floor']
+                                                    .toString(),
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.room,
+                                                'Room: ',
+                                                widget.ticketData[index]
+                                                        ['room'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.account_balance,
+                                                "Asset: ",
+                                                widget.ticketData[index]
+                                                        ['asset'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.build,
+                                                'User: ',
+                                                widget.ticketData[index]
+                                                        ['name'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.build,
+                                                'ServiceProvider: ',
+                                                widget.ticketData[index]
+                                                        ['serviceProvider']
+                                                    .toString()
+                                                    .replaceAll(
+                                                        RegExp(r'\[|\]'), ' '),
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(children: [
+                                          ticketCard(
+                                              Icons.comment,
+                                              'Remark: ',
+                                              widget.ticketData[index]['remark']
+                                                  .toString(),
+                                              index)
+                                        ]),
+                                        const SizedBox(height: 2),
+                                        SizedBox(
+                                          height: 50,
+                                          child: ListView.builder(
+                                            itemCount: imageFilePaths.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index2) =>
+                                                SizedBox(
+                                              height: 50,
+                                              width: 50,
+                                              child: kIsWeb
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: ImageNetwork(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                              return ImageScreen(
+                                                                pageTitle:
+                                                                    'Report Page',
+                                                                imageFiles:
+                                                                    imageFilePaths,
+                                                                initialIndex:
+                                                                    index2,
+                                                              );
+                                                            }),
+                                                          );
+                                                        },
+                                                        image: imageFilePaths[
+                                                            index2],
+                                                        height: 50,
+                                                        width: 50,
+                                                        curve: Curves.easeIn,
+                                                        fitWeb: BoxFitWeb.cover,
+                                                        onLoading: const Icon(
+                                                          Icons.image,
+                                                          color: black,
+                                                          size: 50,
+                                                        ),
+                                                        onError: const Icon(
+                                                          Icons.error,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : const Icon(
+                                                      Icons.image,
+                                                      color: black,
+                                                      size: 50,
+                                                    ),
                                             ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(children: [
+                                          const Text('Re Assign: ',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          const SizedBox(width: 100),
+                                          ElevatedButton(
+                                              style: const ButtonStyle(
+                                                fixedSize:
+                                                    WidgetStatePropertyAll(
+                                                        Size(120, 4)),
+                                                backgroundColor:
+                                                    WidgetStatePropertyAll(
+                                                        marron),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return UpdateServiceProvider(
+                                                          day: widget
+                                                              .ticketData[index]
+                                                                  ['date']
+                                                              .toString(),
+                                                          ticketId:
+                                                              widget.ticketList[
+                                                                  index]);
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                              child: const Text(
+                                                'Re Assign',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ))
+                                        ]),
+                                        const SizedBox(height: 2),
+                                        Row(children: [
+                                          const Text('Revive: ',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          const SizedBox(width: 120),
+                                          ElevatedButton(
+                                              style: const ButtonStyle(
+                                                fixedSize:
+                                                    WidgetStatePropertyAll(
+                                                        Size(120, 4)),
+                                                backgroundColor:
+                                                    WidgetStatePropertyAll(
+                                                        marron),
+                                              ),
+                                              onPressed: () {
+                                                if (widget.ticketData[index]
+                                                        ['status'] ==
+                                                    'Close') {
+                                                  updateTicketStatus(
+                                                      widget.ticketData[index]
+                                                              ['year']
+                                                          .toString(),
+                                                      widget.ticketData[index]
+                                                          ['month'],
+                                                      widget.ticketData[index]
+                                                          ['date'],
+                                                      widget.ticketList[index]);
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        content: Center(
+                                                          child: Text(
+                                                              'Ticket Already Open'),
+                                                        )),
+                                                  );
+                                                }
+                                              },
+                                              child: const Text(
+                                                'Revive',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ))
+                                        ]),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 2),
-                                Row(children: [
-                                  const Text('Re Assign: ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  const SizedBox(width: 100),
-                                  ElevatedButton(
-                                      style: const ButtonStyle(
-                                        fixedSize: WidgetStatePropertyAll(
-                                            Size(120, 4)),
-                                        backgroundColor:
-                                            WidgetStatePropertyAll(marron),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return UpdateServiceProvider(
-                                                  day: widget.ticketData[index]
-                                                          ['date']
-                                                      .toString(),
-                                                  ticketId:
-                                                      widget.ticketList[index]);
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      child: const Text(
-                                        'Re Assign',
-                                        style: TextStyle(color: Colors.white),
-                                      ))
-                                ]),
-                                const SizedBox(height: 2),
-                                Row(children: [
-                                  const Text('Revive: ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  const SizedBox(width: 120),
-                                  ElevatedButton(
-                                      style: const ButtonStyle(
-                                        fixedSize: WidgetStatePropertyAll(
-                                            Size(120, 4)),
-                                        backgroundColor:
-                                            WidgetStatePropertyAll(marron),
-                                      ),
-                                      onPressed: () {
-                                        if (widget.ticketData[index]
-                                                ['status'] ==
-                                            'Close') {
-                                          updateTicketStatus(
-                                              widget.ticketData[index]['year']
+                                )
+                              : Card(
+                                  color: Colors.green.shade200,
+                                  elevation: 5,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.work,
+                                                "Status: ",
+                                                widget.ticketData[index]
+                                                        ['status'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.work,
+                                                "Ticket No.: ",
+                                                widget.ticketList[index] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.work,
+                                                "Date (Opened): ",
+                                                widget.ticketData[index]
+                                                        ['date'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.work,
+                                                "Date (Closed): ",
+                                                widget.ticketData[index]
+                                                        ['closedDate'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.business,
+                                                'Tat: ',
+                                                widget.ticketData[index]['tat']
+                                                    .toString(),
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.business,
+                                                'Work: ',
+                                                widget.ticketData[index]
+                                                        ['work'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.layers,
+                                                "Building: ",
+                                                widget.ticketData[index]
+                                                        ['building']
+                                                    .toString(),
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.layers,
+                                                "Floor: ",
+                                                widget.ticketData[index]
+                                                        ['floor']
+                                                    .toString(),
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.room,
+                                                'Room: ',
+                                                widget.ticketData[index]
+                                                        ['room'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.account_balance,
+                                                "Asset: ",
+                                                widget.ticketData[index]
+                                                        ['asset'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.build,
+                                                'User: ',
+                                                widget.ticketData[index]
+                                                        ['name'] ??
+                                                    "N/A",
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          children: [
+                                            ticketCard(
+                                                Icons.build,
+                                                'ServiceProvider: ',
+                                                widget.ticketData[index]
+                                                        ['serviceProvider']
+                                                    .toString()
+                                                    .replaceAll(
+                                                        RegExp(r'\[|\]'), ' '),
+                                                index)
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(children: [
+                                          ticketCard(
+                                              Icons.comment,
+                                              'Remark: ',
+                                              widget.ticketData[index]['remark']
                                                   .toString(),
-                                              widget.ticketData[index]['month'],
-                                              widget.ticketData[index]['date'],
-                                              widget.ticketList[index]);
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                                backgroundColor: Colors.red,
-                                                content: Center(
-                                                  child: Text(
-                                                      'Ticket Already Open'),
-                                                )),
-                                          );
-                                        }
-                                      },
-                                      child: const Text(
-                                        'Revive',
-                                        style: TextStyle(color: Colors.white),
-                                      ))
-                                ]),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                                              index)
+                                        ]),
+                                        const SizedBox(height: 2),
+                                        SizedBox(
+                                          height: 50,
+                                          child: ListView.builder(
+                                            itemCount: imageFilePaths.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index2) =>
+                                                SizedBox(
+                                              height: 50,
+                                              width: 50,
+                                              child: kIsWeb
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: ImageNetwork(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                              return ImageScreen(
+                                                                pageTitle:
+                                                                    'Report Page',
+                                                                imageFiles:
+                                                                    imageFilePaths,
+                                                                initialIndex:
+                                                                    index2,
+                                                              );
+                                                            }),
+                                                          );
+                                                        },
+                                                        image: imageFilePaths[
+                                                            index2],
+                                                        height: 50,
+                                                        width: 50,
+                                                        curve: Curves.easeIn,
+                                                        fitWeb: BoxFitWeb.cover,
+                                                        onLoading: const Icon(
+                                                          Icons.image,
+                                                          color: black,
+                                                          size: 50,
+                                                        ),
+                                                        onError: const Icon(
+                                                          Icons.error,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : const Icon(
+                                                      Icons.image,
+                                                      color: black,
+                                                      size: 50,
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Row(children: [
+                                          const Text('Re Assign: ',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          const SizedBox(width: 100),
+                                          ElevatedButton(
+                                              style: const ButtonStyle(
+                                                fixedSize:
+                                                    WidgetStatePropertyAll(
+                                                        Size(120, 4)),
+                                                backgroundColor:
+                                                    WidgetStatePropertyAll(
+                                                        marron),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return UpdateServiceProvider(
+                                                          day: widget
+                                                              .ticketData[index]
+                                                                  ['date']
+                                                              .toString(),
+                                                          ticketId:
+                                                              widget.ticketList[
+                                                                  index]);
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                              child: const Text(
+                                                'Re Assign',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ))
+                                        ]),
+                                        const SizedBox(height: 2),
+                                        Row(children: [
+                                          const Text('Revive: ',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          const SizedBox(width: 120),
+                                          ElevatedButton(
+                                              style: const ButtonStyle(
+                                                fixedSize:
+                                                    WidgetStatePropertyAll(
+                                                        Size(120, 4)),
+                                                backgroundColor:
+                                                    WidgetStatePropertyAll(
+                                                        marron),
+                                              ),
+                                              onPressed: () {
+                                                if (widget.ticketData[index]
+                                                        ['status'] ==
+                                                    'Close') {
+                                                  updateTicketStatus(
+                                                      widget.ticketData[index]
+                                                              ['year']
+                                                          .toString(),
+                                                      widget.ticketData[index]
+                                                          ['month'],
+                                                      widget.ticketData[index]
+                                                          ['date'],
+                                                      widget.ticketList[index]);
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        content: Center(
+                                                          child: Text(
+                                                              'Ticket Already Open'),
+                                                        )),
+                                                  );
+                                                }
+                                              },
+                                              child: const Text(
+                                                'Revive',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ))
+                                        ]),
+                                      ],
+                                    ),
+                                  ),
+                                ));
                     }))
             : SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
@@ -443,6 +795,7 @@ class _ReportDetailsState extends State<ReportDetails> {
             child: Text(
               ticketListData,
               textAlign: TextAlign.justify,
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         )

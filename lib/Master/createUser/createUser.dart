@@ -298,7 +298,13 @@ class _CreateUserState extends State<CreateUser> {
                                           );
                                         } else if (!snapshot.hasData ||
                                             snapshot.data!.docs.isEmpty) {
-                                          return const Text('No data found');
+                                          return const Center(
+                                            child: Text(
+                                              'No data found',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          );
                                         } else {
                                           return ListView.builder(
                                               itemCount:

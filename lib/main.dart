@@ -19,13 +19,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-        apiKey: "AIzaSyDtdY2LJ087ii1QTHCJpmTXnB7v8PshdBs",
-        authDomain: "ticket-management-system-db0dc.firebaseapp.com",
-        projectId: "ticket-management-system-db0dc",
-        storageBucket: "ticket-management-system-db0dc.appspot.com",
-        messagingSenderId: "974616957143",
-        appId: "1:974616957143:web:92c96dbda395a5bab8e092",
-        measurementId: "G-VVDZCNMFCC"),
+        apiKey: "AIzaSyA6-g-Dbb6c5B_hFhGvANlznlixlPgKx6k",
+        authDomain: "tmsapp-53ebc.firebaseapp.com",
+        projectId: "tmsapp-53ebc",
+        storageBucket: "tmsapp-53ebc.appspot.com",
+        messagingSenderId: "190167031121",
+        appId: "1:190167031121:web:e2cf8a9bffccfdb181c770",
+        measurementId: "G-88TQTEM40C"),
   );
 
   runApp(const MyApp());

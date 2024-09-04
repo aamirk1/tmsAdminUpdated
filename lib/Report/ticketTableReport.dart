@@ -293,6 +293,8 @@ class _TicketTableReportState extends State<TicketTableReport> {
                                 backgroundColor: WidgetStatePropertyAll(marron),
                               ),
                               onPressed: () {
+                                showFetchingData(context, 'Fetching Data...');
+
                                 filterTickets().whenComplete(() {
                                   print(
                                       'selectedServiceProvider: $selectedServiceProvider');
@@ -345,6 +347,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
                                       ticketList.clear();
                                       filterData.clear();
                                       setState(() {});
+                                      Navigator.pop(context);
                                     });
                                   } else {
                                     popupAlertmessage(
