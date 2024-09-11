@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Master/itemMaster/editBuildingForm.dart';
 import 'package:ticket_management_system/providers/buildingProvider.dart';
+import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 class BuildingList extends StatefulWidget {
@@ -19,8 +20,10 @@ class _BuildingListState extends State<BuildingList> {
 
   bool isLoading = true;
   Stream? _stream;
+  Screenchangeprovider provider = Screenchangeprovider();
   @override
   void initState() {
+    provider = Provider.of<Screenchangeprovider>(context, listen: false);
     _stream =
         FirebaseFirestore.instance.collection('buildingNumbers').snapshots();
     // fetchData().whenComplete(() => setState(() {
@@ -106,6 +109,17 @@ class _BuildingListState extends State<BuildingList> {
                                 return Column(
                                   children: [
                                     ListTile(
+                                      onTap: () {
+                                        provider.setBuildingNumber(snapshot.data
+                                            .docs[index]['buildingNumber']);
+                                        // provider.setIsFloorScreen(
+                                        //     true);
+                                        provider.isFloorScreen == true
+                                            ? provider.setIsFloorScreen(false)
+                                            : provider.setIsFloorScreen(true);
+                                        provider.setIsRoomScreen(false);
+                                        provider.setIsAssetScreen(false);
+                                      },
                                       title: Text(
                                         snapshot.data.docs[index]
                                             ['buildingNumber'],

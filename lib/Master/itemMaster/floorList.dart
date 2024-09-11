@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_management_system/Master/itemMaster/editFloorForm.dart';
 import 'package:ticket_management_system/providers/floorProvider.dart';
-import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 
 class FloorList extends StatefulWidget {
-  const FloorList({super.key});
+  FloorList({super.key, required this.buildingId});
+  String buildingId;
 
   @override
   State<FloorList> createState() => _FloorListState();
@@ -18,9 +18,16 @@ class _FloorListState extends State<FloorList> {
 
   bool isLoading = true;
   Stream? _stream;
+  Screenchangeprovider provider = Screenchangeprovider();
   @override
   void initState() {
-    _stream = FirebaseFirestore.instance.collection('floorNumbers').snapshots();
+    provider = Provider.of<Screenchangeprovider>(context, listen: false);
+    _stream = FirebaseFirestore.instance
+        .collection('buildingNumbers') // Reference to the collection
+        .doc(widget.buildingId) // Reference to the specific document
+        .collection('floorNumbers') // Access the subcollection
+        .snapshots();
+
     super.initState();
     // fetchData().whenComplete(() => setState(() {
     //       isLoading = false;
@@ -65,7 +72,8 @@ class _FloorListState extends State<FloorList> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    storeData(floorNumberController.text).whenComplete(() {
+                    storeData(widget.buildingId, floorNumberController.text)
+                        .whenComplete(() {
                       popupmessage('Floor No. added successfully!!');
                     });
                   },
@@ -103,6 +111,18 @@ class _FloorListState extends State<FloorList> {
                                 return Column(
                                   children: [
                                     ListTile(
+                                      onTap: () {
+                                        widget.buildingId;
+                                        provider.setFloorNumber(
+                                          snapshot.data.docs[index]
+                                              ['floorNumber'],
+                                        );
+
+                                        provider.isRoomScreen == true
+                                            ? provider.setIsRoomScreen(false)
+                                            : provider.setIsRoomScreen(true);
+                                        provider.setIsAssetScreen(false);
+                                      },
                                       title: Text(
                                         snapshot.data.docs[index]
                                             ['floorNumber'],
@@ -114,36 +134,14 @@ class _FloorListState extends State<FloorList> {
                                         children: [
                                           IconButton(
                                             icon: const Icon(
-                                              Icons.edit,
-                                              color: black,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditFloorForm(
-                                                    floorId: snapshot
-                                                            .data.docs[index]
-                                                        ['floorNumber'],
-                                                  ),
-                                                ),
-                                              ).whenComplete(() {
-                                                setState(() {
-                                                  // fetchData();
-                                                  // isLoading = false;
-                                                });
-                                              });
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(
                                               Icons.delete,
                                               color: Colors.red,
                                             ),
                                             onPressed: () {
-                                              deletefloorNumber(snapshot.data
-                                                  .docs[index]['floorNumber']);
+                                              deletefloorNumber(
+                                                  widget.buildingId,
+                                                  snapshot.data.docs[index]
+                                                      ['floorNumber']);
                                             },
                                           ),
                                         ],
@@ -166,9 +164,11 @@ class _FloorListState extends State<FloorList> {
     );
   }
 
-  Future storeData(String floorNumber) async {
+  Future storeData(String buildingNumber, String floorNumber) async {
     final provider = Provider.of<AllFloorProvider>(context, listen: false);
     await FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(buildingNumber)
         .collection('floorNumbers')
         .doc(floorNumber)
         .set({
@@ -177,9 +177,12 @@ class _FloorListState extends State<FloorList> {
     provider.addSingleList({'floorNumber': floorNumber});
   }
 
-  Future<void> deletefloorNumber(String floorNumber) async {
+  Future<void> deletefloorNumber(
+      String buildingNumber, String floorNumber) async {
     final provider = Provider.of<AllFloorProvider>(context, listen: false);
     await FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(buildingNumber)
         .collection('floorNumbers')
         .doc(floorNumber)
         .delete();

@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "ticket-management-system-db0dc"
-  }
+    "default": "tmsapp-53ebc",
+    "yes": "tmsapp-53ebc"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

@@ -11,6 +11,7 @@ import 'package:ticket_management_system/providers/image_upload_provider.dart';
 import 'package:ticket_management_system/providers/menuUserPageProvider.dart';
 import 'package:ticket_management_system/providers/role_page_totalNum_provider.dart';
 import 'package:ticket_management_system/providers/roomProvider.dart';
+import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/providers/userProvider.dart';
 import 'package:ticket_management_system/providers/workProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AllUserProvider()),
         ChangeNotifierProvider(
             create: (context) => RolePageTotalNumProviderAdmin()),
+        ChangeNotifierProvider(create: (context) => Screenchangeprovider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Master/itemMaster/editRoomForm.dart';
 import 'package:ticket_management_system/providers/roomProvider.dart';
+import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 class RoomList extends StatefulWidget {
-  const RoomList({super.key});
+  RoomList({super.key, required this.buildingId, required this.floorId});
+  String buildingId;
+  String floorId;
 
   @override
   State<RoomList> createState() => _RoomListState();
@@ -18,15 +21,23 @@ class _RoomListState extends State<RoomList> {
 
   bool isLoading = true;
   Stream? _stream;
+  Screenchangeprovider provider = Screenchangeprovider();
   @override
   void initState() {
-    _stream = FirebaseFirestore.instance.collection('roomNumbers').snapshots();
+    provider = Provider.of<Screenchangeprovider>(context, listen: false);
+    _stream = FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(widget.buildingId)
+        .collection('floorNumbers')
+        .doc(widget.floorId)
+        .collection('roomNumbers')
+        .snapshots();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AllRoomProvider>(context, listen: false);
+    // final provider = Provider.of<AllRoomProvider>(context, listen: false);
     return Scaffold(
       body: Column(
         children: [
@@ -101,6 +112,18 @@ class _RoomListState extends State<RoomList> {
                                 return Column(
                                   children: [
                                     ListTile(
+                                      onTap: () {
+                                        widget.buildingId;
+                                        widget.floorId;
+
+                                        provider.setRoomNumber(snapshot
+                                            .data.docs[index]['roomNumber']);
+                                        // provider.setIsFloorScreen(
+                                        //     true);
+                                        provider.isAssetScreen == true
+                                            ? provider.setIsAssetScreen(false)
+                                            : provider.setIsAssetScreen(true);
+                                      },
                                       title: Text(
                                         snapshot.data.docs[index]['roomNumber'],
                                         style: const TextStyle(
@@ -126,7 +149,7 @@ class _RoomListState extends State<RoomList> {
                                                   ),
                                                 ),
                                               ).whenComplete(() {
-                                                provider.setLoadWidget(false);
+                                                setState(() {});
                                               });
                                             },
                                           ),
@@ -163,6 +186,10 @@ class _RoomListState extends State<RoomList> {
   Future storeData(String roomNumber) async {
     final provider = Provider.of<AllRoomProvider>(context, listen: false);
     await FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(widget.buildingId)
+        .collection('floorNumbers')
+        .doc(widget.floorId)
         .collection('roomNumbers')
         .doc(roomNumber)
         .set({
@@ -174,6 +201,10 @@ class _RoomListState extends State<RoomList> {
   Future<void> deleteroomNumber(String roomNumber) async {
     final provider = Provider.of<AllRoomProvider>(context, listen: false);
     await FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(widget.buildingId)
+        .collection('floorNumbers')
+        .doc(widget.floorId)
         .collection('roomNumbers')
         .doc(roomNumber)
         .delete();

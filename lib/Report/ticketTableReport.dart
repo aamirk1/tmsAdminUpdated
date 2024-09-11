@@ -521,8 +521,11 @@ class _TicketTableReportState extends State<TicketTableReport> {
   Future<void> getFloor() async {
     final provider = Provider.of<AllFloorProvider>(context, listen: false);
     provider.setBuilderList([]);
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('floorNumbers').get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(selectedbuilding)
+        .collection('floorNumbers')
+        .get();
     if (querySnapshot.docs.isNotEmpty) {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
 
@@ -537,8 +540,13 @@ class _TicketTableReportState extends State<TicketTableReport> {
     List<String> uniqueRoomList = [];
     final provider = Provider.of<AllRoomProvider>(context, listen: false);
     provider.setBuilderList([]);
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('roomNumbers').get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(selectedbuilding)
+        .collection('floorNumbers')
+        .doc(selectedFloor)
+        .collection('roomNumbers')
+        .get();
     if (querySnapshot.docs.isNotEmpty) {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
       uniqueRoomList.addAll(tempData);
@@ -553,8 +561,15 @@ class _TicketTableReportState extends State<TicketTableReport> {
     List<String> uniqueAssetsList = [];
     final provider = Provider.of<AllAssetProvider>(context, listen: false);
     provider.setBuilderList([]);
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('assets').get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(selectedbuilding)
+        .collection('floorNumbers')
+        .doc(selectedFloor)
+        .collection('roomNumbers')
+        .doc(selectedRoom)
+        .collection('assets')
+        .get();
     if (querySnapshot.docs.isNotEmpty) {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
       uniqueAssetsList.addAll(tempData);
@@ -644,15 +659,17 @@ class _TicketTableReportState extends State<TicketTableReport> {
                                                       ? selectedStatus = value
                                                       : selectedWork = value;
                 });
-                // await getFloor(selectedbuilding!).whenComplete(() {
-                //   setState(() {
-                //     getRoom(selectedbuilding!, selectedFloor!).whenComplete(() {
-                //       setState(() {
-                //         getAsset(selectedbuilding!, selectedFloor!, selectedRoom!);
-                //       });
-                //     });
-                //   });
-                // });
+                await getFloor().whenComplete(() {
+                  setState(() {
+                    getRoom().whenComplete(() {
+                      setState(() {
+                        getAsset().whenComplete(() {
+                          setState(() {});
+                        });
+                      });
+                    });
+                  });
+                });
               },
               buttonStyleData: const ButtonStyleData(
                 decoration: BoxDecoration(),

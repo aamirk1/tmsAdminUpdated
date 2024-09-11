@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Master/itemMaster/buildingList.dart';
 import 'package:ticket_management_system/Master/itemMaster/floorList.dart';
 import 'package:ticket_management_system/Master/itemMaster/listOfAsset.dart';
 import 'package:ticket_management_system/Master/itemMaster/roomList.dart';
+import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 // ignore: must_be_immutable
@@ -15,13 +17,13 @@ class AllItemMaster extends StatefulWidget {
 
 class _AllItemMasterState extends State<AllItemMaster> {
   bool isBuildingScreen = false;
-  bool isFloorScreen = false;
   bool isRoomScreen = false;
   bool isAssetScreen = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+    return Scaffold(body:
+        Consumer<Screenchangeprovider>(builder: (context, provider, child) {
+      return Container(
         padding: const EdgeInsets.all(4),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -50,14 +52,14 @@ class _AllItemMasterState extends State<AllItemMaster> {
                             fontWeight: FontWeight.bold),
                       )),
                   ElevatedButton(
-                      style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(lightMarron),
-                          minimumSize: WidgetStatePropertyAll(Size(220, 50))),
-                      onPressed: () {
-                        setState(() {
-                          isFloorScreen = !isFloorScreen;
-                        });
-                      },
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              provider.isFloorScreen == true
+                                  ? lightMarron
+                                  : const Color.fromARGB(255, 177, 177, 177)),
+                          minimumSize:
+                              const WidgetStatePropertyAll(Size(220, 50))),
+                      onPressed: () {},
                       child: const Text(
                         'Floor List',
                         style: TextStyle(
@@ -66,14 +68,14 @@ class _AllItemMasterState extends State<AllItemMaster> {
                             fontWeight: FontWeight.bold),
                       )),
                   ElevatedButton(
-                      style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(lightMarron),
-                          minimumSize: WidgetStatePropertyAll(Size(220, 50))),
-                      onPressed: () {
-                        setState(() {
-                          isRoomScreen = !isRoomScreen;
-                        });
-                      },
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              provider.isRoomScreen == true
+                                  ? lightMarron
+                                  : const Color.fromARGB(255, 177, 177, 177)),
+                          minimumSize:
+                              const WidgetStatePropertyAll(Size(220, 50))),
+                      onPressed: () {},
                       child: const Text(
                         'Room List',
                         style: TextStyle(
@@ -82,14 +84,14 @@ class _AllItemMasterState extends State<AllItemMaster> {
                             fontWeight: FontWeight.bold),
                       )),
                   ElevatedButton(
-                      style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(lightMarron),
-                          minimumSize: WidgetStatePropertyAll(Size(220, 50))),
-                      onPressed: () {
-                        setState(() {
-                          isAssetScreen = !isAssetScreen;
-                        });
-                      },
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              provider.isAssetScreen == true
+                                  ? lightMarron
+                                  : const Color.fromARGB(255, 177, 177, 177)),
+                          minimumSize:
+                              const WidgetStatePropertyAll(Size(220, 50))),
+                      onPressed: () {},
                       child: const Text(
                         'Assets List',
                         style: TextStyle(
@@ -120,7 +122,11 @@ class _AllItemMasterState extends State<AllItemMaster> {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.60,
                     width: MediaQuery.of(context).size.width,
-                    child: isFloorScreen ? const FloorList() : Container(),
+                    child: provider.isFloorScreen
+                        ? FloorList(
+                            buildingId: provider.buildingNumber,
+                          )
+                        : Container(),
                   ),
                 ),
                 Expanded(
@@ -128,7 +134,11 @@ class _AllItemMasterState extends State<AllItemMaster> {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.60,
                     width: MediaQuery.of(context).size.width,
-                    child: isRoomScreen ? const RoomList() : Container(),
+                    child: provider.isRoomScreen
+                        ? RoomList(
+                            buildingId: provider.buildingNumber,
+                            floorId: provider.floorNumber)
+                        : Container(),
                   ),
                 ),
                 Expanded(
@@ -136,14 +146,19 @@ class _AllItemMasterState extends State<AllItemMaster> {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.60,
                     width: MediaQuery.of(context).size.width,
-                    child: isAssetScreen ? const ListOfAsset() : Container(),
+                    child: provider.isAssetScreen
+                        ? ListOfAsset(
+                            buildingId: provider.buildingNumber,
+                            floorId: provider.floorNumber,
+                            roomId: provider.roomNumber)
+                        : Container(),
                   ),
                 ),
               ],
             )
           ],
         ),
-      ),
-    );
+      );
+    }));
   }
 }

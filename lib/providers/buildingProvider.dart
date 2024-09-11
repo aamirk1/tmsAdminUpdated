@@ -33,4 +33,6 @@ class AllBuildingProvider extends ChangeNotifier {
     _loadWidget = value;
     notifyListeners();
   }
+
+
 }

@@ -6,7 +6,10 @@ import 'package:ticket_management_system/providers/assetsProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 class ListOfAsset extends StatefulWidget {
-  const ListOfAsset({super.key});
+   ListOfAsset({super.key, required this.buildingId, required this.floorId, required this.roomId});
+  String buildingId;
+  String floorId;
+  String roomId;
 
   @override
   State<ListOfAsset> createState() => _ListOfAssetState();
@@ -19,7 +22,12 @@ class _ListOfAssetState extends State<ListOfAsset> {
   Stream? _stream;
   @override
   void initState() {
-    _stream = FirebaseFirestore.instance.collection('assets').snapshots();
+    _stream = FirebaseFirestore.instance.collection('buildingNumbers')
+        .doc(widget.buildingId)
+        .collection('floorNumbers')
+        .doc(widget.floorId)
+        .collection('roomNumbers')
+        .doc(widget.roomId).collection('assets').snapshots();
     // fetchData().whenComplete(() => setState(() {
     //       isLoading = false;
     //     }));
@@ -163,7 +171,12 @@ class _ListOfAssetState extends State<ListOfAsset> {
 
   Future<void> deleteAsset(String asset) async {
     final provider = Provider.of<AllAssetProvider>(context, listen: false);
-    await FirebaseFirestore.instance.collection('assets').doc(asset).delete();
+    await FirebaseFirestore.instance.collection('buildingNumbers')
+        .doc(widget.buildingId)
+        .collection('floorNumbers')
+        .doc(widget.floorId)
+        .collection('roomNumbers')
+        .doc(widget.roomId).collection('assets').doc(asset).delete();
     // print('successfully deleted');
 
     // provider.removeData(assetList.indexOf(asset));
@@ -271,7 +284,12 @@ class _ListOfAssetState extends State<ListOfAsset> {
 
   Future storeData(String asset) async {
     final provider = Provider.of<AllAssetProvider>(context, listen: false);
-    await FirebaseFirestore.instance.collection('assets').doc(asset).set({
+    await FirebaseFirestore.instance.collection('buildingNumbers')
+        .doc(widget.buildingId)
+        .collection('floorNumbers')
+        .doc(widget.floorId)
+        .collection('roomNumbers')
+        .doc(widget.roomId).collection('assets').doc(asset).set({
       'asset': asset,
     });
 
