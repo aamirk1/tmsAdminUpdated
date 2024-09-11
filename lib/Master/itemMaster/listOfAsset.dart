@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_management_system/Master/itemMaster/editAssetForm.dart';
 import 'package:ticket_management_system/providers/assetsProvider.dart';
-import 'package:ticket_management_system/utils/colors.dart';
 
 class ListOfAsset extends StatefulWidget {
-   ListOfAsset({super.key, required this.buildingId, required this.floorId, required this.roomId});
+  ListOfAsset(
+      {super.key,
+      required this.buildingId,
+      required this.floorId,
+      required this.roomId});
   String buildingId;
   String floorId;
   String roomId;
@@ -22,12 +24,15 @@ class _ListOfAssetState extends State<ListOfAsset> {
   Stream? _stream;
   @override
   void initState() {
-    _stream = FirebaseFirestore.instance.collection('buildingNumbers')
+    _stream = FirebaseFirestore.instance
+        .collection('buildingNumbers')
         .doc(widget.buildingId)
         .collection('floorNumbers')
         .doc(widget.floorId)
         .collection('roomNumbers')
-        .doc(widget.roomId).collection('assets').snapshots();
+        .doc(widget.roomId)
+        .collection('assets')
+        .snapshots();
     // fetchData().whenComplete(() => setState(() {
     //       isLoading = false;
     //     }));
@@ -121,24 +126,6 @@ class _ListOfAssetState extends State<ListOfAsset> {
                                         children: [
                                           IconButton(
                                             icon: const Icon(
-                                              Icons.edit,
-                                              color: black,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditAssetForm(
-                                                    assetId: snapshot.data
-                                                        .docs[index]['asset'],
-                                                  ),
-                                                ),
-                                              ).whenComplete(() {});
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(
                                               Icons.delete,
                                               color: Colors.red,
                                             ),
@@ -167,16 +154,18 @@ class _ListOfAssetState extends State<ListOfAsset> {
     );
   }
 
-
-
   Future<void> deleteAsset(String asset) async {
     final provider = Provider.of<AllAssetProvider>(context, listen: false);
-    await FirebaseFirestore.instance.collection('buildingNumbers')
+    await FirebaseFirestore.instance
+        .collection('buildingNumbers')
         .doc(widget.buildingId)
         .collection('floorNumbers')
         .doc(widget.floorId)
         .collection('roomNumbers')
-        .doc(widget.roomId).collection('assets').doc(asset).delete();
+        .doc(widget.roomId)
+        .collection('assets')
+        .doc(asset)
+        .delete();
     // print('successfully deleted');
 
     // provider.removeData(assetList.indexOf(asset));
@@ -284,12 +273,16 @@ class _ListOfAssetState extends State<ListOfAsset> {
 
   Future storeData(String asset) async {
     final provider = Provider.of<AllAssetProvider>(context, listen: false);
-    await FirebaseFirestore.instance.collection('buildingNumbers')
+    await FirebaseFirestore.instance
+        .collection('buildingNumbers')
         .doc(widget.buildingId)
         .collection('floorNumbers')
         .doc(widget.floorId)
         .collection('roomNumbers')
-        .doc(widget.roomId).collection('assets').doc(asset).set({
+        .doc(widget.roomId)
+        .collection('assets')
+        .doc(asset)
+        .set({
       'asset': asset,
     });
 
@@ -312,11 +305,9 @@ class _ListOfAssetState extends State<ListOfAsset> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      
-                        Navigator.pop(context);
-                        assetController.clear();
-                        provider.setLoadWidget(false);
-              
+                      Navigator.pop(context);
+                      assetController.clear();
+                      provider.setLoadWidget(false);
                     },
                     child: const Text(
                       'OK',

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_management_system/Master/itemMaster/editRoomForm.dart';
 import 'package:ticket_management_system/providers/roomProvider.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
-import 'package:ticket_management_system/utils/colors.dart';
 
 class RoomList extends StatefulWidget {
   RoomList({super.key, required this.buildingId, required this.floorId});
@@ -132,27 +130,6 @@ class _RoomListState extends State<RoomList> {
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              color: black,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditRoomForm(
-                                                    roomId: snapshot
-                                                            .data.docs[index]
-                                                        ['roomNumber'],
-                                                  ),
-                                                ),
-                                              ).whenComplete(() {
-                                                setState(() {});
-                                              });
-                                            },
-                                          ),
                                           IconButton(
                                             icon: const Icon(
                                               Icons.delete,
