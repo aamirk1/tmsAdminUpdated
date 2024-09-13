@@ -285,6 +285,9 @@ class _ListOfAssetState extends State<ListOfAsset> {
         .set({
       'asset': asset,
     });
+    FirebaseFirestore.instance.collection('assets').doc(asset).set({
+      'asset': asset,
+    });
 
     provider.addSingleList({
       'asset': asset,

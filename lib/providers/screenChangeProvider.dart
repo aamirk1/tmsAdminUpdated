@@ -10,6 +10,10 @@ class Screenchangeprovider extends ChangeNotifier {
   bool _isRoomScreen = false;
   bool _isAssetScreen = false;
 
+  int _selectedbuildingIndex = 0;
+  int _selectedfloorIndex = 0;
+  int _selectedroomIndex = 0;
+
   String get buildingNumber => _buildingNumber;
   String get floorNumber => _floorNumber;
   String get roomNumber => _roomNumber;
@@ -18,6 +22,10 @@ class Screenchangeprovider extends ChangeNotifier {
   bool get isFloorScreen => _isFloorScreen;
   bool get isRoomScreen => _isRoomScreen;
   bool get isAssetScreen => _isAssetScreen;
+
+  int get selectedbuildingIndex => _selectedbuildingIndex;
+  int get selectedfloorIndex => _selectedfloorIndex;
+  int get selectedroomIndex => _selectedroomIndex;
 
   void setBuildingNumber(String value) {
     _buildingNumber = value;
@@ -53,6 +61,32 @@ class Screenchangeprovider extends ChangeNotifier {
 
   void setIsAssetScreen(bool value) {
     _isAssetScreen = value;
+    notifyListeners();
+  }
+
+  // index
+  void setBuildingIndex(int value) {
+    _selectedbuildingIndex = value;
+    notifyListeners();
+  }
+
+  void setFloorIndex(int value) {
+    _selectedfloorIndex = value;
+    notifyListeners();
+  }
+
+  void removeFloorIndex(int value) {
+    // _selectedfloorIndex = null;
+    notifyListeners();
+  }
+
+  void setRoomIndex(int value) {
+    _selectedroomIndex = value;
+    notifyListeners();
+  }
+
+  void removeRoomIndex(int value) {
+    // _selectedfloorIndex.removeAt(value);
     notifyListeners();
   }
 }

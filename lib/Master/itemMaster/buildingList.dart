@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ticket_management_system/Master/itemMaster/editBuildingForm.dart';
 import 'package:ticket_management_system/providers/buildingProvider.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
@@ -17,7 +16,7 @@ class BuildingList extends StatefulWidget {
 class _BuildingListState extends State<BuildingList> {
   TextEditingController buildingNumberController = TextEditingController();
   List<String> buildingNumberList = [];
-
+  int selectedIndex = 0;
   bool isLoading = true;
   Stream? _stream;
   Screenchangeprovider provider = Screenchangeprovider();
@@ -35,8 +34,9 @@ class _BuildingListState extends State<BuildingList> {
   @override
   Widget build(BuildContext context) {
     // fetchData();
-    return Scaffold(
-      body: Column(
+    return Scaffold(body:
+        Consumer<Screenchangeprovider>(builder: (context, provider, child) {
+      return Column(
         children: [
           Row(
             children: [
@@ -109,7 +109,11 @@ class _BuildingListState extends State<BuildingList> {
                                 return Column(
                                   children: [
                                     ListTile(
+                                      selected: index == provider.selectedbuildingIndex,
+                                      selectedTileColor: lightMarron,
                                       onTap: () {
+                                        
+                                        provider.setBuildingIndex(index);
                                         provider.setBuildingNumber(snapshot.data
                                             .docs[index]['buildingNumber']);
                                         // provider.setIsFloorScreen(
@@ -129,25 +133,6 @@ class _BuildingListState extends State<BuildingList> {
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              color: black,
-                                            ),
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditBuildingForm(
-                                                    buildingId: snapshot
-                                                            .data.docs[index]
-                                                        ['buildingNumber'],
-                                                  ),
-                                                ),
-                                              ).whenComplete(() {});
-                                            },
-                                          ),
                                           IconButton(
                                             icon: const Icon(
                                               Icons.delete,
@@ -175,8 +160,8 @@ class _BuildingListState extends State<BuildingList> {
             ),
           )
         ],
-      ),
-    );
+      );
+    }));
   }
 
   Future<void> deletebuildingNumber(String buildingNumber) async {

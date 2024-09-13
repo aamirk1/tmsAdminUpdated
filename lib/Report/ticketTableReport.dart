@@ -333,19 +333,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
                                           });
                                         });
                                       });
-                                      selectedWork = null;
-                                      selectedServiceProvider = null;
-                                      selectedStatus = null;
-                                      selectedAsset = null;
-                                      selectedUser = null;
-                                      selectedRoom = null;
-                                      selectedFloor = null;
-                                      selectedbuilding = null;
-                                      selectedTicket = null;
-                                      selectedStartDate = '';
-                                      selectedEndDate = '';
-                                      ticketList.clear();
-                                      filterData.clear();
+                                      clearSelectdData();
                                       setState(() {});
                                       Navigator.pop(context);
                                     });
@@ -450,7 +438,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
             documentSnapshot.data() as Map<String, dynamic>;
 
         // String fullName = data['fullName'] + " " + data['userId'];
-        String fullName = data['userId'];
+        String fullName = data['fullName'];
         // print(fullName);
         userList.add(fullName);
       }
@@ -521,11 +509,8 @@ class _TicketTableReportState extends State<TicketTableReport> {
   Future<void> getFloor() async {
     final provider = Provider.of<AllFloorProvider>(context, listen: false);
     provider.setBuilderList([]);
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('buildingNumbers')
-        .doc(selectedbuilding)
-        .collection('floorNumbers')
-        .get();
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('floors').get();
     if (querySnapshot.docs.isNotEmpty) {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
 
@@ -540,13 +525,8 @@ class _TicketTableReportState extends State<TicketTableReport> {
     List<String> uniqueRoomList = [];
     final provider = Provider.of<AllRoomProvider>(context, listen: false);
     provider.setBuilderList([]);
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('buildingNumbers')
-        .doc(selectedbuilding)
-        .collection('floorNumbers')
-        .doc(selectedFloor)
-        .collection('roomNumbers')
-        .get();
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('rooms').get();
     if (querySnapshot.docs.isNotEmpty) {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
       uniqueRoomList.addAll(tempData);
@@ -561,15 +541,8 @@ class _TicketTableReportState extends State<TicketTableReport> {
     List<String> uniqueAssetsList = [];
     final provider = Provider.of<AllAssetProvider>(context, listen: false);
     provider.setBuilderList([]);
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('buildingNumbers')
-        .doc(selectedbuilding)
-        .collection('floorNumbers')
-        .doc(selectedFloor)
-        .collection('roomNumbers')
-        .doc(selectedRoom)
-        .collection('assets')
-        .get();
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('assets').get();
     if (querySnapshot.docs.isNotEmpty) {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
       uniqueAssetsList.addAll(tempData);
@@ -917,5 +890,21 @@ class _TicketTableReportState extends State<TicketTableReport> {
       }
     }
     setState(() {});
+  }
+
+  void clearSelectdData() {
+    selectedWork = null;
+    selectedServiceProvider = null;
+    selectedStatus = null;
+    selectedAsset = null;
+    selectedUser = null;
+    selectedRoom = null;
+    selectedFloor = null;
+    selectedbuilding = null;
+    selectedTicket = null;
+    selectedStartDate = '';
+    selectedEndDate = '';
+    ticketList.clear();
+    filterData.clear();
   }
 }

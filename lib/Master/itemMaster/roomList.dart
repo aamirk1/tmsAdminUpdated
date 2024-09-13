@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/providers/roomProvider.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
+import 'package:ticket_management_system/utils/colors.dart';
 
 class RoomList extends StatefulWidget {
   RoomList({super.key, required this.buildingId, required this.floorId});
@@ -110,7 +111,11 @@ class _RoomListState extends State<RoomList> {
                                 return Column(
                                   children: [
                                     ListTile(
+                                      selected:
+                                          index == provider.selectedroomIndex,
+                                      selectedTileColor: lightMarron,
                                       onTap: () {
+                                        provider.setRoomIndex(index);
                                         widget.buildingId;
                                         widget.floorId;
 
@@ -170,6 +175,10 @@ class _RoomListState extends State<RoomList> {
         .collection('roomNumbers')
         .doc(roomNumber)
         .set({
+      'roomNumber': roomNumber,
+    });
+
+    FirebaseFirestore.instance.collection('rooms').doc(roomNumber).set({
       'roomNumber': roomNumber,
     });
     provider.addSingleList({'roomNumber': roomNumber});
