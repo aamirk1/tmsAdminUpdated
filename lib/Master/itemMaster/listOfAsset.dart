@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/providers/assetsProvider.dart';
 
+// ignore: must_be_immutable
 class ListOfAsset extends StatefulWidget {
   ListOfAsset(
       {super.key,
@@ -79,7 +80,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
               ElevatedButton(
                   onPressed: () {
                     storeData(assetController.text).whenComplete(() {
-                      popupmessage('Asset added successfully!!');
+                      assetController.clear();
                     });
                   },
                   child: const Text('Save')),
@@ -255,7 +256,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
                                 onPressed: () {
                                   storeData(assetController.text)
                                       .whenComplete(() {
-                                    popupmessage('Asset added successfully!!');
+                                    assetController.clear();
                                   });
                                 },
                                 child: const Text('Save'))
@@ -294,31 +295,31 @@ class _ListOfAssetState extends State<ListOfAsset> {
     });
   }
 
-  void popupmessage(String msg) {
-    final provider = Provider.of<AllAssetProvider>(context, listen: false);
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Text(
-                msg,
-                style: const TextStyle(fontSize: 14, color: Colors.green),
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      assetController.clear();
-                      provider.setLoadWidget(false);
-                    },
-                    child: const Text(
-                      'OK',
-                      style: TextStyle(color: Colors.green),
-                    ))
-              ],
-            ),
-          );
-        });
-  }
+  // void popupmessage(String msg) {
+  //   final provider = Provider.of<AllAssetProvider>(context, listen: false);
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Center(
+  //           child: AlertDialog(
+  //             content: Text(
+  //               msg,
+  //               style: const TextStyle(fontSize: 14, color: Colors.green),
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                     assetController.clear();
+  //                     provider.setLoadWidget(false);
+  //                   },
+  //                   child: const Text(
+  //                     'OK',
+  //                     style: TextStyle(color: Colors.green),
+  //                   ))
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }

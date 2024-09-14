@@ -253,9 +253,8 @@ class _CreateUserState extends State<CreateUser> {
                                               mobileController.value.text,
                                               passwordController.value.text,
                                               selectedWorkList)
-                                          .whenComplete(() async {
-                                        await popupmessage(
-                                            'User created successfully!!');
+                                          .whenComplete(() {
+                                        resetVariables();
                                       });
                                     }
                                   },
@@ -406,40 +405,34 @@ class _CreateUserState extends State<CreateUser> {
     provider.removeData(provider.userList.indexOf(userId));
   }
 
-  Future<void> popupmessage(String msg) async {
-    final provider = Provider.of<AllUserProvider>(context, listen: false);
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Text(
-                msg,
-                style: const TextStyle(fontSize: 14, color: Colors.green),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () async {
-                    fetchData().whenComplete(() {
-                      Navigator.pop(context);
-                      fnameController.clear();
-                      lnameController.clear();
-                      mobileController.clear();
-                      passwordController.clear();
-                      selectedServiceProvider = null;
-                      provider.setLoadWidget(false);
-                    });
-                  },
-                  child: const Text(
-                    'OK',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
+  // Future<void> popupmessage(String msg) async {
+  //   Provider.of<AllUserProvider>(context, listen: false);
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Center(
+  //           child: AlertDialog(
+  //             content: Text(
+  //               msg,
+  //               style: const TextStyle(fontSize: 14, color: Colors.green),
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () async {
+  //                   fetchData().whenComplete(() {
+  //                     Navigator.pop(context);
+  //                   });
+  //                 },
+  //                 child: const Text(
+  //                   'OK',
+  //                   style: TextStyle(color: Colors.green),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 
   Future<void> getWorks() async {
     final provider = Provider.of<AllWorkProvider>(context, listen: false);
@@ -746,5 +739,13 @@ class _CreateUserState extends State<CreateUser> {
     }
     provider.setBuilderList(userList);
     print('userList $userList');
+  }
+
+  void resetVariables() {
+    fnameController.clear();
+    lnameController.clear();
+    mobileController.clear();
+    passwordController.clear();
+    selectedServiceProvider = null;
   }
 }

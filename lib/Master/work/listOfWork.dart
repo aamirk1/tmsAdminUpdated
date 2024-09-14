@@ -66,7 +66,7 @@ class _ListOfWorkState extends State<ListOfWork> {
                   ElevatedButton(
                       onPressed: () {
                         storeData(workController.text).whenComplete(() {
-                          popupmessage('Work added successfully!!');
+                          workController.clear();
                         });
                       },
                       child: const Text('Save')),
@@ -161,7 +161,6 @@ class _ListOfWorkState extends State<ListOfWork> {
     );
   }
 
-  
   Future<void> deleteWork(String work) async {
     final provider = Provider.of<AllWorkProvider>(context, listen: false);
     await FirebaseFirestore.instance.collection('works').doc(work).delete();
@@ -189,29 +188,29 @@ class _ListOfWorkState extends State<ListOfWork> {
     });
   }
 
-  void popupmessage(String msg) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Text(
-                msg,
-                style: const TextStyle(fontSize: 14, color: Colors.green),
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                        Navigator.pop(context);
-                        workController.clear();
-                    },
-                    child: const Text(
-                      'OK',
-                      style: TextStyle(color: Colors.green),
-                    ))
-              ],
-            ),
-          );
-        });
-  }
+  // void popupmessage(String msg) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Center(
+  //           child: AlertDialog(
+  //             content: Text(
+  //               msg,
+  //               style: const TextStyle(fontSize: 14, color: Colors.green),
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                     workController.clear();
+  //                   },
+  //                   child: const Text(
+  //                     'OK',
+  //                     style: TextStyle(color: Colors.green),
+  //                   ))
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }

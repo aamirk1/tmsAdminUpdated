@@ -5,6 +5,7 @@ import 'package:ticket_management_system/providers/roomProvider.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
+// ignore: must_be_immutable
 class RoomList extends StatefulWidget {
   RoomList({super.key, required this.buildingId, required this.floorId});
   String buildingId;
@@ -74,7 +75,7 @@ class _RoomListState extends State<RoomList> {
               ElevatedButton(
                   onPressed: () {
                     storeData(roomNumberController.text).whenComplete(() {
-                      popupmessage('Room No. added successfully!!');
+                      roomNumberController.clear();
                     });
                   },
                   child: const Text('Save')),
@@ -197,31 +198,31 @@ class _RoomListState extends State<RoomList> {
     provider.removeData(roomNumberList.indexOf(roomNumber));
   }
 
-  void popupmessage(String msg) {
-    final provider = Provider.of<AllRoomProvider>(context, listen: false);
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Text(
-                msg,
-                style: const TextStyle(fontSize: 14, color: Colors.green),
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      roomNumberController.clear();
-                      provider.setLoadWidget(false);
-                    },
-                    child: const Text(
-                      'OK',
-                      style: TextStyle(color: Colors.green),
-                    ))
-              ],
-            ),
-          );
-        });
-  }
+  // void popupmessage(String msg) {
+  //   final provider = Provider.of<AllRoomProvider>(context, listen: false);
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Center(
+  //           child: AlertDialog(
+  //             content: Text(
+  //               msg,
+  //               style: const TextStyle(fontSize: 14, color: Colors.green),
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                     roomNumberController.clear();
+  //                     provider.setLoadWidget(false);
+  //                   },
+  //                   child: const Text(
+  //                     'OK',
+  //                     style: TextStyle(color: Colors.green),
+  //                   ))
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }

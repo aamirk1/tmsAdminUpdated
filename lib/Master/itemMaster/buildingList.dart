@@ -72,7 +72,7 @@ class _BuildingListState extends State<BuildingList> {
               ElevatedButton(
                   onPressed: () {
                     storeData(buildingNumberController.text).whenComplete(() {
-                      popupmessage('Building added successfully!!');
+                      buildingNumberController.clear();
                     });
                   },
                   child: const Text('Save')),
@@ -109,10 +109,10 @@ class _BuildingListState extends State<BuildingList> {
                                 return Column(
                                   children: [
                                     ListTile(
-                                      selected: index == provider.selectedbuildingIndex,
+                                      selected: index ==
+                                          provider.selectedbuildingIndex,
                                       selectedTileColor: lightMarron,
                                       onTap: () {
-                                        
                                         provider.setBuildingIndex(index);
                                         provider.setBuildingNumber(snapshot.data
                                             .docs[index]['buildingNumber']);
@@ -192,31 +192,31 @@ class _BuildingListState extends State<BuildingList> {
     }
   }
 
-  void popupmessage(String msg) {
-    final provider = Provider.of<AllBuildingProvider>(context, listen: false);
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Text(
-                msg,
-                style: const TextStyle(fontSize: 14, color: Colors.green),
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      buildingNumberController.clear();
-                      provider.setLoadWidget(false);
-                    },
-                    child: const Text(
-                      'OK',
-                      style: TextStyle(color: Colors.green),
-                    ))
-              ],
-            ),
-          );
-        });
-  }
+  // void popupmessage(String msg) {
+  //   final provider = Provider.of<AllBuildingProvider>(context, listen: false);
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Center(
+  //           child: AlertDialog(
+  //             content: Text(
+  //               msg,
+  //               style: const TextStyle(fontSize: 14, color: Colors.green),
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                     buildingNumberController.clear();
+  //                     provider.setLoadWidget(false);
+  //                   },
+  //                   child: const Text(
+  //                     'OK',
+  //                     style: TextStyle(color: Colors.green),
+  //                   ))
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }

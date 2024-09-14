@@ -5,6 +5,7 @@ import 'package:ticket_management_system/providers/floorProvider.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
+// ignore: must_be_immutable
 class FloorList extends StatefulWidget {
   FloorList({super.key, required this.buildingId});
   String buildingId;
@@ -75,7 +76,7 @@ class _FloorListState extends State<FloorList> {
                   onPressed: () {
                     storeData(widget.buildingId, floorNumberController.text)
                         .whenComplete(() {
-                      popupmessage('Floor No. added successfully!!');
+                      floorNumberController.clear();;
                     });
                   },
                   child: const Text('Save')),
@@ -198,31 +199,31 @@ class _FloorListState extends State<FloorList> {
     provider.removeData(floorNumberList.indexOf(floorNumber));
   }
 
-  void popupmessage(String msg) {
-    final provider = Provider.of<AllFloorProvider>(context, listen: false);
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: AlertDialog(
-              content: Text(
-                msg,
-                style: const TextStyle(fontSize: 14, color: Colors.green),
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      floorNumberController.clear();
-                      provider.setLoadWidget(false);
-                    },
-                    child: const Text(
-                      'OK',
-                      style: TextStyle(color: Colors.green),
-                    ))
-              ],
-            ),
-          );
-        });
-  }
+  // void popupmessage(String msg) {
+  //   final provider = Provider.of<AllFloorProvider>(context, listen: false);
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Center(
+  //           child: AlertDialog(
+  //             content: Text(
+  //               msg,
+  //               style: const TextStyle(fontSize: 14, color: Colors.green),
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                     floorNumberController.clear();
+  //                     provider.setLoadWidget(false);
+  //                   },
+  //                   child: const Text(
+  //                     'OK',
+  //                     style: TextStyle(color: Colors.green),
+  //                   ))
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }
