@@ -123,6 +123,7 @@ class _BuildingListState extends State<BuildingList> {
                                             : provider.setIsFloorScreen(true);
                                         provider.setIsRoomScreen(false);
                                         provider.setIsAssetScreen(false);
+                                        provider.setIsWorkScreen(false);
                                       },
                                       title: Text(
                                         snapshot.data.docs[index]

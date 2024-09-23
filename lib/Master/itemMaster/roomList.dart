@@ -127,6 +127,8 @@ class _RoomListState extends State<RoomList> {
                                         provider.isAssetScreen == true
                                             ? provider.setIsAssetScreen(false)
                                             : provider.setIsAssetScreen(true);
+
+                                        provider.setIsWorkScreen(false);
                                       },
                                       title: Text(
                                         snapshot.data.docs[index]['roomNumber'],

@@ -129,6 +129,7 @@ class _FloorListState extends State<FloorList> {
                                             ? provider.setIsRoomScreen(false)
                                             : provider.setIsRoomScreen(true);
                                         provider.setIsAssetScreen(false);
+                                        provider.setIsWorkScreen(false);
                                       },
                                       title: Text(
                                         snapshot.data.docs[index]

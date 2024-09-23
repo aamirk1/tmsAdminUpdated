@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Master/createUser/createUser.dart';
 import 'package:ticket_management_system/Master/itemMaster/itemMaster.dart';
 import 'package:ticket_management_system/Master/work/listOfWork.dart';
+import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 // ignore: must_be_immutable
@@ -113,9 +115,18 @@ class _MasterHomeScreenState extends State<MasterHomeScreen> {
                           minimumSize: WidgetStatePropertyAll(Size(300, 50))),
                       onPressed: () {
                         setState(() {
+                          final provider = Provider.of<Screenchangeprovider>(
+                              context,
+                              listen: false);
                           isUserScreen = false;
                           isWorkScreen = false;
                           isItemMasterScreen = !isItemMasterScreen;
+                          isItemMasterScreen == false
+                              ? Container()
+                              : provider.setIsFloorScreen(false);
+                          provider.setIsRoomScreen(false);
+                          provider.setIsAssetScreen(false);
+                          provider.setIsWorkScreen(false);
                         });
                       },
                       child: const Text(

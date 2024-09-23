@@ -110,13 +110,13 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
                                 return Column(
                                   children: [
                                     ListTile(
-                                      onTap: () {
-                                        // provider.setIsFloorScreen(
-                                        //     true);
-                                        provider.isAssetScreen == true
-                                            ? provider.setIsAssetScreen(false)
-                                            : provider.setIsAssetScreen(true);
-                                      },
+                                      // onTap: () {
+                                      //   // provider.setIsFloorScreen(
+                                      //   //     true);
+                                      //   provider.isAssetScreen == true
+                                      //       ? provider.setIsWorkScreen(false)
+                                      //       : provider.setIsWorkScreen(true);
+                                      // },
                                       title: Text(
                                         snapshot.data['workListByAsset'],
                                         style: const TextStyle(
