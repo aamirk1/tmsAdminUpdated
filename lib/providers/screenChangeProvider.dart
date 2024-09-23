@@ -5,27 +5,33 @@ class Screenchangeprovider extends ChangeNotifier {
   String _floorNumber = '';
   String _roomNumber = '';
   String _asset = '';
+  String _work = '';
 
   bool _isFloorScreen = false;
   bool _isRoomScreen = false;
   bool _isAssetScreen = false;
+  bool _isWorkScreen = false;
 
   int _selectedbuildingIndex = 0;
   int _selectedfloorIndex = 0;
   int _selectedroomIndex = 0;
+  int _selectedAssetIndex = 0;
 
   String get buildingNumber => _buildingNumber;
   String get floorNumber => _floorNumber;
   String get roomNumber => _roomNumber;
   String get asset => _asset;
+  String get work => _work;
 
   bool get isFloorScreen => _isFloorScreen;
   bool get isRoomScreen => _isRoomScreen;
   bool get isAssetScreen => _isAssetScreen;
+  bool get isWorkScreen => _isWorkScreen;
 
   int get selectedbuildingIndex => _selectedbuildingIndex;
   int get selectedfloorIndex => _selectedfloorIndex;
   int get selectedroomIndex => _selectedroomIndex;
+  int get selectedAssetIndex => _selectedAssetIndex;
 
   void setBuildingNumber(String value) {
     _buildingNumber = value;
@@ -47,6 +53,11 @@ class Screenchangeprovider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setWorkNumber(String value) {
+    _work = value;
+    notifyListeners();
+  }
+
 // boolean variable
 
   void setIsFloorScreen(bool value) {
@@ -61,6 +72,11 @@ class Screenchangeprovider extends ChangeNotifier {
 
   void setIsAssetScreen(bool value) {
     _isAssetScreen = value;
+    notifyListeners();
+  }
+
+    void setIsWorkScreen(bool value) {
+    _isWorkScreen = value;
     notifyListeners();
   }
 
@@ -85,8 +101,30 @@ class Screenchangeprovider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setAssetIndex(int value) {
+    _selectedAssetIndex = value;
+    notifyListeners();
+  }
+
   void removeRoomIndex(int value) {
     // _selectedfloorIndex.removeAt(value);
     notifyListeners();
   }
+
+
+
+  // fetch worklist
+  List<dynamic> _workList = [];
+  List<dynamic> get workList => _workList;
+
+  void addList(List<dynamic> list) {
+    _workList = workList;
+    notifyListeners();
+  }
+
+  void setBuilderList(List<String> value) {
+    _workList = value;
+    // notifyListeners();
+  }
+
 }

@@ -4,6 +4,7 @@ import 'package:ticket_management_system/Master/itemMaster/buildingList.dart';
 import 'package:ticket_management_system/Master/itemMaster/floorList.dart';
 import 'package:ticket_management_system/Master/itemMaster/listOfAsset.dart';
 import 'package:ticket_management_system/Master/itemMaster/roomList.dart';
+import 'package:ticket_management_system/Master/itemMaster/worklist.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
@@ -17,12 +18,23 @@ class AllItemMaster extends StatefulWidget {
 
 class _AllItemMasterState extends State<AllItemMaster> {
   bool isBuildingScreen = false;
-  bool isRoomScreen = false;
-  bool isAssetScreen = false;
+  Stream? _stream;
+  Screenchangeprovider provider = Screenchangeprovider();
+
   @override
+  void initState() {
+    // provider = Provider.of<Screenchangeprovider>(context, listen: false);
+    // _stream =
+    //     FirebaseFirestore.instance.collection('buildingNumbers').snapshots();
+    // TODO: implement initState
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(body:
         Consumer<Screenchangeprovider>(builder: (context, provider, child) {
+      print('provider.isWorkScreen: ${provider.isWorkScreen}');
+      // provider.setIsWorkScreen(true);
       return Container(
         padding: const EdgeInsets.all(4),
         height: MediaQuery.of(context).size.height,
@@ -75,7 +87,19 @@ class _AllItemMasterState extends State<AllItemMaster> {
                                   : const Color.fromARGB(255, 177, 177, 177)),
                           minimumSize:
                               const WidgetStatePropertyAll(Size(220, 50))),
-                      onPressed: () {},
+                      onPressed: () {
+                        // Navigator.push(context, MaterialPageRoute(
+                        //   builder: (context) {
+                        //     return WorkListByAsset(
+                        //       buildingId: '',
+                        //       floorId: '',
+                        //       roomId: '',
+                        //       assetId: '',
+
+                        //     );
+                        //   },
+                        // ));
+                      },
                       child: const Text(
                         'Room List',
                         style: TextStyle(
@@ -99,11 +123,27 @@ class _AllItemMasterState extends State<AllItemMaster> {
                             fontSize: 16,
                             fontWeight: FontWeight.bold),
                       )),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                              provider.isWorkScreen == true
+                                  ? lightMarron
+                                  : const Color.fromARGB(255, 177, 177, 177)),
+                          minimumSize:
+                              const WidgetStatePropertyAll(Size(220, 50))),
+                      onPressed: () {},
+                      child: const Text(
+                        'Work List',
+                        style: TextStyle(
+                            color: marron,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      )),
                 ],
               ),
             ),
             const SizedBox(
-              height: 5,
+              height: 3,
             ),
             Row(
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -151,6 +191,22 @@ class _AllItemMasterState extends State<AllItemMaster> {
                             buildingId: provider.buildingNumber,
                             floorId: provider.floorNumber,
                             roomId: provider.roomNumber)
+                        : Container(),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.60,
+                    width: MediaQuery.of(context).size.width,
+                    child: provider.isWorkScreen
+                        ? WorkListByAsset(
+                            buildingId: provider.buildingNumber,
+                            floorId: provider.floorNumber,
+                            roomId: provider.roomNumber,
+                            assetId: provider.asset,
+                            workList: provider.workList,
+                          )
                         : Container(),
                   ),
                 ),

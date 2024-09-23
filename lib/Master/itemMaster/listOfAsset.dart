@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/providers/assetsProvider.dart';
+import 'package:ticket_management_system/providers/screenChangeProvider.dart';
+import 'package:ticket_management_system/utils/colors.dart';
 
 // ignore: must_be_immutable
 class ListOfAsset extends StatefulWidget {
@@ -22,9 +24,15 @@ class _ListOfAssetState extends State<ListOfAsset> {
   TextEditingController assetController = TextEditingController();
   bool isLoading = true;
   List<String> assetList = [];
+
+  List<String> workList = [];
+  bool isWorkScreen = false;
+
+  Screenchangeprovider provider = Screenchangeprovider();
   Stream? _stream;
   @override
   void initState() {
+    provider = Provider.of<Screenchangeprovider>(context, listen: false);
     _stream = FirebaseFirestore.instance
         .collection('buildingNumbers')
         .doc(widget.buildingId)
@@ -37,6 +45,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
     // fetchData().whenComplete(() => setState(() {
     //       isLoading = false;
     //     }));
+    getWorks();
     super.initState();
   }
 
@@ -53,7 +62,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
                 child: Container(
                   color: Colors.white,
                   height: 40,
-                  width: MediaQuery.of(context).size.width * 0.14,
+                  width: MediaQuery.of(context).size.width * 0.10,
                   child: TextFormField(
                     textInputAction: TextInputAction.done,
                     expands: true,
@@ -75,7 +84,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
                 ),
               ),
               const SizedBox(
-                width: 5,
+                width: 2,
               ),
               ElevatedButton(
                   onPressed: () {
@@ -117,6 +126,21 @@ class _ListOfAssetState extends State<ListOfAsset> {
                                 return Column(
                                   children: [
                                     ListTile(
+                                      selected:
+                                          index == provider.selectedAssetIndex,
+                                      selectedTileColor: lightMarron,
+                                      onTap: () {
+                                        provider.setAssetIndex(index);
+                                        widget.buildingId;
+                                        widget.floorId;
+                                        widget.roomId;
+
+                                        provider.setAssetNumber(
+                                            snapshot.data.docs[index]['asset']);
+                                        provider.isWorkScreen == true
+                                            ? provider.setIsWorkScreen(false)
+                                            : provider.setIsWorkScreen(true);
+                                      },
                                       title: Text(
                                         snapshot.data.docs[index]['asset'],
                                         style: const TextStyle(
@@ -295,31 +319,16 @@ class _ListOfAssetState extends State<ListOfAsset> {
     });
   }
 
-  // void popupmessage(String msg) {
-  //   final provider = Provider.of<AllAssetProvider>(context, listen: false);
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return Center(
-  //           child: AlertDialog(
-  //             content: Text(
-  //               msg,
-  //               style: const TextStyle(fontSize: 14, color: Colors.green),
-  //             ),
-  //             actions: [
-  //               TextButton(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                     assetController.clear();
-  //                     provider.setLoadWidget(false);
-  //                   },
-  //                   child: const Text(
-  //                     'OK',
-  //                     style: TextStyle(color: Colors.green),
-  //                   ))
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
+  Future<void> getWorks() async {
+    // final provider = Provider.of<AllWorkProvider>(context, listen: false);
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('works').get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
+      workList = tempData;
+    }
+
+    provider.setBuilderList(workList);
+    print('workList $workList');
+  }
 }

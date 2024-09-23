@@ -48,7 +48,7 @@ class _RoomListState extends State<RoomList> {
                 child: Container(
                   color: Colors.white,
                   height: 40,
-                  width: MediaQuery.of(context).size.width * 0.14,
+                  width: MediaQuery.of(context).size.width * 0.10,
                   child: TextFormField(
                     textInputAction: TextInputAction.done,
                     expands: true,
@@ -70,7 +70,7 @@ class _RoomListState extends State<RoomList> {
                 ),
               ),
               const SizedBox(
-                width: 5,
+                width: 2,
               ),
               ElevatedButton(
                   onPressed: () {

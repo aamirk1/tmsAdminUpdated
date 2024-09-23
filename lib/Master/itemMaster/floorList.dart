@@ -48,7 +48,7 @@ class _FloorListState extends State<FloorList> {
                 child: Container(
                   color: Colors.white,
                   height: 40,
-                  width: MediaQuery.of(context).size.width * 0.14,
+                  width: MediaQuery.of(context).size.width * 0.10,
                   child: TextFormField(
                     textInputAction: TextInputAction.done,
                     expands: true,
@@ -60,7 +60,7 @@ class _FloorListState extends State<FloorList> {
                         horizontal: 10,
                         vertical: 8,
                       ),
-                      hintText: 'Add Floor No',
+                      hintText: 'Add Floor',
                       hintStyle: const TextStyle(fontSize: 12),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -70,13 +70,14 @@ class _FloorListState extends State<FloorList> {
                 ),
               ),
               const SizedBox(
-                width: 5,
+                width: 2,
               ),
               ElevatedButton(
                   onPressed: () {
                     storeData(widget.buildingId, floorNumberController.text)
                         .whenComplete(() {
-                      floorNumberController.clear();;
+                      floorNumberController.clear();
+                      ;
                     });
                   },
                   child: const Text('Save')),

@@ -704,7 +704,7 @@ class _CreateUserState extends State<CreateUser> {
   }
 
   Future<void> storeData(String fname, String lname, String mobile,
-      String password, List<String> role) async {
+    String password, List<String> role) async {
     final provider = Provider.of<AllUserProvider>(context, listen: false);
     String firstInitial = fname[0][0].trim().toUpperCase();
     String lastInitial = lname[0][0].trim().toUpperCase();
