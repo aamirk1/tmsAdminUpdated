@@ -18,6 +18,13 @@ class ReportDetails extends StatefulWidget {
 }
 
 class _ReportDetailsState extends State<ReportDetails> {
+  @override
+  void initState() {
+    print('widget.ticketData: ${widget.ticketData}');
+    // print(widget.)
+    super.initState();
+  }
+
   final pattern = RegExp(r',\s*');
   List<dynamic> keys = [
     'date',

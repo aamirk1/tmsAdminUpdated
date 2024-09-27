@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Report/refreshScreen.dart';
@@ -64,10 +63,6 @@ class _TicketTableReportState extends State<TicketTableReport> {
   List<dynamic> allData = [];
   List<dynamic> serviceProviderList = [];
   String? selectedTicketNumber;
-  List<String> allDateData = [];
-  List<String> allTicketData = [];
-  List<String> allAssetData = [];
-  List<String> allUserData = [];
   List<String> buildingNumberList = [];
   List<String> allFloorData = [];
   List<String> allWorkData = [];
@@ -582,9 +577,10 @@ class _TicketTableReportState extends State<TicketTableReport> {
               ),
               items: customDropDownList
                   .map((item) => DropdownMenuItem(
-                        value: item,
+                        value:
+                            item, //customDropDownList.contains(item) ? item : '',
                         child: Text(
-                          item,
+                          item, //  customDropDownList.contains(item) ? item : '',
                           style: const TextStyle(
                               fontSize: 14, color: Colors.black),
                         ),
@@ -702,7 +698,11 @@ class _TicketTableReportState extends State<TicketTableReport> {
                                             ? userController
                                             : index == 6
                                                 ? assetController
-                                                : serviceProviderController,
+                                                : index == 7
+                                                    ? serviceProviderController
+                                                    : index == 8
+                                                        ? statusController
+                                                        : workController,
                     decoration: InputDecoration(
                       isDense: true,
                       contentPadding: const EdgeInsets.symmetric(
@@ -842,29 +842,71 @@ class _TicketTableReportState extends State<TicketTableReport> {
           }
         }
       } else {
+        QuerySnapshot dateQuery =
+            await FirebaseFirestore.instance.collection("raisedTickets").get();
+        List<dynamic> dateList = dateQuery.docs.map((e) => e.id).toList();
         for (int j = 0; j < dateList.length; j++) {
           List<dynamic> temp = [];
-          QuerySnapshot ticketQuery = await FirebaseFirestore.instance
+          Query query = FirebaseFirestore.instance
               .collection("raisedTickets")
               .doc(dateList[j])
-              .collection('tickets')
-              .where('work', isEqualTo: selectedWork) // Filter by work
-              .where('status', isEqualTo: selectedStatus) // Filter by work
-              .where('serviceProvider',
-                  isEqualTo: selectedServiceProvider) // Filter by work
-              .where('building', isEqualTo: selectedbuilding) // Filter by work
-              .where('floor', isEqualTo: selectedFloor) // Filter by work
-              .where('room', isEqualTo: selectedRoom) // Filter by work
-              .where('asset', isEqualTo: selectedAsset) // Filter by work
-              .where('user', isEqualTo: selectedUser) // Filter by work
-              .where('tickets', isEqualTo: selectedTicket) // Filter by work
-              .get();
+              .collection('tickets');
+          if (selectedStatus != null) {
+            query = query.where('status', isEqualTo: selectedStatus);
+          }
+          if (selectedUser != null) {
+            query = query.where('name', isEqualTo: selectedUser);
+          }
+          if (selectedFloor != null) {
+            query = query.where('floor', isEqualTo: selectedFloor);
+          }
+          if (selectedTicket != null) {
+            query = query.where('tickets', isEqualTo: selectedTicket);
+          }
+          if (selectedRoom != null) {
+            query = query.where('room', isEqualTo: selectedRoom);
+          }
+          if (selectedWork != null) {
+            query = query.where('work', isEqualTo: selectedWork);
+          }
+          if (selectedAsset != null) {
+            query = query.where('asset', isEqualTo: selectedAsset);
+          }
+          if (selectedbuilding != null) {
+            query = query.where('building', isEqualTo: selectedbuilding);
+          }
+
+          if (selectedServiceProvider != null) {
+            query = query.where('serviceProvider',
+                isEqualTo: selectedServiceProvider);
+          }
+          QuerySnapshot ticketQuery = await query.get();
+          //await FirebaseFirestore.instance
+          //     .collection("raisedTickets")
+          //     .doc(currentYear.toString())
+          //     .collection('months')
+          //     .doc(months[i])
+          //     .collection('date')
+          //     .doc(dateList[j])
+          //     .collection('tickets')
+          //     .where('work', isEqualTo: selectedWork) // Filter by work
+          //     .where('status', isEqualTo: selectedStatus) // Filter by work
+          //     .where('serviceProvider',
+          //         isEqualTo: selectedServiceProvider) // Filter by work
+          //     .where('building',
+          //         isEqualTo: selectedbuilding) // Filter by work
+          //     .where('floor', isEqualTo: selectedFloor) // Filter by work
+          //     .where('room', isEqualTo: selectedRoom) // Filter by work
+          //     .where('asset', isEqualTo: selectedAsset) // Filter by work
+          //     .where('tickets', isEqualTo: selectedTicket) // Filter by work
+          //     .get();
 
           temp = ticketQuery.docs.map((e) => e.id).toList();
           // ticketList = ticketList + temp;
+          print('Temp String $temp');
 
           if (temp.isNotEmpty) {
-            ticketList.addAll(temp);
+            ticketList = ticketList + temp;
             for (int k = 0; k < temp.length; k++) {
               DocumentSnapshot ticketDataQuery = await FirebaseFirestore
                   .instance
@@ -878,19 +920,67 @@ class _TicketTableReportState extends State<TicketTableReport> {
                     ticketDataQuery.data() as Map<String, dynamic>;
 
                 filterData.add(mapData);
-                // print('$mapData abc');
+                print('$mapData abc');
               }
             }
           }
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Error Fetching tickets: $e");
-      }
+      print("Error Fetching tickets: $e");
     }
-    setState(() {});
   }
+
+  //     else {
+  //       for (int j = 0; j < dateList.length; j++) {
+  //         List<dynamic> temp = [];
+  //         QuerySnapshot ticketQuery = await FirebaseFirestore.instance
+  //             .collection("raisedTickets")
+  //             .doc(dateList[j])
+  //             .collection('tickets')
+  //             .where('work', isEqualTo: selectedWork) // Filter by work
+  //             .where('status', isEqualTo: selectedStatus) // Filter by work
+  //             .where('serviceProvider',
+  //                 isEqualTo: selectedServiceProvider) // Filter by work
+  //             .where('building', isEqualTo: selectedbuilding) // Filter by work
+  //             .where('floor', isEqualTo: selectedFloor) // Filter by work
+  //             .where('room', isEqualTo: selectedRoom) // Filter by work
+  //             .where('asset', isEqualTo: selectedAsset) // Filter by work
+  //             .where('user', isEqualTo: selectedUser) // Filter by work
+  //             .where('tickets', isEqualTo: selectedTicket) // Filter by work
+  //             .get();
+
+  //         temp = ticketQuery.docs.map((e) => e.id).toList();
+  //         // ticketList = ticketList + temp;
+
+  //         if (temp.isNotEmpty) {
+  //           ticketList.addAll(temp);
+  //           for (int k = 0; k < temp.length; k++) {
+  //             DocumentSnapshot ticketDataQuery = await FirebaseFirestore
+  //                 .instance
+  //                 .collection("raisedTickets")
+  //                 .doc(dateList[j])
+  //                 .collection('tickets')
+  //                 .doc(temp[k])
+  //                 .get();
+  //             if (ticketDataQuery.exists) {
+  //               Map<String, dynamic> mapData =
+  //                   ticketDataQuery.data() as Map<String, dynamic>;
+
+  //               filterData.add(mapData);
+  //               // print('$mapData abc');
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print("Error Fetching tickets: $e");
+  //     }
+  //   }
+  //   setState(() {});
+  // }
 
   void clearSelectdData() {
     selectedWork = null;
