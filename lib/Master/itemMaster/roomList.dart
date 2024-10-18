@@ -197,6 +197,12 @@ class _RoomListState extends State<RoomList> {
         .collection('roomNumbers')
         .doc(roomNumber)
         .delete();
+
+        await FirebaseFirestore.instance
+        
+        .collection('rooms')
+        .doc(roomNumber)
+        .delete();
     provider.removeData(roomNumberList.indexOf(roomNumber));
   }
 

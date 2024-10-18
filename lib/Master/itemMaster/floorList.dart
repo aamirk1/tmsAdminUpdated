@@ -198,6 +198,10 @@ class _FloorListState extends State<FloorList> {
         .collection('floorNumbers')
         .doc(floorNumber)
         .delete();
+    await FirebaseFirestore.instance
+        .collection('floors')
+        .doc(floorNumber)
+        .delete();
     provider.removeData(floorNumberList.indexOf(floorNumber));
   }
 

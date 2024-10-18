@@ -117,7 +117,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
                           );
                         } else if (!snapshot.hasData ||
                             snapshot.data!.docs.isEmpty) {
-                          return const Text('No data found');
+                          return const Center(child: Text('No data found'));
                         } else {
                           return ListView.builder(
                               shrinkWrap: true,
@@ -192,7 +192,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
         .doc(asset)
         .delete();
     // print('successfully deleted');
-
+    await FirebaseFirestore.instance.collection('assets').doc(asset).delete();
     // provider.removeData(assetList.indexOf(asset));
     provider.removeData(assetList.indexOf(asset));
     print('successfully deletedw');

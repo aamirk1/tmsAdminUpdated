@@ -119,8 +119,8 @@ class _UserDetailsState extends State<UserDetails> {
                                               padding:
                                                   const EdgeInsets.all(2.0),
                                               child: SizedBox(
-                                                width: 150,
-                                                height: 25,
+                                                width: 180,
+                                                height: 35,
                                                 child: ListTile(
                                                   title: RichText(
                                                       text: TextSpan(children: [

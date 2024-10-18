@@ -40,8 +40,14 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
   void initState() {
     provider = Provider.of<Screenchangeprovider>(context, listen: false);
     _stream = FirebaseFirestore.instance
+        // .collection('buildingNumbers')
+        // .doc(widget.buildingId)
+        // .collection('floorNumbers')
+        // .doc(widget.floorId)
+        // .collection('roomNumbers')
+        // .doc(widget.roomId)
         .collection('assets')
-        .doc(widget.assetId)
+        .where('asset', isEqualTo: widget.assetId)
         .snapshots();
     super.initState();
   }
@@ -100,12 +106,13 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
-                        } else if (!snapshot.hasData || snapshot.data == null) {
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
                           return const Text('No data found');
                         } else {
                           return ListView.builder(
                               shrinkWrap: true,
-                              itemCount: 1,
+                              itemCount: snapshot.data!.docs.length,
                               itemBuilder: (item, index) {
                                 return Column(
                                   children: [
@@ -118,7 +125,9 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
                                       //       : provider.setIsWorkScreen(true);
                                       // },
                                       title: Text(
-                                        snapshot.data['workListByAsset'],
+                                        snapshot.data.docs[index]
+                                            ['workListByAsset'],
+                                        // snapshot.data['workListByAsset'],
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -169,6 +178,7 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
         .collection('workListByAssets')
         .doc(workListByAsset)
         .delete();
+
     provider.removeData(workListByAssetList.indexOf(workListByAsset));
   }
 
