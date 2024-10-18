@@ -78,8 +78,8 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
                 width: 2,
               ),
               ElevatedButton(
-                  onPressed: () {
-                    storeData(selectedWorkList[0]).whenComplete(() {
+                  onPressed: () async {
+                    await storeData(selectedWorkList[0]).whenComplete(() {
                       selectedWorkList.clear();
                     });
                   },
@@ -108,7 +108,7 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
                           );
                         } else if (!snapshot.hasData ||
                             snapshot.data!.docs.isEmpty) {
-                          return const Text('No data found');
+                          return const Center(child: Text('No data found'));
                         } else {
                           return ListView.builder(
                               shrinkWrap: true,
@@ -228,17 +228,17 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
         child: Column(
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.30,
+              width: MediaQuery.of(context).size.width * 0.35,
               height: 25,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton2(
                   dropdownSearchData: DropdownSearchData(
                     searchController: workListByAssetController,
                     searchInnerWidgetHeight: 20,
-                    searchInnerWidget: SizedBox(
+                    searchInnerWidget: const SizedBox(
                       height: 50, //: 42,
                       child: Padding(
-                        padding: const EdgeInsets.all(5.0),
+                        padding: EdgeInsets.all(5.0),
                         child: Row(
                           children: [
                             // Expanded(
@@ -267,31 +267,31 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
                             //     ),
                             //   ),
                             // ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 2.0, right: 1, top: 6, bottom: 5),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: marron,
-                                    minimumSize: Size(
-                                      MediaQuery.of(context).size.width * 0.04,
-                                      50,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    )),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text(
-                                  'Done',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: white,
-                                  ),
-                                ),
-                              ),
-                            )
+                            // Padding(
+                            //   padding: const EdgeInsets.only(
+                            //       left: 2.0, right: 1, top: 6, bottom: 5),
+                            //   child: ElevatedButton(
+                            //     style: ElevatedButton.styleFrom(
+                            //         backgroundColor: marron,
+                            //         minimumSize: Size(
+                            //           MediaQuery.of(context).size.width * 0.04,
+                            //           50,
+                            //         ),
+                            //         shape: RoundedRectangleBorder(
+                            //           borderRadius: BorderRadius.circular(6),
+                            //         )),
+                            //     onPressed: () {
+                            //       Navigator.pop(context);
+                            //     },
+                            //     child: const Text(
+                            //       'Done',
+                            //       style: TextStyle(
+                            //         fontSize: 12,
+                            //         color: white,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // )
                           ],
                         ),
                       ),

@@ -307,12 +307,11 @@ class _ListOfAssetState extends State<ListOfAsset> {
         .doc(widget.roomId)
         .collection('assets')
         .doc(asset)
-        .set({
-      'asset': asset,
-    });
-    FirebaseFirestore.instance.collection('assets').doc(asset).set({
-      'asset': asset,
-    });
+        .set({'asset': asset, 'workListByAsset': 'Work not assign'});
+    FirebaseFirestore.instance
+        .collection('assets')
+        .doc(asset)
+        .set({'asset': asset, 'workListByAsset': 'Work not assign'});
 
     provider.addSingleList({
       'asset': asset,
