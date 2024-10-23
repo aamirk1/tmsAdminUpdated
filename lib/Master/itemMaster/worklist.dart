@@ -157,6 +157,16 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
         .update({
       'workListByAsset': workListByAsset,
     });
+    await FirebaseFirestore.instance
+        .collection('buildingNumbers')
+        .doc(widget.buildingId)
+        .collection('floorNumbers')
+        .doc(widget.floorId)
+        .collection('roomNumbers')
+        .doc(widget.roomId)
+        .collection('assets')
+        .doc(widget.assetId)
+        .set({'asset': widget.assetId, 'workListByAsset': workListByAsset});
 
     // FirebaseFirestore.instance.collection('rooms').doc(workListByAsset).set({
     //   'workListByAsset': workListByAsset,
