@@ -35,7 +35,6 @@ class _EditUserFormState extends State<EditUserForm> {
   @override
   void initState() {
     fetchData(widget.fullName).whenComplete(() => setState(() {
-          selectedWorkList = roleList.map((e) => e.toString()).toList();
           isLoading = false;
         }));
     getWorks();
@@ -207,6 +206,7 @@ class _EditUserFormState extends State<EditUserForm> {
                           )),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
+                          print('selectedWorkList---$selectedWorkList');
                           updateData(
                                   fnameController.text,
                                   lnameController.text,
@@ -214,7 +214,9 @@ class _EditUserFormState extends State<EditUserForm> {
                                   passwordController.text,
                                   selectedWorkList)
                               .whenComplete(() async {
+                            selectedWorkList.clear();
                             await popupmessage('User Updated successfully!!');
+                            print('selectedWorkList222222---$selectedWorkList');
                           });
                         }
                       },
@@ -237,6 +239,7 @@ class _EditUserFormState extends State<EditUserForm> {
 
   Future<void> updateData(String fname, String lname, String mobile,
       String password, List<String> role) async {
+    print('inside function $role');
     String firstInitial = fname[0][0].trim().toUpperCase();
     String lastInitial = lname[0][0].trim().toUpperCase();
     String mobileLastFour = mobile.substring(mobile.length - 4);
@@ -247,7 +250,7 @@ class _EditUserFormState extends State<EditUserForm> {
     await FirebaseFirestore.instance
         .collection('members')
         .doc(widget.fullName)
-        .set({
+        .update({
       'userId': userId,
       'fullName': fullName,
       'fName': fname,
@@ -257,6 +260,7 @@ class _EditUserFormState extends State<EditUserForm> {
       'role': role,
     });
     provider.addSingleList({'fullName': fullName});
+    role.clear();
   }
 
   Future<void> popupmessage(String msg) async {
@@ -323,7 +327,9 @@ class _EditUserFormState extends State<EditUserForm> {
 
     provider.setBuilderList(userList);
     roleList = role;
+    // selectedWorkList = roleList.map((e) => e.toString()).toList();
     // print('roleList : $roleList');
+    // print('store work $selectedWorkList');
   }
 
   Widget customDropDown(String title, bool isMultiCheckbox,

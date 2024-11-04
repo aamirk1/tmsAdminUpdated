@@ -18,7 +18,6 @@ class AllItemMaster extends StatefulWidget {
 
 class _AllItemMasterState extends State<AllItemMaster> {
   bool isBuildingScreen = false;
-  Stream? _stream;
   Screenchangeprovider provider = Screenchangeprovider();
 
   @override
