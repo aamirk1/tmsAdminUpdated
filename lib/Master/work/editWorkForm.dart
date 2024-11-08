@@ -138,6 +138,17 @@ class _EditWorkFormState extends State<EditWorkForm> {
           .set({
         'work': newDocumentId,
       });
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('assets')
+          .where('workListByAsset', isEqualTo: oldDocumentId)
+          .get();
+      querySnapshot.docs.forEach((doc) {
+        doc.reference.update({
+          'workListByAsset': newDocumentId,
+        });
+      });
+
       provider.addSingleList({
         'work': newDocumentId,
       });

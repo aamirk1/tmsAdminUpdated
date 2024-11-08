@@ -183,6 +183,10 @@ class _ListOfWorkState extends State<ListOfWork> {
     await FirebaseFirestore.instance.collection('works').doc(work).set({
       'work': work,
     });
+
+    
+
+
     provider.addSingleList({
       'work': work,
     });

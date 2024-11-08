@@ -401,7 +401,14 @@ class _CreateUserState extends State<CreateUser> {
 
   Future<void> deleteUser(String userId) async {
     final provider = Provider.of<AllUserProvider>(context, listen: false);
-    await FirebaseFirestore.instance.collection('members').doc(userId).delete();
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('members')
+        .where('fullName', isEqualTo: userId)
+        .get();
+
+    querySnapshot.docs.forEach((doc) async {
+      await doc.reference.delete();
+    });
     provider.removeData(provider.userList.indexOf(userId));
   }
 
@@ -704,7 +711,7 @@ class _CreateUserState extends State<CreateUser> {
   }
 
   Future<void> storeData(String fname, String lname, String mobile,
-    String password, List<String> role) async {
+      String password, List<String> role) async {
     final provider = Provider.of<AllUserProvider>(context, listen: false);
     String firstInitial = fname[0][0].trim().toUpperCase();
     String lastInitial = lname[0][0].trim().toUpperCase();

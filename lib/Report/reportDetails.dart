@@ -95,14 +95,14 @@ class _ReportDetailsState extends State<ReportDetails> {
         ),
       ),
       body: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        widget.ticketList.isNotEmpty
+        widget.ticketData.isNotEmpty
             ? SizedBox(
                 height: MediaQuery.of(context).size.height * 0.95,
                 width: MediaQuery.of(context).size.width * 0.99,
                 child: GridView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: widget.ticketList.length,
+                    itemCount: widget.ticketData.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisSpacing: 5,
@@ -141,7 +141,8 @@ class _ReportDetailsState extends State<ReportDetails> {
                                             ticketCard(
                                                 Icons.work,
                                                 "Ticket No.: ",
-                                                widget.ticketList[index] ??
+                                                widget.ticketData[index]
+                                                        ['tickets'] ??
                                                     "N/A",
                                                 index)
                                           ],
@@ -375,8 +376,9 @@ class _ReportDetailsState extends State<ReportDetails> {
                                                                   ['date']
                                                               .toString(),
                                                           ticketId:
-                                                              widget.ticketList[
-                                                                  index]);
+                                                              widget.ticketData[
+                                                                      index]
+                                                                  ['tickets']);
                                                     },
                                                   ),
                                                 );
@@ -415,7 +417,8 @@ class _ReportDetailsState extends State<ReportDetails> {
                                                           ['month'],
                                                       widget.ticketData[index]
                                                           ['date'],
-                                                      widget.ticketList[index]);
+                                                      widget.ticketData[index]
+                                                          ['tickets']);
                                                 } else {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
@@ -465,7 +468,8 @@ class _ReportDetailsState extends State<ReportDetails> {
                                             ticketCard(
                                                 Icons.work,
                                                 "Ticket No.: ",
-                                                widget.ticketList[index] ??
+                                                widget.ticketData[index]
+                                                        ['tickets'] ??
                                                     "N/A",
                                                 index)
                                           ],
@@ -699,8 +703,9 @@ class _ReportDetailsState extends State<ReportDetails> {
                                                                   ['date']
                                                               .toString(),
                                                           ticketId:
-                                                              widget.ticketList[
-                                                                  index]);
+                                                              widget.ticketData[
+                                                                      index]
+                                                                  ['tickets']);
                                                     },
                                                   ),
                                                 );
@@ -739,7 +744,8 @@ class _ReportDetailsState extends State<ReportDetails> {
                                                           ['month'],
                                                       widget.ticketData[index]
                                                           ['date'],
-                                                      widget.ticketList[index]);
+                                                      widget.ticketData[index]
+                                                          ['tickets']);
                                                 } else {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
