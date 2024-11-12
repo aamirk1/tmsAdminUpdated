@@ -67,8 +67,9 @@ class MyApp extends StatelessWidget {
           ),
           primarySwatch: Colors.blue,
         ),
-        home: customSide(),
-        // TicketTableReport(),
+        home:
+            // Dashboard(),
+            customSide(),
       ),
     );
   }

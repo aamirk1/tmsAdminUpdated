@@ -57,6 +57,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
   String room = '';
   String work = '';
   String serviceprovider = '';
+  String tickets = '';
 
   List<String> floorNumberList = [];
   List<dynamic> allData = [];
@@ -931,6 +932,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
                 room = mapData['room'].toString();
                 work = mapData['work'].toString();
                 serviceprovider = mapData['serviceProvider'].toString();
+                tickets = mapData['tickets'].toString();
                 filterData.add(mapData);
                 filterData.sort((a, b) {
                   DateTime dateA =
@@ -1005,7 +1007,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
 
           temp = ticketQuery.docs.map((e) => e.id).toList();
           // ticketList = ticketList + temp;
-
+          temp = temp.reversed.toList();
           print('Temp String $temp');
 
           if (temp.isNotEmpty) {
@@ -1042,6 +1044,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
             }
           }
         }
+        print('tickets $tickets');
       }
     } catch (e) {
       print("Error Fetching tickets: $e");

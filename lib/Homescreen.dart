@@ -28,9 +28,7 @@ class Home extends StatelessWidget {
         //  backgroundColor: Colors.deepPurple,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [ lightMarron,
-                  marron])),
+              gradient: LinearGradient(colors: [lightMarron, marron])),
         ),
         actions: [
           Padding(
