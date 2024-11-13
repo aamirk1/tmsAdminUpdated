@@ -576,11 +576,11 @@ class _TicketTableReportState extends State<TicketTableReport> {
           .get();
       temp = ticketQuery.docs.map((e) => e.id).toList();
       ticketList = ticketList + temp;
-      ticketList.sort((a, b) {
-        DateTime dateA = parseDate(a['date']); // Parse date from mapData
-        DateTime dateB = parseDate(b['date']);
-        return dateA.compareTo(dateB); // Descending order
-      });
+      // ticketList.sort((a, b) {
+      //   DateTime dateA = parseDate(a['date']); // Parse date from mapData
+      //   DateTime dateB = parseDate(b['date']);
+      //   return dateA.compareTo(dateB); // Descending order
+      // });
     }
 
     setState(() {});
