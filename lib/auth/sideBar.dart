@@ -1,4 +1,5 @@
 // ignore: file_names
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_management_system/Homescreen.dart';
 import 'package:ticket_management_system/Master/master.dart';
@@ -19,6 +20,9 @@ final String adminId = 'KM1737';
 
 // ignore: camel_case_types
 class _customSideState extends State<customSide> {
+  List<String> userList = [];
+  List<String> serviceProvider = [];
+
   List<String> tabTitle = [
     // 'Profile',
     'Master',
@@ -37,13 +41,18 @@ class _customSideState extends State<customSide> {
   int _selectedIndex = 0;
 
   List<Widget> pages = [];
+  initState() {
+    super.initState();
+    fetchServiceProvider();
+    fetchUser();
+  }
 
   @override
   Widget build(BuildContext context) {
     pages = [
       // const Profile(adminId: 'KM1737'),
       MasterHomeScreen(adminId: 'KM1737'),
-      const TicketTableReport()
+      TicketTableReport(serviceProvider: serviceProvider, userList: userList),
     ];
     return Scaffold(
       body: Row(
@@ -159,5 +168,97 @@ class _customSideState extends State<customSide> {
       return const Home();
     }
     return const Text('');
+  }
+
+// Function
+
+  Future<void> fetchServiceProvider() async {
+    try {
+      // Clear existing data
+      serviceProvider = [];
+
+      // Fetch document IDs from 'members' collection
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('members')
+          .where('role', isNotEqualTo: null)
+          .get();
+
+      List<String> tempData = [];
+      if (querySnapshot.docs.isNotEmpty) {
+        tempData = querySnapshot.docs.map((e) => e.id).toList();
+      }
+
+      // Fetch each document and add to serviceProviders
+      for (var id in tempData) {
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+            .collection('members')
+            .doc(id)
+            .get();
+
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> data =
+              documentSnapshot.data() as Map<String, dynamic>;
+
+          if (data.containsKey('role') &&
+              // data['role'] is List &&
+              data['role'].isNotEmpty) {
+            if (data.containsKey('fullName')) {
+              serviceProvider.add(data['fullName']);
+            }
+          }
+        }
+      }
+
+      // Notify listeners after updating the list
+      // notifyListeners();
+    } catch (e) {
+      // Handle any errors (optional)
+      print('Error fetching service providers: $e');
+    }
+  }
+
+  Future<void> fetchUser() async {
+    try {
+      // Clear existing data
+      userList = [];
+
+      // Fetch document IDs from 'members' collection
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('members')
+          .where('role', isEqualTo: null)
+          .get();
+
+      List<String> tempData = [];
+      if (querySnapshot.docs.isNotEmpty) {
+        tempData = querySnapshot.docs.map((e) => e.id).toList();
+      }
+
+      // Fetch each document and add to serviceProviders
+      for (var id in tempData) {
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+            .collection('members')
+            .doc(id)
+            .get();
+
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> data =
+              documentSnapshot.data() as Map<String, dynamic>;
+
+          if (data.containsKey('role') &&
+              data['role'] is List &&
+              data['role'].isEmpty) {
+            if (data.containsKey('fullName')) {
+              userList.add(data['fullName']);
+            }
+          }
+        }
+      }
+
+      // Notify listeners after updating the list
+      // notifyListeners();
+    } catch (e) {
+      // Handle any errors (optional)
+      print('Error fetching user: $e');
+    }
   }
 }

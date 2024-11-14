@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ticket_management_system/Master/master.dart';
-import 'package:ticket_management_system/Report/ticketTableReport.dart';
 import 'package:ticket_management_system/profile/changePassword.dart';
 import 'package:ticket_management_system/profile/profile.dart';
 import 'package:ticket_management_system/utils/colors.dart';
@@ -135,11 +134,11 @@ class Home extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TicketTableReport()),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) =>  TicketTableReport()),
+                        // );
                       },
                       child: Container(
                         alignment: Alignment.center,
@@ -180,12 +179,12 @@ class Home extends StatelessWidget {
                             color: Colors.deepPurple,
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const TicketTableReport()),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) =>
+                            //           const TicketTableReport()),
+                            // );
                           },
                         ),
                       ),
@@ -265,11 +264,11 @@ class Home extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TicketTableReport()),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => const TicketTableReport()),
+                        // );
                       },
                       child: InkWell(
                         onTap: () {

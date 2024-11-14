@@ -14,8 +14,10 @@ import 'package:ticket_management_system/providers/workProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 class TicketTableReport extends StatefulWidget {
-  const TicketTableReport({super.key});
-
+  TicketTableReport(
+      {super.key, required this.serviceProvider, required this.userList});
+  List<String> userList = [];
+  List<String> serviceProvider = [];
   @override
   State<TicketTableReport> createState() => _TicketTableReportState();
 }
@@ -90,9 +92,12 @@ class _TicketTableReportState extends State<TicketTableReport> {
     getTicketList().whenComplete(() {
       setState(() {});
     });
-    fetchServiceProvider();
-    fetchUser();
-
+    // fetchServiceProvider();
+    // fetchUser();
+    print('running');
+    print(widget.userList);
+    print(widget.serviceProvider);
+    print('updated');
     getWorkList();
     getBuilding();
     getFloor();
@@ -265,12 +270,15 @@ class _TicketTableReportState extends State<TicketTableReport> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: customDropDown(
-                              'Select User', userList, "Search User", 5),
+                              'Select User', widget.userList, "Search User", 5),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: customDropDown('Select Service Provider',
-                              serviceProvider, "Search Service Provider", 7),
+                          child: customDropDown(
+                              'Select Service Provider',
+                              widget.serviceProvider,
+                              "Search Service Provider",
+                              7),
                         ),
                       ]),
                     ],
