@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Report/refreshScreen.dart';
 import 'package:ticket_management_system/Report/reportDetails.dart';
@@ -94,10 +95,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
     });
     // fetchServiceProvider();
     // fetchUser();
-    print('running');
-    print(widget.userList);
-    print(widget.serviceProvider);
-    print('updated');
+
     getWorkList();
     getBuilding();
     getFloor();
@@ -575,6 +573,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
     QuerySnapshot monthQuery =
         await FirebaseFirestore.instance.collection("raisedTickets").get();
     List<dynamic> dateList = monthQuery.docs.map((e) => e.id).toList();
+    // dateList = dateList.reversed.toList();
     for (int j = 0; j < dateList.length; j++) {
       List<String> temp = [];
       QuerySnapshot ticketQuery = await FirebaseFirestore.instance
@@ -583,6 +582,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
           .collection('tickets')
           .get();
       temp = ticketQuery.docs.map((e) => e.id).toList();
+      temp = temp.reversed.toList();
       ticketList = ticketList + temp;
       // ticketList.sort((a, b) {
       //   DateTime dateA = parseDate(a['date']); // Parse date from mapData
@@ -893,6 +893,16 @@ class _TicketTableReportState extends State<TicketTableReport> {
     });
   }
 
+  DateTime parseDateString(String dateStr) {
+    try {
+      // Using DateFormat to parse the string into DateTime object
+      return DateFormat('dd-MM-yyyy').parse(dateStr);
+    } catch (e) {
+      print("Error parsing date: $e");
+      return DateTime.now(); // Return the current date if parsing fails
+    }
+  }
+
   Future<void> filterTickets() async {
     // print('before $selectedUser');
     // selectedUser = selectedUser.toString().split(' ')[2];
@@ -901,27 +911,48 @@ class _TicketTableReportState extends State<TicketTableReport> {
       filterData.clear();
       ticketList.clear();
 
-      QuerySnapshot dateQuery =
-          await FirebaseFirestore.instance.collection("raisedTickets").get();
+      // QuerySnapshot dateQuery =
+      //     await FirebaseFirestore.instance.collection("raisedTickets").get();
 
-      List<dynamic> dateList = dateQuery.docs.map((e) => e.id).toList();
+      // List<dynamic> dateList = dateQuery.docs.map((e) => e.id).toList();
       // print('dateList ${dateList}');
       if (selectedStartDate.isNotEmpty && selectedEndDate.isNotEmpty) {
+        // Parse the selected start and end date strings into DateTime objects
+        DateTime parsedStartDate = parseDateString(selectedStartDate);
+        DateTime parsedEndDate = parseDateString(selectedEndDate);
+
+        // Get all dateList entries (your raisedTickets document IDs)
+        QuerySnapshot dateQuery =
+            await FirebaseFirestore.instance.collection("raisedTickets").get();
+        List<dynamic> dateList = dateQuery.docs.map((e) => e.id).toList();
+
         for (int j = 0; j < dateList.length; j++) {
           List<dynamic> temp = [];
+
+          // Query to get the tickets for each date
           QuerySnapshot ticketQuery = await FirebaseFirestore.instance
               .collection("raisedTickets")
               .doc(dateList[j])
               .collection('tickets')
-              .where('date', isGreaterThanOrEqualTo: selectedStartDate)
-              .where('date', isLessThanOrEqualTo: selectedEndDate)
               .get();
 
-          temp = ticketQuery.docs.map((e) => e.id).toList();
-          // ticketList = ticketList + temp;
+          // Loop through the tickets and check if their date falls within the range
+          for (var doc in ticketQuery.docs) {
+            String ticketDateStr = doc[
+                'date']; // Assuming the date is stored as a string in Firestore
 
+            // Convert the ticket's string date to DateTime
+            DateTime ticketDate = parseDateString(ticketDateStr);
+
+            // Check if the ticket's date is within the selected date range
+            if (ticketDate.isAfter(parsedStartDate) &&
+                ticketDate.isBefore(parsedEndDate)) {
+              temp.add(doc.id);
+            }
+          }
+          temp = temp.reversed.toList();
           if (temp.isNotEmpty) {
-            ticketList.addAll(temp);
+            ticketList = ticketList + temp;
             for (int k = 0; k < temp.length; k++) {
               DocumentSnapshot ticketDataQuery = await FirebaseFirestore
                   .instance
@@ -933,25 +964,28 @@ class _TicketTableReportState extends State<TicketTableReport> {
               if (ticketDataQuery.exists) {
                 Map<String, dynamic> mapData =
                     ticketDataQuery.data() as Map<String, dynamic>;
-                asset = mapData['asset'].toString();
-                building = mapData['building'].toString();
-                floor = mapData['floor'].toString();
-                remark = mapData['remark'].toString();
-                room = mapData['room'].toString();
-                work = mapData['work'].toString();
-                serviceprovider = mapData['serviceProvider'].toString();
-                tickets = mapData['tickets'].toString();
+
                 filterData.add(mapData);
                 filterData.sort((a, b) {
                   DateTime dateA =
                       parseDate(a['date']); // Parse date from mapData
+
                   DateTime dateB = parseDate(b['date']);
-                  return dateA.compareTo(dateB); // Descending order
+                  return dateB.compareTo(dateA); // Descending order
                 });
-                // print('$mapData abc');
+                // temp.sort((a, b) {
+                //   DateTime dateA =
+                //       parseDate(a['date']); // Parse date from mapData
+                //   DateTime dateB = parseDate(b['date']);
+                //   return dateA.compareTo(dateB); // Descending order
+                // });
+
+                print('$mapData abc');
               }
             }
           }
+          // filterData = ticketList;
+          // print(' =outside ticketList ${filterData}');
         }
       } else {
         QuerySnapshot dateQuery =
@@ -993,25 +1027,6 @@ class _TicketTableReportState extends State<TicketTableReport> {
                 isEqualTo: selectedServiceProvider);
           }
           QuerySnapshot ticketQuery = await query.get();
-          //await FirebaseFirestore.instance
-          //     .collection("raisedTickets")
-          //     .doc(currentYear.toString())
-          //     .collection('months')
-          //     .doc(months[i])
-          //     .collection('date')
-          //     .doc(dateList[j])
-          //     .collection('tickets')
-          //     .where('work', isEqualTo: selectedWork) // Filter by work
-          //     .where('status', isEqualTo: selectedStatus) // Filter by work
-          //     .where('serviceProvider',
-          //         isEqualTo: selectedServiceProvider) // Filter by work
-          //     .where('building',
-          //         isEqualTo: selectedbuilding) // Filter by work
-          //     .where('floor', isEqualTo: selectedFloor) // Filter by work
-          //     .where('room', isEqualTo: selectedRoom) // Filter by work
-          //     .where('asset', isEqualTo: selectedAsset) // Filter by work
-          //     .where('tickets', isEqualTo: selectedTicket) // Filter by work
-          //     .get();
 
           temp = ticketQuery.docs.map((e) => e.id).toList();
           // ticketList = ticketList + temp;

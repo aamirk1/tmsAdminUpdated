@@ -110,6 +110,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                             childAspectRatio: 0.8,
                             crossAxisCount: 3),
                     itemBuilder: (BuildContext context, int index) {
+                      print(widget.ticketData[index]);
                       List<String> imageFilePaths = List<String>.from(
                           widget.ticketData[index]['imageFilePaths'] ?? []);
                       return Padding(

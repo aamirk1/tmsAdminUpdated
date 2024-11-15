@@ -40,12 +40,12 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
   void initState() {
     provider = Provider.of<Screenchangeprovider>(context, listen: false);
     _stream = FirebaseFirestore.instance
-        // .collection('buildingNumbers')
-        // .doc(widget.buildingId)
-        // .collection('floorNumbers')
-        // .doc(widget.floorId)
-        // .collection('roomNumbers')
-        // .doc(widget.roomId)
+        .collection('buildingNumbers')
+        .doc(widget.buildingId)
+        .collection('floorNumbers')
+        .doc(widget.floorId)
+        .collection('roomNumbers')
+        .doc(widget.roomId)
         .collection('assets')
         .where('asset', isEqualTo: widget.assetId)
         .snapshots();
