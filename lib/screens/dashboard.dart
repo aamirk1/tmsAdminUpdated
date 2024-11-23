@@ -74,6 +74,38 @@ class _DashboardState extends State<Dashboard> {
             }).toList();
           }
 
+          // Calculate totals
+          int totalPendingTicket = 0;
+          int totalFirstDate = 0;
+          int totalSecondDate = 0;
+          int totalThirdDate = 0;
+          int totalFourthDate = 0;
+          int totalFifthDate = 0;
+          int totalSixthDate = 0;
+
+          for (var item in _dashboardModel) {
+            totalPendingTicket += item.pendingTickets;
+            totalFirstDate += item.firstDate!;
+            totalSecondDate += item.secondDate!;
+            totalThirdDate += item.thirdDate!;
+            totalFourthDate += item.fourthDate!;
+            totalFifthDate += item.fifthDate!;
+            totalSixthDate += item.sixthDate!;
+          }
+
+          _dashboardModel.insert(
+              0,
+              DashboardModel.fromjson({
+                'serviceProvider': 'Total Ticket Tally',
+                'pendingTicket': totalPendingTicket,
+                'firstDate': totalFirstDate,
+                'secondDate': totalSecondDate,
+                'thirdDate': totalThirdDate,
+                'fourthDate': totalFourthDate,
+                'fifthDate': totalFifthDate,
+                'sixthDate': totalSixthDate,
+              }));
+
           // Update the dashboardDatasource with the mapped data
           _dashboardDatasource = DashboardDatasource(_dashboardModel);
 
@@ -89,7 +121,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             body: SfDataGridTheme(
               data: const SfDataGridThemeData(
-                headerColor: white,
+                headerColor: marron,
                 gridLineColor: marron,
               ),
               child: SfDataGrid(
@@ -246,6 +278,7 @@ Widget createColumnLabel(String labelText) {
     child: Text(labelText,
         overflow: TextOverflow.values.first,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        style: const TextStyle(
+            fontSize: 16, fontWeight: FontWeight.bold, color: white)),
   );
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:ticket_management_system/model/dashboardModel.dart';
+import 'package:ticket_management_system/utils/colors.dart';
 
 class DashboardDatasource extends DataGridSource {
   DashboardDatasource(this._dailyproject) {
@@ -33,18 +34,19 @@ class DashboardDatasource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
-    // final int dataRowIndex = dataGridRows.indexOf(row);
+    final int dataRowIndex = dataGridRows.indexOf(row);
 
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
       return Container(
           alignment: Alignment.center,
+          color: dataRowIndex == 0 ? lightMarron : white,
           padding: const EdgeInsets.symmetric(horizontal: 5.0),
-          child: Text(
-            dataGridCell.value.toString(),
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 15),
-          ));
+          child: Text(dataGridCell.value.toString(),
+              textAlign: TextAlign.center,
+              style: dataRowIndex == 0
+                  ? const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                  : const TextStyle(fontSize: 15)));
     }).toList());
   }
 
