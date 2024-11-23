@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/auth/sideBar.dart';
+import 'package:ticket_management_system/provider/dashboard_provider.dart';
 import 'package:ticket_management_system/providers/assetsProvider.dart';
 import 'package:ticket_management_system/providers/buildingProvider.dart';
 import 'package:ticket_management_system/providers/designationProvider.dart';
@@ -15,6 +16,7 @@ import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/providers/userProvider.dart';
 import 'package:ticket_management_system/providers/workListByAssets.dart';
 import 'package:ticket_management_system/providers/workProvider.dart';
+import 'package:ticket_management_system/screens/dashboard.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 void main() async {
@@ -55,6 +57,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) => RolePageTotalNumProviderAdmin()),
         ChangeNotifierProvider(create: (context) => Screenchangeprovider()),
+        ChangeNotifierProvider(create: (context) => dashboardProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -67,9 +70,8 @@ class MyApp extends StatelessWidget {
           ),
           primarySwatch: Colors.blue,
         ),
-        home:
-            // Dashboard(),
-            customSide(),
+        home: const Dashboard(),
+        // customSide(),
       ),
     );
   }

@@ -734,21 +734,29 @@ packages:
     source: hosted
     version: "1.2.0"
   syncfusion_flutter_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: syncfusion_flutter_core
-      sha256: fd4d2cdbf8d0d1e3441817cb8a03f896566fad5187788957e78492fe16800388
+      sha256: "225b1cc135549bb4eef096d63b7323c30ee61c4b095c7e8a14bf9333e243d84b"
       url: "https://pub.dev"
     source: hosted
-    version: "26.2.7"
+    version: "27.2.2"
+  syncfusion_flutter_datagrid:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_datagrid
+      sha256: "6db8e5828dcc65f603a948cc28beb07c506654a4cf22a490924eb568c944d344"
+      url: "https://pub.dev"
+    source: hosted
+    version: "27.2.2"
   syncfusion_flutter_datepicker:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_datepicker
-      sha256: e541929ccf95a9188ef9f32dfca544f29b3fc222d4dc5da9cb1112305021a615
+      sha256: e2e2a97b033390f0791316c6019743991aa598563d09f603ba13230cd50b8905
       url: "https://pub.dev"
     source: hosted
-    version: "26.2.7"
+    version: "27.2.2"
   term_glyph:
     dependency: transitive
     description:
