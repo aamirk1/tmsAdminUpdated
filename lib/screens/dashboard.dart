@@ -47,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
           visible: true,
           allowEditing: false,
           width: MediaQuery.of(context).size.width *
-              0.12, // You can adjust this width as needed
+              0.11, // You can adjust this width as needed
           label: createColumnLabel(
             currentColumnLabels[currentColumnNames.indexOf(columnName)],
           ),
@@ -72,49 +72,51 @@ class _DashboardState extends State<Dashboard> {
                 'sixthDate': map['sixthDate'] ?? 0,
               });
             }).toList();
+
+            // Calculate totals
+            int totalPendingTicket = 0;
+            int totalFirstDate = 0;
+            int totalSecondDate = 0;
+            int totalThirdDate = 0;
+            int totalFourthDate = 0;
+            int totalFifthDate = 0;
+            int totalSixthDate = 0;
+
+            for (var item in _dashboardModel) {
+              totalPendingTicket += item.pendingTickets;
+              totalFirstDate += item.firstDate!;
+              totalSecondDate += item.secondDate!;
+              totalThirdDate += item.thirdDate!;
+              totalFourthDate += item.fourthDate!;
+              totalFifthDate += item.fifthDate!;
+              totalSixthDate += item.sixthDate!;
+
+              print(item.firstDate!);
+              print(totalPendingTicket);
+            }
+
+            _dashboardModel.insert(
+                0,
+                DashboardModel.fromjson({
+                  'serviceProvider': 'Total Ticket Tally',
+                  'pendingTicket': totalPendingTicket,
+                  'firstDate': totalFirstDate,
+                  'secondDate': totalSecondDate,
+                  'thirdDate': totalThirdDate,
+                  'fourthDate': totalFourthDate,
+                  'fifthDate': totalFifthDate,
+                  'sixthDate': totalSixthDate,
+                }));
+
+            // Update the dashboardDatasource with the mapped data
+            _dashboardDatasource = DashboardDatasource(_dashboardModel);
           }
-
-          // Calculate totals
-          int totalPendingTicket = 0;
-          int totalFirstDate = 0;
-          int totalSecondDate = 0;
-          int totalThirdDate = 0;
-          int totalFourthDate = 0;
-          int totalFifthDate = 0;
-          int totalSixthDate = 0;
-
-          for (var item in _dashboardModel) {
-            totalPendingTicket += item.pendingTickets;
-            totalFirstDate += item.firstDate!;
-            totalSecondDate += item.secondDate!;
-            totalThirdDate += item.thirdDate!;
-            totalFourthDate += item.fourthDate!;
-            totalFifthDate += item.fifthDate!;
-            totalSixthDate += item.sixthDate!;
-          }
-
-          _dashboardModel.insert(
-              0,
-              DashboardModel.fromjson({
-                'serviceProvider': 'Total Ticket Tally',
-                'pendingTicket': totalPendingTicket,
-                'firstDate': totalFirstDate,
-                'secondDate': totalSecondDate,
-                'thirdDate': totalThirdDate,
-                'fourthDate': totalFourthDate,
-                'fifthDate': totalFifthDate,
-                'sixthDate': totalSixthDate,
-              }));
-
-          // Update the dashboardDatasource with the mapped data
-          _dashboardDatasource = DashboardDatasource(_dashboardModel);
-
           // Return the DataGrid directly
           return Scaffold(
             appBar: AppBar(
               title: const Center(
                   child: Text(
-                'Dashboard',
+                'Dashboard (Pending Tickets in Days)',
                 style: TextStyle(color: white),
               )),
               flexibleSpace: Container(

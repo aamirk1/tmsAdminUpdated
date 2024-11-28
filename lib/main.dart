@@ -16,7 +16,6 @@ import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/providers/userProvider.dart';
 import 'package:ticket_management_system/providers/workListByAssets.dart';
 import 'package:ticket_management_system/providers/workProvider.dart';
-import 'package:ticket_management_system/screens/dashboard.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 void main() async {
@@ -70,9 +69,9 @@ class MyApp extends StatelessWidget {
           ),
           primarySwatch: Colors.blue,
         ),
-        home:  
-        // Dashboard(),
-        customSide(),
+        home:
+            // Dashboard(),
+            customSide(),
       ),
     );
   }

@@ -58,11 +58,13 @@ class dashboardProvider extends ChangeNotifier {
 
       var memberNameSnapshot = await FirebaseFirestore.instance
           .collection('members')
-          .where('role', isNotEqualTo: null)
-          .get();
+          .where('role', isGreaterThanOrEqualTo: []).get();
 
       for (var doc in memberNameSnapshot.docs) {
-        memberName.add(doc.id);
+        var roles = doc['role'];
+        if (roles != null && roles.isNotEmpty) {
+          memberName.add(doc.id);
+        }
       }
 
       List<DateRange> dateRanges = [
@@ -136,7 +138,7 @@ class dashboardProvider extends ChangeNotifier {
                 // Determine the correct date range based on the day
                 String dateRangeKey;
 
-                if (day >= 0 && day <= 1) {
+                if (day <= 0) {
                   dateRangeKey = '0-1';
                 } else if (day >= 1 && day <= 7) {
                   dateRangeKey = '1-7';
@@ -171,7 +173,7 @@ class dashboardProvider extends ChangeNotifier {
 
       aggregatedData.forEach((serviceProvider, dateRangesMap) {
         // Sum up the total pending tickets for this service provider across all date ranges
-        int totalPendingTickets = (dateRangesMap['today'] ?? 0) +
+        int totalPendingTickets = (dateRangesMap['0-1'] ?? 0) +
             (dateRangesMap['1-7'] ?? 0) +
             (dateRangesMap['8-14'] ?? 0) +
             (dateRangesMap['15-21'] ?? 0) +
