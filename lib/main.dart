@@ -70,8 +70,9 @@ class MyApp extends StatelessWidget {
           ),
           primarySwatch: Colors.blue,
         ),
-        home: const Dashboard(),
-        // customSide(),
+        home:  
+        // Dashboard(),
+        customSide(),
       ),
     );
   }

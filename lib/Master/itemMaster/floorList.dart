@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ticket_management_system/providers/floorProvider.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 // ignore: must_be_immutable
 class FloorList extends StatefulWidget {
@@ -101,7 +102,7 @@ class _FloorListState extends State<FloorList> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: LoadingPage(),
                           );
                         } else if (!snapshot.hasData ||
                             snapshot.data!.docs.isEmpty) {

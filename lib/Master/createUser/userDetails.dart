@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 class UserDetails extends StatefulWidget {
   const UserDetails({super.key, required this.fullName});
@@ -32,7 +33,7 @@ class _UserDetailsState extends State<UserDetails> {
     return Scaffold(
       body: isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: LoadingPage(),
             )
           : SingleChildScrollView(
               child: SizedBox(

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ticket_management_system/providers/roomProvider.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 // ignore: must_be_immutable
 class RoomList extends StatefulWidget {
@@ -99,7 +100,7 @@ class _RoomListState extends State<RoomList> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: LoadingPage(),
                           );
                         } else if (!snapshot.hasData ||
                             snapshot.data!.docs.isEmpty) {
@@ -198,8 +199,7 @@ class _RoomListState extends State<RoomList> {
         .doc(roomNumber)
         .delete();
 
-        await FirebaseFirestore.instance
-        
+    await FirebaseFirestore.instance
         .collection('rooms')
         .doc(roomNumber)
         .delete();

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:flutter/material.dart';
 import 'package:ticket_management_system/auth/login.dart';
 import 'package:ticket_management_system/splash_screen/splash_service.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 const white = Colors.white;
 const black = Colors.black;
@@ -31,8 +32,7 @@ void showFetchingData(BuildContext context, String msg) {
             height: 50,
             width: 50,
             child: Center(
-              child: CircularProgressIndicator(
-                  color: Color.fromARGB(255, 151, 64, 69)),
+              child: LoadingPage(),
             ),
           ),
           Text(

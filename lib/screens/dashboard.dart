@@ -1,12 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:ticket_management_system/auth/sideBar.dart';
 import 'package:ticket_management_system/model/dashboardModel.dart';
 import 'package:ticket_management_system/provider/dashboard_provider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
+
 import '../datasource/dashboard_datasource.dart';
 import '../utils/String.dart';
 
@@ -112,7 +112,11 @@ class _DashboardState extends State<Dashboard> {
           // Return the DataGrid directly
           return Scaffold(
             appBar: AppBar(
-              title: const Center(child: Text('Dashboard')),
+              title: const Center(
+                  child: Text(
+                'Dashboard',
+                style: TextStyle(color: white),
+              )),
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(colors: [lightMarron, marron]),
@@ -141,35 +145,35 @@ class _DashboardState extends State<Dashboard> {
                 columns: columns,
               ),
             ),
-            floatingActionButton: Container(
-              width: 150,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 5), // Set the padding around the button
-                child: FloatingActionButton(
-                  backgroundColor: marron,
-                  child: Text(
-                    'Proceed',
-                    style: TextStyle(
-                        color: white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => customSide(),
-                      ),
-                    );
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        8.0), // This will give it rounded corners
-                  ),
-                ),
-              ),
-            ),
+            // floatingActionButton: Container(
+            //   width: 150,
+            //   child: Padding(
+            //     padding: const EdgeInsets.symmetric(
+            //         horizontal: 5), // Set the padding around the button
+            //     child: FloatingActionButton(
+            //       backgroundColor: marron,
+            //       child: const Text(
+            //         'Proceed',
+            //         style: TextStyle(
+            //             color: white,
+            //             fontWeight: FontWeight.bold,
+            //             fontSize: 18),
+            //       ),
+            //       onPressed: () {
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => customSide(),
+            //           ),
+            //         );
+            //       },
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(
+            //             8.0), // This will give it rounded corners
+            //       ),
+            //     ),
+            //   ),
+            // ),
           );
         }
 
@@ -183,8 +187,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-          body: const Center(
-              child: CircularProgressIndicator()), // Loading indicator
+          body: const Center(child: LoadingPage()), // Loading indicator
         );
       },
     );
@@ -225,7 +228,7 @@ class _DashboardState extends State<Dashboard> {
     //                 .snapshots(),
     //             builder: (context, snapshot) {
     //               if (snapshot.connectionState == ConnectionState.waiting) {
-    //                 return const Center(child: CircularProgressIndicator());
+    //                 return const Center(child: LoadingPage());
     //               } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
     //                 return SfDataGrid(
     //                     source: _dashboardDatasource,

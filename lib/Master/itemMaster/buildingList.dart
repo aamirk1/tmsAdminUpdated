@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:ticket_management_system/providers/buildingProvider.dart';
 import 'package:ticket_management_system/providers/screenChangeProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 class BuildingList extends StatefulWidget {
   const BuildingList({super.key});
@@ -96,7 +97,7 @@ class _BuildingListState extends State<BuildingList> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: LoadingPage(),
                           );
                         } else if (!snapshot.hasData ||
                             snapshot.data!.docs.isEmpty) {

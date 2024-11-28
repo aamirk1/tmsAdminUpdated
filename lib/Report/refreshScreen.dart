@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 class Refreshscreen extends StatefulWidget {
   const Refreshscreen({super.key});
@@ -20,7 +21,7 @@ class _RefreshscreenState extends State<Refreshscreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+      body: Center(child: LoadingPage()),
     );
   }
 }

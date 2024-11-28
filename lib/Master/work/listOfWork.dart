@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Master/work/editWorkForm.dart';
 import 'package:ticket_management_system/providers/workProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 class ListOfWork extends StatefulWidget {
   const ListOfWork({super.key});
@@ -92,7 +93,7 @@ class _ListOfWorkState extends State<ListOfWork> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: LoadingPage(),
                           );
                         } else if (!snapshot.hasData ||
                             snapshot.data!.docs.isEmpty) {
@@ -183,9 +184,6 @@ class _ListOfWorkState extends State<ListOfWork> {
     await FirebaseFirestore.instance.collection('works').doc(work).set({
       'work': work,
     });
-
-    
-
 
     provider.addSingleList({
       'work': work,

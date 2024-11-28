@@ -13,6 +13,7 @@ import 'package:ticket_management_system/providers/floorProvider.dart';
 import 'package:ticket_management_system/providers/roomProvider.dart';
 import 'package:ticket_management_system/providers/workProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 class TicketTableReport extends StatefulWidget {
   TicketTableReport(
@@ -143,7 +144,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
         // ],
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: LoadingPage())
           : SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Column(

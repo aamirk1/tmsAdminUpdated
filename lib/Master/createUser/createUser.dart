@@ -7,6 +7,7 @@ import 'package:ticket_management_system/Master/createUser/userDetails.dart';
 import 'package:ticket_management_system/providers/userProvider.dart';
 import 'package:ticket_management_system/providers/workProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 class CreateUser extends StatefulWidget {
   const CreateUser({super.key, required this.adminId});
@@ -53,7 +54,7 @@ class _CreateUserState extends State<CreateUser> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const Center(child: LoadingPage())
             : SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
@@ -293,7 +294,7 @@ class _CreateUserState extends State<CreateUser> {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
                                           return const Center(
-                                            child: CircularProgressIndicator(),
+                                            child: LoadingPage(),
                                           );
                                         } else if (!snapshot.hasData ||
                                             snapshot.data!.docs.isEmpty) {

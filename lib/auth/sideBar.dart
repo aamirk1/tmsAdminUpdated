@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ticket_management_system/Homescreen.dart';
 import 'package:ticket_management_system/Master/master.dart';
 import 'package:ticket_management_system/Report/ticketTableReport.dart';
+import 'package:ticket_management_system/screens/dashboard.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 
 // ignore: camel_case_types, must_be_immutable
@@ -24,17 +25,18 @@ class _customSideState extends State<customSide> {
   List<String> serviceProvider = [];
 
   List<String> tabTitle = [
-    // 'Profile',
+    'Dashboard',
     'Master',
     'Reports',
   ];
   List<dynamic> tabIcon = [
-    // Icons.supervised_user_circle_sharp,
+    Icons.dashboard,
     Icons.house_rounded,
     Icons.house_outlined,
   ];
   List<bool> design = [
     true,
+    false,
     false,
   ];
 
@@ -50,7 +52,7 @@ class _customSideState extends State<customSide> {
   @override
   Widget build(BuildContext context) {
     pages = [
-      // const Profile(adminId: 'KM1737'),
+      const Dashboard(),
       MasterHomeScreen(adminId: 'KM1737'),
       TicketTableReport(serviceProvider: serviceProvider, userList: userList),
     ];
@@ -157,7 +159,7 @@ class _customSideState extends State<customSide> {
 
   void setDesignBool() {
     List<bool> tempBool = [];
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
       tempBool.add(false);
     }
     design = tempBool;

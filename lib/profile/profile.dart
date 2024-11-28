@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_management_system/profile/changePassword.dart';
 import 'package:ticket_management_system/utils/colors.dart';
+import 'package:ticket_management_system/utils/loading_page.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key, required this.adminId});
@@ -44,7 +45,7 @@ class _ProfileState extends State<Profile> {
       ),
       body: isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: LoadingPage(),
             )
           : Row(
               children: [
@@ -88,9 +89,7 @@ class _ProfileState extends State<Profile> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                             
-                                            ]),
+                                            children: []),
                                       ),
                                       const SizedBox(
                                         height: 15,
@@ -144,6 +143,4 @@ class _ProfileState extends State<Profile> {
 
     setState(() {});
   }
-
-  
 }
