@@ -29,7 +29,7 @@ void showFetchingData(BuildContext context, String msg) {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
-            height: 50,
+            height: 200,
             width: 50,
             child: Center(
               child: LoadingPage(),
@@ -38,6 +38,7 @@ void showFetchingData(BuildContext context, String msg) {
           Text(
             msg,
             style: const TextStyle(
+                fontSize: 14,
                 color: Color.fromARGB(255, 151, 64, 69),
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,

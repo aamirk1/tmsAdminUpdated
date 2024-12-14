@@ -12,14 +12,14 @@ class LoadingPage extends StatelessWidget {
         children: [
           Center(
             child: Container(
-              height: 300,
+              height: MediaQuery.of(context).size.height * 0.15,
               width: 300,
               child: Image.asset('assets/fire.gif'),
             ),
           ),
           const Text(
             'Please Wait',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ],
       ),

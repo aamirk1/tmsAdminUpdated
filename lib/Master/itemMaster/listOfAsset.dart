@@ -237,35 +237,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
                             ),
                           ),
                         ),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(10),
-                        //   child: Container(
-                        //       color: Colors.white,
-                        //       height: 40,
-                        //       width: MediaQuery.of(context).size.width * 0.25,
-                        //       child: Column(children: [
-                        //         TextFormField(
-                        //           expands: true,
-                        //           maxLines: null,
-                        //           controller: serviceProviderController,
-                        //           decoration: InputDecoration(
-                        //             isDense: true,
-                        //             contentPadding: const EdgeInsets.symmetric(
-                        //               horizontal: 10,
-                        //               vertical: 8,
-                        //             ),
-                        //             hintText: 'Search flat no...',
-                        //             hintStyle: const TextStyle(fontSize: 12),
-                        //             border: OutlineInputBorder(
-                        //               borderRadius: BorderRadius.circular(8),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ])),
-                        // ),
+                     
                         const SizedBox(
                           height: 10,
                         ),

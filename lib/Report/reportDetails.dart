@@ -8,11 +8,11 @@ import 'package:ticket_management_system/utils/colors.dart';
 
 // ignore: must_be_immutable
 class ReportDetails extends StatefulWidget {
-  ReportDetails(
-      {super.key, required this.ticketList, required this.ticketData});
+  ReportDetails({super.key, required this.ticketData});
 
-  List<dynamic> ticketList = [];
+  // List<dynamic> ticketList = [];
   List<dynamic> ticketData = [];
+
   @override
   State<ReportDetails> createState() => _ReportDetailsState();
 }
@@ -21,6 +21,8 @@ class _ReportDetailsState extends State<ReportDetails> {
   @override
   void initState() {
     print('widget.ticketData: ${widget.ticketData}');
+
+   
     // print(widget.)
     super.initState();
   }
@@ -66,7 +68,7 @@ class _ReportDetailsState extends State<ReportDetails> {
   List<String> serviceProvider = [];
   List<dynamic> allData = [];
   String? selectedServiceProvider;
-  List<String> allTicketData = [];
+
   bool isLoading = true;
 
   String asset = '';
@@ -78,7 +80,14 @@ class _ReportDetailsState extends State<ReportDetails> {
   String serviceprovider = '';
   List<dynamic> ticketListData = [];
 
-  @override
+  DateTime parseDate2(String ticketId) {
+    // Assuming the format is 'YYYYMMDD.xx' (e.g., '20241005.03')
+    int year = int.parse(ticketId.substring(0, 4));
+    int month = int.parse(ticketId.substring(4, 6));
+    int day = int.parse(ticketId.substring(6, 8));
+    return DateTime(year, month, day);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -42,11 +42,23 @@ class _customSideState extends State<customSide> {
 
   int _selectedIndex = 0;
 
+  List<String> buildings = [];
+  List<String> floors = [];
+  List<String> rooms = [];
+  List<String> assets = [];
+
   List<Widget> pages = [];
   initState() {
     super.initState();
     fetchServiceProvider();
     fetchUser();
+    getBuiildings().whenComplete(() {
+      getFloors().whenComplete(() {
+        getRooms().whenComplete(() {
+          getAssets();
+        });
+      });
+    });
   }
 
   @override
@@ -54,7 +66,14 @@ class _customSideState extends State<customSide> {
     pages = [
       const Dashboard(),
       MasterHomeScreen(adminId: 'KM1737'),
-      TicketTableReport(serviceProvider: serviceProvider, userList: userList),
+      TicketTableReport(
+        serviceProvider: serviceProvider,
+        userList: userList,
+        buildings: buildings,
+        floors: floors,
+        rooms: rooms,
+        assets: assets,
+      ),
     ];
     return Scaffold(
       body: Row(
@@ -262,5 +281,107 @@ class _customSideState extends State<customSide> {
       // Handle any errors (optional)
       print('Error fetching user: $e');
     }
+  }
+
+  // BuildingList
+  Future<void> getBuiildings() async {
+    List<String> uniqueBuildingsList = [];
+
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('buildingNumbers').get();
+    if (querySnapshot.docs.isNotEmpty) {
+      List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
+      uniqueBuildingsList.addAll(tempData);
+      Set<String> set = uniqueBuildingsList.toSet();
+      buildings = set.toList();
+      // provider.setBuilderList(assetList);
+    }
+    print('start on buildings: $buildings');
+    setState(() {});
+  }
+
+  // FloorList
+
+  Future<void> getFloors() async {
+    List<String> uniqueFloorsList = [];
+
+    for (var k = 0; k < buildings.length; k++) {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('buildingNumbers')
+          .doc(buildings[k])
+          .collection('floorNumbers')
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
+        uniqueFloorsList.addAll(tempData);
+        Set<String> set = uniqueFloorsList.toSet();
+        floors = set.toList();
+        // provider.setBuilderList(assetList);
+      }
+      print('start on Floors: $floors');
+      setState(() {});
+    }
+  }
+
+  // RoomList
+
+  Future<void> getRooms() async {
+    List<String> uniqueRoomsList = [];
+    // final provider = Provider.of<AllAssetProvider>(context, listen: false);
+    // provider.setBuilderList([]);
+    for (var i = 0; i < buildings.length; i++) {
+      for (var j = 0; j < floors.length; j++) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('buildingNumbers')
+            .doc(buildings[i])
+            .collection('floorNumbers')
+            .doc(floors[j])
+            .collection('roomNumbers')
+            .get();
+        if (querySnapshot.docs.isNotEmpty) {
+          List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
+          uniqueRoomsList.addAll(tempData);
+          Set<String> set = uniqueRoomsList.toSet();
+          rooms = set.toList();
+          // provider.setBuilderList(assetList);
+        }
+      }
+    }
+
+    print('start on Rooms: ${rooms.length}');
+    setState(() {});
+  }
+
+// assets
+  Future<void> getAssets() async {
+    List<String> uniqueAssetsList = [];
+    // final provider = Provider.of<AllAssetProvider>(context, listen: false);
+    // provider.setBuilderList([]);
+    for (var i = 0; i < buildings.length; i++) {
+      for (var j = 0; j < floors.length; j++) {
+        for (var k = 0; k < rooms.length; k++) {
+          QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+              .collection('buildingNumbers')
+              .doc(buildings[i])
+              .collection('floorNumbers')
+              .doc(floors[j])
+              .collection('roomNumbers')
+              .doc(rooms[k])
+              .collection('assets')
+              .get();
+          if (querySnapshot.docs.isNotEmpty) {
+            List<String> tempData =
+                querySnapshot.docs.map((e) => e.id).toList();
+            uniqueAssetsList.addAll(tempData);
+            Set<String> set = uniqueAssetsList.toSet();
+            assets = set.toList();
+            // provider.setBuilderList(assetList);
+          }
+        }
+      }
+    }
+
+    print('start on Assets: ${assets.length}');
+    setState(() {});
   }
 }

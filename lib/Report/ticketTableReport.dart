@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ticket_management_system/Report/refreshScreen.dart';
 import 'package:ticket_management_system/Report/reportDetails.dart';
-import 'package:ticket_management_system/providers/assetsProvider.dart';
 import 'package:ticket_management_system/providers/buildingProvider.dart';
 import 'package:ticket_management_system/providers/floorProvider.dart';
 import 'package:ticket_management_system/providers/roomProvider.dart';
@@ -15,11 +14,23 @@ import 'package:ticket_management_system/providers/workProvider.dart';
 import 'package:ticket_management_system/utils/colors.dart';
 import 'package:ticket_management_system/utils/loading_page.dart';
 
+import '../providers/assetsProvider.dart';
+
 class TicketTableReport extends StatefulWidget {
   TicketTableReport(
-      {super.key, required this.serviceProvider, required this.userList});
+      {super.key,
+      required this.serviceProvider,
+      required this.userList,
+      required this.buildings,
+      required this.floors,
+      required this.rooms,
+      required this.assets});
   List<String> userList = [];
   List<String> serviceProvider = [];
+  List<String> buildings = [];
+  List<String> floors = [];
+  List<String> rooms = [];
+  List<String> assets = [];
   @override
   State<TicketTableReport> createState() => _TicketTableReportState();
 }
@@ -98,8 +109,13 @@ class _TicketTableReportState extends State<TicketTableReport> {
     // fetchUser();
 
     getWorkList();
-    getBuilding();
-    getFloor();
+    // getRoom().whenComplete(() {
+    //   getAsset().whenComplete(() {
+    //     setState(() {});
+    //   });
+    // });
+    // getBuilding();
+    // getFloor();
     getRoom();
     getAsset();
 
@@ -247,19 +263,19 @@ class _TicketTableReportState extends State<TicketTableReport> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: customDropDown('Select Building',
-                              buildingNumberList, "Search Building Number", 2),
+                              widget.buildings, "Search Building Number", 2),
                         ),
                       ]),
                       Column(children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: customDropDown('Select Floor', floorNumberList,
+                          child: customDropDown('Select Floor', widget.floors,
                               "Search Floor Number", 3),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: customDropDown('Select Room', roomNumberList,
-                              "Search Room Number", 4),
+                          child: customDropDown(
+                              'Select Room', roomList, "Search Room Number", 4),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -315,7 +331,6 @@ class _TicketTableReportState extends State<TicketTableReport> {
                                       context,
                                       MaterialPageRoute(builder: (context) {
                                         return ReportDetails(
-                                          ticketList: ticketList,
                                           ticketData: filterData,
                                         );
                                       }),
@@ -565,6 +580,36 @@ class _TicketTableReportState extends State<TicketTableReport> {
   //   setState(() {});
   // }
 
+  // Future<void> getTicketList() async {
+  //   final provider = Provider.of<AllRoomProvider>(context, listen: false);
+  //   provider.setBuilderList([]);
+
+  //   ticketList.clear();
+
+  //   QuerySnapshot monthQuery =
+  //       await FirebaseFirestore.instance.collection("raisedTickets").get();
+  //   List<dynamic> dateList = monthQuery.docs.map((e) => e.id).toList();
+
+  //   // dateList = dateList.reversed.toList();
+  //   for (int j = 0; j < dateList.length; j++) {
+  //     List<String> temp = [];
+  //     QuerySnapshot ticketQuery = await FirebaseFirestore.instance
+  //         .collection("raisedTickets")
+  //         .doc(dateList[j])
+  //         .collection('tickets')
+  //         .get();
+  //     temp = ticketQuery.docs.map((e) => e.id).toList();
+  //     temp = temp.reversed.toList();
+  //     ticketList = ticketList + temp;
+  //     // ticketList.sort((a, b) {
+  //     //   DateTime dateA = parseDate(a['date']); // Parse date from mapData
+  //     //   DateTime dateB = parseDate(b['date']);
+  //     //   return dateA.compareTo(dateB); // Descending order
+  //     // });
+  //   }
+
+  //   setState(() {});
+  // }
   Future<void> getTicketList() async {
     final provider = Provider.of<AllRoomProvider>(context, listen: false);
     provider.setBuilderList([]);
@@ -574,7 +619,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
     QuerySnapshot monthQuery =
         await FirebaseFirestore.instance.collection("raisedTickets").get();
     List<dynamic> dateList = monthQuery.docs.map((e) => e.id).toList();
-    // dateList = dateList.reversed.toList();
+
     for (int j = 0; j < dateList.length; j++) {
       List<String> temp = [];
       QuerySnapshot ticketQuery = await FirebaseFirestore.instance
@@ -583,16 +628,28 @@ class _TicketTableReportState extends State<TicketTableReport> {
           .collection('tickets')
           .get();
       temp = ticketQuery.docs.map((e) => e.id).toList();
-      temp = temp.reversed.toList();
+      temp = temp.reversed.toList(); // This reverses the order within each date
       ticketList = ticketList + temp;
-      // ticketList.sort((a, b) {
-      //   DateTime dateA = parseDate(a['date']); // Parse date from mapData
-      //   DateTime dateB = parseDate(b['date']);
-      //   return dateA.compareTo(dateB); // Descending order
-      // });
     }
 
+    // Sort ticketList in descending order based on the date in the ticket IDs
+    ticketList.sort((a, b) {
+      DateTime dateA = parseDateForTicketNo(
+          a); // Assuming parseDate extracts a DateTime from the string
+      DateTime dateB = parseDateForTicketNo(b);
+      return dateB.compareTo(dateA); // Sort in descending order
+    });
+
     setState(() {});
+  }
+
+// Helper function to parse the date from the ticket ID
+  DateTime parseDateForTicketNo(String ticketId) {
+    // Assuming the format is 'YYYYMMDD.xx' (e.g., '20241005.03')
+    int year = int.parse(ticketId.substring(0, 4));
+    int month = int.parse(ticketId.substring(4, 6));
+    int day = int.parse(ticketId.substring(6, 8));
+    return DateTime(year, month, day);
   }
 
   Future<void> getBuilding() async {
@@ -652,6 +709,66 @@ class _TicketTableReportState extends State<TicketTableReport> {
     }
     provider.setBuilderList(assetList);
   }
+
+//   Future<void> getRoom() async {
+//     List<String> uniqueRoomsList = [];
+//     // final provider = Provider.of<AllAssetProvider>(context, listen: false);
+//     // provider.setBuilderList([]);
+//     for (var i = 0; i < widget.buildings.length; i++) {
+//       for (var j = 0; j < widget.floors.length; j++) {
+//         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+//             .collection('buildingNumbers')
+//             .doc(widget.buildings[i])
+//             .collection('floorNumbers')
+//             .doc(widget.floors[j])
+//             .collection('roomNumbers')
+//             .get();
+//         if (querySnapshot.docs.isNotEmpty) {
+//           List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
+//           uniqueRoomsList.addAll(tempData);
+//           Set<String> set = uniqueRoomsList.toSet();
+//           roomList = set.toList();
+//           // provider.setBuilderList(assetList);
+//         }
+//       }
+//     }
+
+//     print('start on Rooms: $roomList');
+//     setState(() {});
+//   }
+
+// // assets
+//   Future<void> getAsset() async {
+//     List<String> uniqueAssetsList = [];
+//     // final provider = Provider.of<AllAssetProvider>(context, listen: false);
+//     // provider.setBuilderList([]);
+//     for (var i = 0; i < widget.buildings.length; i++) {
+//       for (var j = 0; j < widget.floors.length; j++) {
+//         for (var k = 0; k < roomList.length; k++) {
+//           QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+//               .collection('buildingNumbers')
+//               .doc(widget.buildings[i])
+//               .collection('floorNumbers')
+//               .doc(widget.floors[j])
+//               .collection('roomNumbers')
+//               .doc(roomList[k])
+//               .collection('assets')
+//               .get();
+//           if (querySnapshot.docs.isNotEmpty) {
+//             List<String> tempData =
+//                 querySnapshot.docs.map((e) => e.id).toList();
+//             uniqueAssetsList.addAll(tempData);
+//             Set<String> set = uniqueAssetsList.toSet();
+//             assetList = set.toList();
+//             // provider.setBuilderList(assetList);
+//           }
+//         }
+//       }
+//     }
+
+//     print('start on Assets: $assetList');
+//     setState(() {});
+//   }
 
   Future<void> getWorkList() async {
     final provider = Provider.of<AllWorkProvider>(context, listen: false);
