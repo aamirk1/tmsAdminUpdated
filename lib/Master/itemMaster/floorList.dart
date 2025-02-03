@@ -181,11 +181,13 @@ class _FloorListState extends State<FloorList> {
         .collection('floorNumbers')
         .doc(floorNumber)
         .set({
+                    
       'floorNumber': floorNumber,
     });
 
     FirebaseFirestore.instance.collection('floors').doc(floorNumber).set({
       'floorNumber': floorNumber,
+      
     });
     provider.addSingleList({'floorNumber': floorNumber});
   }

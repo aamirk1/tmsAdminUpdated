@@ -29,6 +29,7 @@ class _ListOfAssetState extends State<ListOfAsset> {
   List<String> workList = [];
   bool isWorkScreen = false;
 
+  List<dynamic> listOfAsset = [];
   Screenchangeprovider provider = Screenchangeprovider();
   Stream? _stream;
   @override
@@ -194,6 +195,25 @@ class _ListOfAssetState extends State<ListOfAsset> {
         .delete();
     // print('successfully deleted');
     await FirebaseFirestore.instance.collection('assets').doc(asset).delete();
+
+    await FirebaseFirestore.instance
+        .collection('assets')
+        .doc('asset')
+        .get()
+        .then((docSnapshot) {
+      if (docSnapshot.exists &&
+          (docSnapshot.data() as Map<String, dynamic>)['buildingId'] ==
+              widget.buildingId &&
+          (docSnapshot.data() as Map<String, dynamic>)['floorId'] ==
+              widget.floorId &&
+          (docSnapshot.data() as Map<String, dynamic>)['roomId'] ==
+              widget.roomId) {
+        print(
+            'docSnapshot delete asset: ${docSnapshot.data()} ${docSnapshot.reference}');
+        // docSnapshot.reference.delete();
+      }
+    });
+
     // provider.removeData(assetList.indexOf(asset));
     provider.removeData(assetList.indexOf(asset));
     print('successfully deletedw');
@@ -237,35 +257,6 @@ class _ListOfAssetState extends State<ListOfAsset> {
                             ),
                           ),
                         ),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(10),
-                        //   child: Container(
-                        //       color: Colors.white,
-                        //       height: 40,
-                        //       width: MediaQuery.of(context).size.width * 0.25,
-                        //       child: Column(children: [
-                        //         TextFormField(
-                        //           expands: true,
-                        //           maxLines: null,
-                        //           controller: serviceProviderController,
-                        //           decoration: InputDecoration(
-                        //             isDense: true,
-                        //             contentPadding: const EdgeInsets.symmetric(
-                        //               horizontal: 10,
-                        //               vertical: 8,
-                        //             ),
-                        //             hintText: 'Search flat no...',
-                        //             hintStyle: const TextStyle(fontSize: 12),
-                        //             border: OutlineInputBorder(
-                        //               borderRadius: BorderRadius.circular(8),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ])),
-                        // ),
                         const SizedBox(
                           height: 10,
                         ),
@@ -309,10 +300,19 @@ class _ListOfAssetState extends State<ListOfAsset> {
         .collection('assets')
         .doc(asset)
         .set({'asset': asset, 'workListByAsset': 'Work not assign'});
-    FirebaseFirestore.instance
+
+    Map<String, dynamic> assetMap = {};
+    assetMap.addAll({
+      'asset': asset,
+      'buildingId': widget.buildingId,
+      'floorId': widget.floorId,
+      'roomId': widget.roomId,
+    });
+    listOfAsset.add(assetMap);
+    await FirebaseFirestore.instance
         .collection('assets')
-        .doc(asset)
-        .set({'asset': asset, 'workListByAsset': 'Work not assign'});
+        .doc('asset')
+        .set({'data': listOfAsset});
 
     provider.addSingleList({
       'asset': asset,

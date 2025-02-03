@@ -160,8 +160,23 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-          body: const Center(child: LoadingPage()), // Loading indicator
+          body: const Center(child: LoadingPage()),
         );
+        // Scaffold(
+        //     appBar: AppBar(
+        //       title: const Center(child: Text('Dashboard')),
+        //       flexibleSpace: Container(
+        //         decoration: const BoxDecoration(
+        //           gradient: LinearGradient(colors: [lightMarron, marron]),
+        //         ),
+        //       ),
+        //     ),
+        //     body: const Center(
+        //       child: Text(
+        //         'All Tickets are closed',
+        //         style: TextStyle(color: marron, fontSize: 20),
+        //       ), // Loading indicator
+        //     ));
       },
     );
 

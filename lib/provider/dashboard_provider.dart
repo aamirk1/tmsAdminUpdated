@@ -49,12 +49,23 @@ class DashboardProvider extends ChangeNotifier {
       var raisedTicketsSnapshot =
           await FirebaseFirestore.instance.collection('raisedTickets').get();
 
+      DateTime? lastDayOfMonth;
+      DateTime? today;
+      for (var doc in raisedTicketsSnapshot.docs) {
+        String todayDateString = doc.id;
+        today = DateFormat('dd-MM-yyyy')
+            .parse(todayDateString); // Parse string into DateTime
+        // String formattedTodayDate =
+        //     DateFormat('dd-MM-yyyy').format(todayDate); // Format as desired
+
+        lastDayOfMonth = DateTime(
+            today.year, today.month + 1, 0); // Works fine for all months
+      }
+
       var memberNameSnapshot = await FirebaseFirestore.instance
           .collection('members')
           .where('role', isGreaterThanOrEqualTo: []).get();
 
-      DateTime? lastDayOfMonth;
-      DateTime? today;
       for (var doc in raisedTicketsSnapshot.docs) {
         String todayDateString = doc.id;
         today = DateFormat('dd-MM-yyyy').parse(todayDateString);
