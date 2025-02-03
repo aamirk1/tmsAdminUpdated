@@ -22,7 +22,6 @@ class _ReportDetailsState extends State<ReportDetails> {
   void initState() {
     print('widget.ticketData: ${widget.ticketData}');
 
-   
     // print(widget.)
     super.initState();
   }
@@ -192,7 +191,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                                           children: [
                                             ticketCard(
                                                 Icons.business,
-                                                'Tat: ',
+                                                'TAT: ',
                                                 widget.ticketData[index]['tat']
                                                     .toString(),
                                                 index)
@@ -519,7 +518,7 @@ class _ReportDetailsState extends State<ReportDetails> {
                                           children: [
                                             ticketCard(
                                                 Icons.business,
-                                                'Tat: ',
+                                                'TAT: ',
                                                 widget.ticketData[index]['tat']
                                                     .toString(),
                                                 index)
@@ -833,7 +832,11 @@ class _ReportDetailsState extends State<ReportDetails> {
         .doc(date)
         .collection('tickets')
         .doc(ticketId)
-        .update({'status': 'Open', 'isSeen': true}).whenComplete(() {
+        .update({
+      'status': 'Open',
+      'isSeen': true,
+      'closedDate': 'N/A'
+    }).whenComplete(() {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.green,

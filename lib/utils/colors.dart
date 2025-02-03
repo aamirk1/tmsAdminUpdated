@@ -30,7 +30,7 @@ void showFetchingData(BuildContext context, String msg) {
         children: [
           const SizedBox(
             height: 200,
-            width: 50,
+            width: 100,
             child: Center(
               child: LoadingPage(),
             ),

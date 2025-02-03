@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ import 'package:ticket_management_system/utils/loading_page.dart';
 
 import '../providers/assetsProvider.dart';
 
+// ignore: must_be_immutable
 class TicketTableReport extends StatefulWidget {
   TicketTableReport(
       {super.key,
@@ -109,13 +111,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
     // fetchUser();
 
     getWorkList();
-    // getRoom().whenComplete(() {
-    //   getAsset().whenComplete(() {
-    //     setState(() {});
-    //   });
-    // });
-    // getBuilding();
-    // getFloor();
+
     getRoom();
     getAsset();
 
@@ -314,8 +310,10 @@ class _TicketTableReportState extends State<TicketTableReport> {
                                 showFetchingData(context, 'Fetching Data...');
 
                                 filterTickets().whenComplete(() {
-                                  print(
-                                      'selectedServiceProvider: $selectedServiceProvider');
+                                  if (kDebugMode) {
+                                    print(
+                                        'selectedServiceProvider: $selectedServiceProvider');
+                                  }
                                   if (selectedStatus != null ||
                                       selectedTicket != null ||
                                       selectedWork != null ||
@@ -1064,9 +1062,9 @@ class _TicketTableReportState extends State<TicketTableReport> {
 
             // Check if the ticket's date is within the selected date range
             if (ticketDate.isAfter(parsedStartDate) &&
-                ticketDate.isBefore(parsedEndDate)) {
+                ticketDate.isBefore(parsedEndDate.add(Duration(days: 1)))) {
               temp.add(doc.id);
-            }
+            } 
           }
           temp = temp.reversed.toList();
           if (temp.isNotEmpty) {

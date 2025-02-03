@@ -42,12 +42,12 @@ class dashboardProvider extends ChangeNotifier {
 
   Future<void> fetchTickets() async {
     try {
-      // Get today's date and format it as 'dd-MM-yyyy'
-      String todayDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+      // // Get today's date and format it as 'dd-MM-yyyy'
+      // String todayDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
-      // Get the start and end dates for each range
-      DateTime today = DateTime.now();
-      DateTime lastDayOfMonth = DateTime(today.year, today.month + 1, 0);
+      // // Get the start and end dates for each range
+      // DateTime today = DateTime.now();
+      // DateTime lastDayOfMonth = DateTime(today.year, today.month + 1, 0);
 
       // Step 1: Aggregate data by service provider and date range
       Map<String, Map<String, int>> aggregatedData = {};
@@ -55,6 +55,19 @@ class dashboardProvider extends ChangeNotifier {
       List<String>? memberName = [];
       var raisedTicketsSnapshot =
           await FirebaseFirestore.instance.collection('raisedTickets').get();
+
+      DateTime? lastDayOfMonth;
+      DateTime? today;
+      for (var doc in raisedTicketsSnapshot.docs) {
+        String todayDateString = doc.id;
+        today = DateFormat('dd-MM-yyyy')
+            .parse(todayDateString); // Parse string into DateTime
+        // String formattedTodayDate =
+        //     DateFormat('dd-MM-yyyy').format(todayDate); // Format as desired
+
+        lastDayOfMonth = DateTime(
+            today.year, today.month + 1, 0); // Works fine for all months
+      }
 
       var memberNameSnapshot = await FirebaseFirestore.instance
           .collection('members')
@@ -73,7 +86,7 @@ class dashboardProvider extends ChangeNotifier {
         DateRange(8, 14),
         DateRange(15, 21),
         DateRange(22, 28),
-        DateRange(29, lastDayOfMonth.day)
+        DateRange(29, lastDayOfMonth!.day)
       ];
       // Loop through each document (date)
       for (var doc in raisedTicketsSnapshot.docs) {
@@ -98,7 +111,7 @@ class dashboardProvider extends ChangeNotifier {
         for (var range in dateRanges) {
           // Format the dates in 'dd-MM-yyyy' format for Firestore
           String startDate = DateFormat('dd-MM-yyyy')
-              .format(DateTime(today.year, today.month, range.start));
+              .format(DateTime(today!.year, today.month, range.start));
           String endDate = DateFormat('dd-MM-yyyy')
               .format(DateTime(today.year, today.month, range.end));
 
