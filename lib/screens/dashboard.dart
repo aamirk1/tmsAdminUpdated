@@ -24,7 +24,7 @@ class _DashboardState extends State<Dashboard> {
   late DashboardDatasource _dashboardDatasource;
   List<DashboardModel> _dashboardModel = [];
   late DataGridController _dataGridController;
-  dashboardProvider provider = dashboardProvider();
+  DashboardProvider provider = DashboardProvider();
   Stream? _stream;
 
   @override
@@ -32,7 +32,7 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     _dashboardDatasource = DashboardDatasource(_dashboardModel);
     _dataGridController = DataGridController();
-    provider = Provider.of<dashboardProvider>(context, listen: false);
+    provider = Provider.of<DashboardProvider>(context, listen: false);
     provider.fetchTickets();
   }
 
@@ -54,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
         ),
       );
     }
-    return Consumer<dashboardProvider>(
+    return Consumer<DashboardProvider>(
       builder: (context, value, child) {
         // Initialize the dashboardDatasource and dataGridController only once
         if (value.allticketCountsList.isNotEmpty) {
@@ -147,35 +147,6 @@ class _DashboardState extends State<Dashboard> {
                 columns: columns,
               ),
             ),
-            // floatingActionButton: Container(
-            //   width: 150,
-            //   child: Padding(
-            //     padding: const EdgeInsets.symmetric(
-            //         horizontal: 5), // Set the padding around the button
-            //     child: FloatingActionButton(
-            //       backgroundColor: marron,
-            //       child: const Text(
-            //         'Proceed',
-            //         style: TextStyle(
-            //             color: white,
-            //             fontWeight: FontWeight.bold,
-            //             fontSize: 18),
-            //       ),
-            //       onPressed: () {
-            //         Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //             builder: (context) => customSide(),
-            //           ),
-            //         );
-            //       },
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(
-            //             8.0), // This will give it rounded corners
-            //       ),
-            //     ),
-            //   ),
-            // ),
           );
         }
 

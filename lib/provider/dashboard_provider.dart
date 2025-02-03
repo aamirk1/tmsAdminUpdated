@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class dashboardProvider extends ChangeNotifier {
+class DashboardProvider extends ChangeNotifier {
   List<String> ticketData = [];
   List<String> alldates = [];
   List<String> pendingTickets = [];
@@ -42,13 +42,6 @@ class dashboardProvider extends ChangeNotifier {
 
   Future<void> fetchTickets() async {
     try {
-      // Get today's date and format it as 'dd-MM-yyyy'
-      String todayDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
-
-      // Get the start and end dates for each range
-      DateTime today = DateTime.now();
-      DateTime lastDayOfMonth = DateTime(today.year, today.month + 1, 0);
-
       // Step 1: Aggregate data by service provider and date range
       Map<String, Map<String, int>> aggregatedData = {};
       List<String>? dateIds = [];
@@ -60,6 +53,15 @@ class dashboardProvider extends ChangeNotifier {
           .collection('members')
           .where('role', isGreaterThanOrEqualTo: []).get();
 
+      DateTime? lastDayOfMonth;
+      DateTime? today;
+      for (var doc in raisedTicketsSnapshot.docs) {
+        String todayDateString = doc.id;
+        today = DateFormat('dd-MM-yyyy').parse(todayDateString);
+
+        lastDayOfMonth = DateTime(
+            today.year, today.month + 1, 0); // Works fine for all months
+      }
       for (var doc in memberNameSnapshot.docs) {
         var roles = doc['role'];
         if (roles != null && roles.isNotEmpty) {
@@ -73,7 +75,7 @@ class dashboardProvider extends ChangeNotifier {
         DateRange(8, 14),
         DateRange(15, 21),
         DateRange(22, 28),
-        DateRange(29, lastDayOfMonth.day)
+        DateRange(29, lastDayOfMonth!.day)
       ];
       // Loop through each document (date)
       for (var doc in raisedTicketsSnapshot.docs) {
@@ -98,12 +100,14 @@ class dashboardProvider extends ChangeNotifier {
         for (var range in dateRanges) {
           // Format the dates in 'dd-MM-yyyy' format for Firestore
           String startDate = DateFormat('dd-MM-yyyy')
-              .format(DateTime(today.year, today.month, range.start));
+              .format(DateTime(today!.year, today.month, range.start));
           String endDate = DateFormat('dd-MM-yyyy')
               .format(DateTime(today.year, today.month, range.end));
 
+          Set<String> printedDates = Set(); // A Set to track printed dateIds
           try {
-            // Fetch tickets for the specific date range and status = 'Open'
+            print('StartDate: $startDate');
+            print('End Date: $endDate');
             QuerySnapshot snapshot = await FirebaseFirestore.instance
                 .collection('raisedTickets')
                 .doc(dateId)
@@ -112,54 +116,58 @@ class dashboardProvider extends ChangeNotifier {
                 .where('date', isLessThanOrEqualTo: endDate)
                 .get();
 
-            Map<String, Map<String, int>> ticketCounts =
-                {}; // Initialize ticket counts map
-
             for (var doc in snapshot.docs) {
               // Access document data (fields)
+
               var ticketData =
                   doc.data() as Map<String, dynamic>; // Cast to a map
               DateFormat dateFormat = DateFormat('dd-MM-yyyy');
 
-              if (ticketData['status'] == 'Open' &&
-                  memberName.contains(ticketData['serviceProvider'])) {
-                String date = ticketData['date'];
-                DateTime parsedDate = dateFormat.parse(date);
+              if (!printedDates.contains(ticketData['tickets'])) {
+                if (ticketData['status'] == 'Open' &&
+                    memberName.contains(ticketData['serviceProvider'])) {
+                  printedDates.add(ticketData['tickets']);
+                  print('Date : ${ticketData['tickets']}');
+                  print('ticketDta$ticketData');
+                  print('new line');
+                  String date = ticketData['date'];
+                  DateTime parsedDate = dateFormat.parse(date);
 
-                // Calculate the difference between today and the parsed date
-                Duration difference = today.difference(parsedDate);
+                  // Calculate the difference between today and the parsed date
+                  Duration difference = today.difference(parsedDate);
 
-                // Get the difference in days
-                int day = difference.inDays;
+                  // Get the difference in days
+                  int day = difference.inDays;
 
-                // Get the service provider and date range for this ticket
-                String serviceProvider = ticketData['serviceProvider'];
+                  // Get the service provider and date range for this ticket
+                  String serviceProvider = ticketData['serviceProvider'];
 
-                // Determine the correct date range based on the day
-                String dateRangeKey;
+                  // Determine the correct date range based on the day
+                  String dateRangeKey;
 
-                if (day <= 0) {
-                  dateRangeKey = '0-1';
-                } else if (day >= 1 && day <= 7) {
-                  dateRangeKey = '1-7';
-                } else if (day >= 8 && day <= 14) {
-                  dateRangeKey = '8-14';
-                } else if (day >= 15 && day <= 21) {
-                  dateRangeKey = '15-21';
-                } else if (day >= 22 && day <= 28) {
-                  dateRangeKey = '22-28';
-                } else {
-                  dateRangeKey = '29-31'; // for days 29, 30, and 31
+                  if (day <= 0) {
+                    dateRangeKey = '0-1';
+                  } else if (day >= 1 && day <= 7) {
+                    dateRangeKey = '1-7';
+                  } else if (day >= 8 && day <= 14) {
+                    dateRangeKey = '8-14';
+                  } else if (day >= 15 && day <= 21) {
+                    dateRangeKey = '15-21';
+                  } else if (day >= 22 && day <= 28) {
+                    dateRangeKey = '22-28';
+                  } else {
+                    dateRangeKey = '29-31'; // for days 29, 30, and 31
+                  }
+                  // String dateRangeKey = '${range.start}-${range.end}';
+
+                  if (!aggregatedData.containsKey(serviceProvider)) {
+                    aggregatedData[serviceProvider] = {};
+                  }
+
+                  // Update ticket count for this service provider and date range
+                  aggregatedData[serviceProvider]![dateRangeKey] =
+                      (aggregatedData[serviceProvider]![dateRangeKey] ?? 0) + 1;
                 }
-                // String dateRangeKey = '${range.start}-${range.end}';
-
-                if (!aggregatedData.containsKey(serviceProvider)) {
-                  aggregatedData[serviceProvider] = {};
-                }
-
-                // Update ticket count for this service provider and date range
-                aggregatedData[serviceProvider]![dateRangeKey] =
-                    (aggregatedData[serviceProvider]![dateRangeKey] ?? 0) + 1;
               }
             }
           } catch (e) {
