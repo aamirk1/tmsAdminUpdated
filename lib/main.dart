@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) => RolePageTotalNumProviderAdmin()),
         ChangeNotifierProvider(create: (context) => Screenchangeprovider()),
-        ChangeNotifierProvider(create: (context) => dashboardProvider()),
+        ChangeNotifierProvider(create: (context) => DashboardProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
