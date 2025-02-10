@@ -109,8 +109,9 @@ class DashboardProvider extends ChangeNotifier {
           String endDate = DateFormat('dd-MM-yyyy')
               .format(DateTime(today.year, today.month, range.end));
 
+          Set<String> printedDates = Set(); // A Set to track printed dateIds
+          DateTime todaysDate = DateTime.now();
           try {
-            // Fetch tickets for the specific date range and status = 'Open'
             QuerySnapshot snapshot = await FirebaseFirestore.instance
                 .collection('raisedTickets')
                 .doc(dateId)
@@ -126,13 +127,16 @@ class DashboardProvider extends ChangeNotifier {
                   doc.data() as Map<String, dynamic>; // Cast to a map
               DateFormat dateFormat = DateFormat('dd-MM-yyyy');
 
-              if (ticketData['status'] == 'Open' &&
-                  memberName.contains(ticketData['serviceProvider'])) {
-                String date = ticketData['date'];
-                DateTime parsedDate = dateFormat.parse(date);
+              if (!printedDates.contains(ticketData['tickets'])) {
+                if (ticketData['status'] == 'Open' &&
+                    memberName.contains(ticketData['serviceProvider'])) {
+                  printedDates.add(ticketData['tickets']);
 
-                // Calculate the difference between today and the parsed date
-                Duration difference = today.difference(parsedDate);
+                  String date = ticketData['date'];
+                  DateTime parsedDate = dateFormat.parse(date);
+
+                  // Calculate the difference between today and the parsed date
+                  Duration difference = todaysDate.difference(parsedDate);
 
                   // Get the difference in days
                   int day = difference.inDays;
@@ -143,20 +147,19 @@ class DashboardProvider extends ChangeNotifier {
                   // Determine the correct date range based on the day
                   String dateRangeKey;
 
-                if (day <= 0) {
-                  dateRangeKey = '0-1';
-                } else if (day >= 1 && day <= 7) {
-                  dateRangeKey = '1-7';
-                } else if (day >= 8 && day <= 14) {
-                  dateRangeKey = '8-14';
-                } else if (day >= 15 && day <= 21) {
-                  dateRangeKey = '15-21';
-                } else if (day >= 22 && day <= 28) {
-                  dateRangeKey = '22-28';
-                } else {
-                  dateRangeKey = '29-31'; // for days 29, 30, and 31
-                }
-                // String dateRangeKey = '${range.start}-${range.end}';
+                  if (day <= 0) {
+                    dateRangeKey = '0-1';
+                  } else if (day >= 1 && day <= 7) {
+                    dateRangeKey = '1-7';
+                  } else if (day >= 8 && day <= 14) {
+                    dateRangeKey = '8-14';
+                  } else if (day >= 15 && day <= 21) {
+                    dateRangeKey = '15-21';
+                  } else if (day >= 22 && day <= 28) {
+                    dateRangeKey = '22-28';
+                  } else {
+                    dateRangeKey = '29-31'; // for days 29, 30, and 31
+                  }
 
                   if (!aggregatedData.containsKey(serviceProvider)) {
                     aggregatedData[serviceProvider] = {};
