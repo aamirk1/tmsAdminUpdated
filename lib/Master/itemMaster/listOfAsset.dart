@@ -311,8 +311,8 @@ class _ListOfAssetState extends State<ListOfAsset> {
     listOfAsset.add(assetMap);
     await FirebaseFirestore.instance
         .collection('assets')
-        .doc('asset')
-        .set({'data': listOfAsset});
+        .doc(asset)
+        .set({'asset': asset});
 
     provider.addSingleList({
       'asset': asset,

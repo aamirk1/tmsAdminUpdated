@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_management_system/Homescreen.dart';
 import 'package:ticket_management_system/Master/master.dart';
@@ -234,7 +235,9 @@ class _customSideState extends State<customSide> {
       // notifyListeners();
     } catch (e) {
       // Handle any errors (optional)
-      print('Error fetching service providers: $e');
+      if (kDebugMode) {
+        print('Error fetching service providers: $e');
+      }
     }
   }
 
@@ -279,7 +282,9 @@ class _customSideState extends State<customSide> {
       // notifyListeners();
     } catch (e) {
       // Handle any errors (optional)
-      print('Error fetching user: $e');
+      if (kDebugMode) {
+        print('Error fetching user: $e');
+      }
     }
   }
 
@@ -296,7 +301,6 @@ class _customSideState extends State<customSide> {
       buildings = set.toList();
       // provider.setBuilderList(assetList);
     }
-    print('start on buildings: $buildings');
     setState(() {});
   }
 
@@ -318,7 +322,6 @@ class _customSideState extends State<customSide> {
         floors = set.toList();
         // provider.setBuilderList(assetList);
       }
-      print('start on Floors: $floors');
       setState(() {});
     }
   }
@@ -348,7 +351,6 @@ class _customSideState extends State<customSide> {
       }
     }
 
-    print('start on Rooms: ${rooms.length}');
     setState(() {});
   }
 
