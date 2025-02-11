@@ -334,40 +334,70 @@ class _CreateUserState extends State<CreateUser> {
                                                         children: [
                                                           IconButton(
                                                             icon: const Icon(
-                                                              Icons.edit,
-                                                              color: black,
-                                                            ),
-                                                            onPressed: () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          EditUserForm(
-                                                                    fullName: snapshot
-                                                                            .data
-                                                                            .docs[index]
-                                                                        [
-                                                                        'fullName'],
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            },
-                                                          ),
-                                                          IconButton(
-                                                            icon: const Icon(
                                                               Icons.delete,
                                                               color: Colors.red,
                                                             ),
                                                             onPressed: () {
-                                                              deleteUser(
-                                                                snapshot.data
-                                                                            .docs[
-                                                                        index][
-                                                                    'fullName'],
+                                                              // Show confirmation dialog
+                                                              showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return AlertDialog(
+                                                                    title: const Text(
+                                                                        'Confirm Deletion'),
+                                                                    content: Text(
+                                                                        'Are you sure you want to delete ${snapshot.data.docs[index]['fullName']} user?'),
+                                                                    actions: <Widget>[
+                                                                      TextButton(
+                                                                        child: const Text(
+                                                                            'Cancel'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop(); // Close the dialog
+                                                                        },
+                                                                      ),
+                                                                      TextButton(
+                                                                        child: const Text(
+                                                                            'Delete'),
+                                                                        onPressed:
+                                                                            () {
+                                                                          // Call the deleteUser function to delete the user
+                                                                          deleteUser(
+                                                                            snapshot.data.docs[index]['fullName'],
+                                                                          );
+                                                                          Navigator.of(context)
+                                                                              .pop(); // Close the dialog
+                                                                        },
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                },
                                                               );
                                                             },
-                                                          ),
+                                                          )
+
+                                                          // IconButton(
+                                                          //   icon: const Icon(
+                                                          //     Icons.delete,
+                                                          //     color: Colors.red,
+                                                          //   ),
+                                                          //   onPressed: () {
+                                                          //     showDialog(context: context, builder: AlertDialog(
+
+                                                          //     ))
+
+                                                          //     deleteUser(
+                                                          //       snapshot.data
+                                                          //                   .docs[
+                                                          //               index][
+                                                          //           'fullName'],
+                                                          //     );
+                                                          //   },
+                                                          // ),
                                                         ],
                                                       ),
                                                     ),
