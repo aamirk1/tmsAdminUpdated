@@ -145,9 +145,35 @@ class _RoomListState extends State<RoomList> {
                                               color: Colors.red,
                                             ),
                                             onPressed: () {
-                                              deleteroomNumber(snapshot.data
-                                                  .docs[index]['roomNumber']);
-                                            },
+  // Show confirmation dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirm Deletion'),
+        content: Text(
+            'Are you sure you want to delete room number ${snapshot.data.docs[index]['roomNumber']}?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+          TextButton(
+            child: const Text('Delete'),
+            onPressed: () {
+              // Call the deleteroomNumber function to delete the room number
+              deleteroomNumber(snapshot.data.docs[index]['roomNumber']);
+              Navigator.of(context).pop(); // Close the dialog after deletion
+            },
+          ),
+        ],
+      );
+    },
+  );
+},
+
                                           ),
                                         ],
                                       ),

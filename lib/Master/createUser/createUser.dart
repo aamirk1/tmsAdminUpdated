@@ -45,9 +45,33 @@ class _CreateUserState extends State<CreateUser> {
         isLoading = false;
       });
     });
+    fetchRoles().whenComplete(() {
+      print('role ${allRoles}');
+    });
+
     // Get.put(UserController()).isLoading.value = false;
     // print(userList);
     super.initState();
+  }
+
+  List<String> allRoles = [];
+
+  Future<void> fetchRoles() async {
+    try {
+      // Fetch documents from Firestore
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('members').get();
+
+      // Extract roles from each document and collect them into a single list
+      setState(() {
+        allRoles = snapshot.docs
+            .expand((doc) =>
+                List<String>.from(doc['role'] ?? [])) // Flatten the role arrays
+            .toList();
+      });
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
   }
 
   @override
@@ -597,6 +621,27 @@ class _CreateUserState extends State<CreateUser> {
 
                                 return InkWell(
                                   onTap: () async {
+                                    if (allRoles.contains(item)) {
+                                      return showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Alert'),
+                                            content: Text(
+                                                'This Role is already assign'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () {
+                                                  // Close the dialog
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Close'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                     switch (isSelected) {
                                       case true:
                                         selectedWorkList.remove(item);
