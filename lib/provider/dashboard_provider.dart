@@ -209,8 +209,6 @@ class DashboardProvider extends ChangeNotifier {
       setTicketCountsList = ticketCountsList;
       ticketPendingData = aggregatedData;
 
-      // For debugging, print the aggregated ticket counts
-      print('Aggregated Ticket Counts: $ticketCountsList');
     } catch (e) {
       print('Error fetching tickets: $e');
     }

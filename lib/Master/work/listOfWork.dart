@@ -138,8 +138,42 @@ class _ListOfWorkState extends State<ListOfWork> {
                                               color: Colors.red,
                                             ),
                                             onPressed: () {
-                                              deleteWork(snapshot
-                                                  .data.docs[index]['work']);
+                                              // Show confirmation dialog
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: const Text(
+                                                        'Confirm Deletion'),
+                                                    content: Text(
+                                                        'Are you sure you want to delete the work: ${snapshot.data.docs[index]['work']}?'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: const Text(
+                                                            'Cancel'),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop(); // Close the dialog without action
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: const Text(
+                                                            'Delete'),
+                                                        onPressed: () {
+                                                          // Call the deleteWork function to delete the work
+                                                          deleteWork(snapshot
+                                                                  .data
+                                                                  .docs[index]
+                                                              ['work']);
+                                                          Navigator.of(context)
+                                                              .pop(); // Close the dialog after deletion
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
                                             },
                                           ),
                                         ],

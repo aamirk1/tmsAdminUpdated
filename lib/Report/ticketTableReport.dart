@@ -523,91 +523,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
       print('Error fetching user: $e');
     }
   }
-  // Future<void> fetchUser() async {
-  //   userList = [];
-  //   final provider = Provider.of<AllUserProvider>(context, listen: false);
-  //   List<String> tempData = [];
-  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-  //       .collection('members')
-  //       .where('role', isEqualTo: null)
-  //       .get();
-
-  //   if (querySnapshot.docs.isNotEmpty) {
-  //     tempData = querySnapshot.docs.map((e) => e.id).toList();
-  //   }
-  //   for (var i = 0; i < tempData.length; i++) {
-  //     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-  //         .collection('members')
-  //         .doc(tempData[i])
-  //         .get();
-  //     if (documentSnapshot.data() != null) {
-  //       Map<String, dynamic> data =
-  //           documentSnapshot.data() as Map<String, dynamic>;
-  //       String fullName = data['fullName'];
-  //       // print(fullName);
-  //       userList.add(fullName);
-  //     }
-  //   }
-  //   print('user $userList');
-  //   provider.setBuilderList(userList);
-  // }
-
-  // Future<void> fetchServiceProvider() async {
-  //   serviceProvider = [];
-  //   List<String> tempData = [];
-  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-  //       .collection('members')
-  //       .where('role', isNotEqualTo: null)
-  //       .get();
-
-  //   if (querySnapshot.docs.isNotEmpty) {
-  //     tempData = querySnapshot.docs.map((e) => e.id).toList();
-  //   }
-  //   for (var i = 0; i < tempData.length; i++) {
-  //     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-  //         .collection('members')
-  //         .doc(tempData[i])
-  //         .get();
-  //     if (documentSnapshot.data() != null) {
-  //       Map<String, dynamic> data =
-  //           documentSnapshot.data() as Map<String, dynamic>;
-  //       serviceProvider.add(data['fullName']);
-  //     }
-  //   }
-  //   print('service provider $serviceProvider');
-  //   setState(() {});
-  // }
-
-  // Future<void> getTicketList() async {
-  //   final provider = Provider.of<AllRoomProvider>(context, listen: false);
-  //   provider.setBuilderList([]);
-
-  //   ticketList.clear();
-
-  //   QuerySnapshot monthQuery =
-  //       await FirebaseFirestore.instance.collection("raisedTickets").get();
-  //   List<dynamic> dateList = monthQuery.docs.map((e) => e.id).toList();
-
-  //   // dateList = dateList.reversed.toList();
-  //   for (int j = 0; j < dateList.length; j++) {
-  //     List<String> temp = [];
-  //     QuerySnapshot ticketQuery = await FirebaseFirestore.instance
-  //         .collection("raisedTickets")
-  //         .doc(dateList[j])
-  //         .collection('tickets')
-  //         .get();
-  //     temp = ticketQuery.docs.map((e) => e.id).toList();
-  //     temp = temp.reversed.toList();
-  //     ticketList = ticketList + temp;
-  //     // ticketList.sort((a, b) {
-  //     //   DateTime dateA = parseDate(a['date']); // Parse date from mapData
-  //     //   DateTime dateB = parseDate(b['date']);
-  //     //   return dateA.compareTo(dateB); // Descending order
-  //     // });
-  //   }
-
-  //   setState(() {});
-  // }
+  
   Future<void> getTicketList() async {
     final provider = Provider.of<AllRoomProvider>(context, listen: false);
     provider.setBuilderList([]);
@@ -687,7 +603,7 @@ class _TicketTableReportState extends State<TicketTableReport> {
       List<String> tempData = querySnapshot.docs.map((e) => e.id).toList();
       uniqueRoomList.addAll(tempData);
       Set<String> set = uniqueRoomList.toSet();
-      roomNumberList = set.toList();
+      roomList = set.toList();
     }
     provider.setBuilderList(roomNumberList);
     // print(roomNumberList);
