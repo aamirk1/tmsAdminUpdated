@@ -27,6 +27,10 @@ class _MasterHomeScreenState extends State<MasterHomeScreen> {
   void initState() {
     getProfile(widget.adminId);
     super.initState();
+    final provider = Provider.of<Screenchangeprovider>(context, listen: false);
+    
+   
+    
   }
 
   @override

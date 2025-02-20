@@ -835,7 +835,8 @@ class _ReportDetailsState extends State<ReportDetails> {
         .update({
       'status': 'Open',
       'isSeen': true,
-      'closedDate': 'N/A'
+      'closedDate': 'N/A',
+      'tat':0,
     }).whenComplete(() {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

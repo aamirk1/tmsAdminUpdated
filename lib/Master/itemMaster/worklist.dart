@@ -150,15 +150,35 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
     );
   }
 
-  Future storeData(workListByAsset) async {
-    // final provider = Provider.of<AllRoomProvider>(context, listen: false);
-    await FirebaseFirestore.instance
-        .collection('assets')
-        .doc(widget.assetId)
-        .update({
-      'workListByAsset': workListByAsset,
-    });
-    await FirebaseFirestore.instance
+  storeData(workListByAsset) async {
+    // var assetList = await FirebaseFirestore.instance
+    //     .collection('assets')
+    //     .where('asset', isEqualTo: widget.assetId)
+    //     .get();
+
+    // if (assetList.docs.isNotEmpty) {
+    //   for (var doc in assetList.docs) {
+    //     print("✅ Updating Firestore document: ${doc.reference.path}");
+    //     await doc.reference
+    //         .set({'workListByAsset': workListByAsset}, SetOptions(merge: true));
+    //   }
+    //   print("🎉 Firestore update successful!");
+    // } else {
+    //   print("⚠️ No matching asset found for assetId: ${widget.assetId}");
+    // }
+
+    // await FirebaseFirestore.instance
+    //     .collection('buildingNumbers')
+    //     .doc(widget.buildingId)
+    //     .collection('floorNumbers')
+    //     .doc(widget.floorId)
+    //     .collection('roomNumbers')
+    //     .doc(widget.roomId)
+    //     .collection('assets')
+    //     .doc(widget.assetId)
+    //     .update({'asset': widget.assetId, 'workListByAsset': workListByAsset});
+
+    var assetDocRef = FirebaseFirestore.instance
         .collection('buildingNumbers')
         .doc(widget.buildingId)
         .collection('floorNumbers')
@@ -166,8 +186,23 @@ class _WorkListByAssetState extends State<WorkListByAsset> {
         .collection('roomNumbers')
         .doc(widget.roomId)
         .collection('assets')
-        .doc(widget.assetId)
-        .update({'asset': widget.assetId, 'workListByAsset': workListByAsset});
+        .doc(widget.assetId);
+
+    try {
+      var docSnapshot = await assetDocRef.get();
+
+      if (docSnapshot.exists) {
+        await assetDocRef.update(
+            {'asset': widget.assetId, 'workListByAsset': workListByAsset});
+      } else {
+        print('Document does not exist. Creating it now...');
+        await assetDocRef.set(
+            {'asset': widget.assetId, 'workListByAsset': workListByAsset},
+            SetOptions(merge: true));
+      }
+    } catch (e) {
+      print('Error updating Firestore document: $e');
+    }
 
     // FirebaseFirestore.instance.collection('rooms').doc(workListByAsset).set({
     //   'workListByAsset': workListByAsset,
